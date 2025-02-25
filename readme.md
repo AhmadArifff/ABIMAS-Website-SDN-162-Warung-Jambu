@@ -36,7 +36,7 @@ Fitur yang tersedia di website ini adalah
 
 ## Kebutuhan
 Software yang diperlukan untuk menjalankan aplikasi ini adalah
-1. [Xampp](https://www.apachefriends.org/)
+1. [Xampp](https://sourceforge.net/projects/xampp/files/XAMPP%20Windows/)
 2. Web Browser (Mozilla, Chrome, Opera, dll)
 3. Composer
 
@@ -89,5 +89,3 @@ Software yang diperlukan untuk menjalankan aplikasi ini adalah
 <br />
 <br />
 
-## Kontak
-https://danyadhi.github.io/
