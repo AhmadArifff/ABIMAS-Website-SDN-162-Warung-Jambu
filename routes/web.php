@@ -7,6 +7,20 @@ Route::get('/blog/{slug}', 'UserController@show_article')->name('blog.show');
 Route::get('/destination', 'UserController@destination')->name('destination');
 Route::get('/destination/{slug}', 'UserController@show_destination')->name('destination.show');
 Route::get('/contact', 'UserController@contact')->name('contact');
+Route::get('/tatatertib', 'UserController@tatatertib')->name('tatatertib');
+Route::get('/pembiasaan', 'UserController@pembiasaan')->name('pembiasaan');
+Route::get('/penghargaan', 'UserController@penghargaan')->name('penghargaan');
+Route::get('/strukturorganisasi', 'UserController@strukturorganisasi')->name('strukturorganisasi');
+
+Route::get('/ekstrakurikuler/pramuka', 'UserController@ekstrakurikuler_pramuka')->name('ekstrakurikuler.pramuka');
+Route::get('/ekstrakurikuler/kesenian', 'UserController@ekstrakurikuler_kesenian')->name('ekstrakurikuler.kesenian');
+Route::get('/ekstrakurikuler/karate', 'UserController@ekstrakurikuler_karate')->name('ekstrakurikuler.karate');
+Route::get('/ekstrakurikuler/silat', 'UserController@ekstrakurikuler_silat')->name('ekstrakurikuler.silat');
+Route::get('/ekstrakurikuler/olimpiade', 'UserController@ekstrakurikuler_olimpiade')->name('ekstrakurikuler.olimpiade');
+Route::get('/ekstrakurikuler/paskibra', 'UserController@ekstrakurikuler_paskibra')->name('ekstrakurikuler.paskibra');
+Route::get('/ekstrakurikuler/hoki', 'UserController@ekstrakurikuler_hoki')->name('ekstrakurikuler.hoki');
+Route::get('/ekstrakurikuler/pmr', 'UserController@ekstrakurikuler_pmr')->name('ekstrakurikuler.pmr');
+Route::get('/ekstrakurikuler/renang', 'UserController@ekstrakurikuler_renang')->name('ekstrakurikuler.renang');
 
 Route::prefix('admin')->group(function(){
 
