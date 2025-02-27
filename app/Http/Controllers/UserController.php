@@ -85,10 +85,13 @@ class UserController extends Controller
 
     return view('user/destination', $data);
   }
-
   public function contact()
   {
     return view('user/contact');
+  }
+  public function berita()
+  {
+    return view('user/berita');
   }
 
   public function tatatertib()
