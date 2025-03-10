@@ -80,21 +80,33 @@
 
 @section('hero')
     <div id="hero">
-        <div class="hero-slide active">
-            <img src="{{ asset('sample_image/1.jpg') }}" alt="Slide 1">
-            <h1>Blog Jogja-Travel</h1>
-            <h2>Kumpulan artikel-artikel wisata Jogja, Tips travelling, dan kesehatan</h2>
-        </div>
-        <div class="hero-slide">
-            <img src="{{ asset('sample_image/2.jpg') }}" alt="Slide 2">
-            <h1>Explore Jogja</h1>
-            <h2>Temukan keindahan alam dan budaya Jogja</h2>
-        </div>
-        <div class="hero-slide">
-            <img src="{{ asset('sample_image/3.jpg') }}" alt="Slide 3">
-            <h1>Travel Tips</h1>
-            <h2>Tips dan trik untuk perjalanan yang aman dan menyenangkan</h2>
-        </div>
+        @if($kesiswaan)
+            @if($kesiswaan->k_foto_slide1)
+                <div class="hero-slide active">
+                    <img id="preview-image1" src="{{ asset('kesiswaan_image/slide_image/'.$kesiswaan->k_foto_slide1) }}" alt="Slide 1">
+                    <h1 id="preview-title1">{{ $kesiswaan->k_judul_slide }}</h1>
+                    <h2 id="preview-description1">{{ $kesiswaan->k_deskripsi_slide }}</h2>
+                </div>
+            @endif
+            @if($kesiswaan->k_foto_slide2)
+                <div class="hero-slide">
+                    <img id="preview-image2" src="{{ asset('kesiswaan_image/slide_image/'.$kesiswaan->k_foto_slide2) }}" alt="Slide 2">
+                    <h1 id="preview-title2">{{ $kesiswaan->k_judul_slide }}</h1>
+                    <h2 id="preview-description2">{{ $kesiswaan->k_deskripsi_slide }}</h2>
+                </div>
+            @endif
+            @if($kesiswaan->k_foto_slide3)
+                <div class="hero-slide">
+                    <img id="preview-image3" src="{{ asset('kesiswaan_image/slide_image/'.$kesiswaan->k_foto_slide3) }}" alt="Slide 3">
+                    <h1 id="preview-title3">{{ $kesiswaan->k_judul_slide }}</h1>
+                    <h2 id="preview-description3">{{ $kesiswaan->k_deskripsi_slide }}</h2>
+                </div>
+            @endif
+        @else
+            <div class="hero-slide active">
+                <h1 id="preview-title1">Data Content Slide Belum Ditambahkan!</h1>
+            </div>
+        @endif
     </div>
     <script>
         let currentSlide = 0;
@@ -116,59 +128,21 @@
             <div class="row">
                 <div class="col-lg-9 col-md-8 col-sm-12">
                     <div class="article">
-                        <h1>Tata Tertib di Sekolah SD 163 Warung Jambu Kiaracondong</h1>
+                        <h1 id="preview-main-title">{{ $kesiswaan ? $kesiswaan->k_judul_isi_content : 'Data Content Judul Belum Ditambahkan!' }}</h1>
                         <div class="row">
                             <div class="col-lg-4 col-md-5 col-sm-12 mb-3">
                                 <div id="list-example" class="list-group">
-                                    <a class="list-group-item list-group-item-action" href="#list-item-1">1. Datang Tepat Waktu</a>
-                                    <a class="list-group-item list-group-item-action" href="#list-item-2">2. Menghormati Guru dan Teman</a>
-                                    <a class="list-group-item list-group-item-action" href="#list-item-3">3. Menjaga Kebersihan</a>
-                                    <a class="list-group-item list-group-item-action" href="#list-item-4">4. Mengikuti Pelajaran dengan Baik</a>
-                                    <a class="list-group-item list-group-item-action" href="#list-item-5">5. Memakai Seragam Lengkap</a>
-                                    <a class="list-group-item list-group-item-action" href="#list-item-6">6. Tidak Membawa Barang Berbahaya</a>
-                                    <a class="list-group-item list-group-item-action" href="#list-item-7">7. Tidak Bermain di Kelas</a>
-                                    <a class="list-group-item list-group-item-action" href="#list-item-8">8. Mengikuti Upacara Bendera</a>
-                                    <a class="list-group-item list-group-item-action" href="#list-item-9">9. Tidak Berkelahi</a>
-                                    <a class="list-group-item list-group-item-action" href="#list-item-10">10. Tidak Membawa Gadget</a>
-                                    <a class="list-group-item list-group-item-action" href="#list-item-11">11. Menghormati Upacara Keagamaan</a>
-                                    <a class="list-group-item list-group-item-action" href="#list-item-12">12. Tidak Meninggalkan Sekolah Tanpa Izin</a>
-                                    <a class="list-group-item list-group-item-action" href="#list-item-13">13. Mengikuti Ekstrakurikuler</a>
-                                    <a class="list-group-item list-group-item-action" href="#list-item-14">14. Tidak Membawa Makanan dari Luar</a>
-                                    <a class="list-group-item list-group-item-action" href="#list-item-15">15. Menjaga Fasilitas Sekolah</a>
+                                    @foreach($tatatertib as $item)
+                                        <a class="list-group-item list-group-item-action" href="#list-item-{{ $loop->index + 1 }}">{{ $loop->index + 1 }}. {{ $item->t_nama_peraturan }}</a>
+                                    @endforeach
                                 </div>
                             </div>
                             <div class="col-lg-8 col-md-7 col-sm-12">
                                 <div data-spy="scroll" data-target="#list-example" data-offset="0" class="scrollspy-example">
-                                    <h4 id="list-item-1">1. Datang Tepat Waktu</h4>
-                                    <p>Siswa diharapkan datang ke sekolah tepat waktu sebelum bel masuk berbunyi.</p>
-                                    <h4 id="list-item-2">2. Menghormati Guru dan Teman</h4>
-                                    <p>Siswa harus selalu menghormati guru dan teman-teman di sekolah.</p>
-                                    <h4 id="list-item-3">3. Menjaga Kebersihan</h4>
-                                    <p>Siswa wajib menjaga kebersihan kelas dan lingkungan sekolah.</p>
-                                    <h4 id="list-item-4">4. Mengikuti Pelajaran dengan Baik</h4>
-                                    <p>Siswa harus mengikuti pelajaran dengan baik dan tidak mengganggu proses belajar mengajar.</p>
-                                    <h4 id="list-item-5">5. Memakai Seragam Lengkap</h4>
-                                    <p>Siswa wajib memakai seragam lengkap sesuai dengan ketentuan sekolah.</p>
-                                    <h4 id="list-item-6">6. Tidak Membawa Barang Berbahaya</h4>
-                                    <p>Siswa dilarang membawa barang-barang berbahaya ke sekolah.</p>
-                                    <h4 id="list-item-7">7. Tidak Bermain di Kelas</h4>
-                                    <p>Siswa tidak diperbolehkan bermain di dalam kelas selama jam pelajaran.</p>
-                                    <h4 id="list-item-8">8. Mengikuti Upacara Bendera</h4>
-                                    <p>Siswa wajib mengikuti upacara bendera setiap hari Senin.</p>
-                                    <h4 id="list-item-9">9. Tidak Berkelahi</h4>
-                                    <p>Siswa dilarang berkelahi dengan teman-teman di sekolah.</p>
-                                    <h4 id="list-item-10">10. Tidak Membawa Gadget</h4>
-                                    <p>Siswa tidak diperbolehkan membawa gadget ke sekolah kecuali dengan izin guru.</p>
-                                    <h4 id="list-item-11">11. Menghormati Upacara Keagamaan</h4>
-                                    <p>Siswa harus menghormati upacara keagamaan yang diadakan di sekolah.</p>
-                                    <h4 id="list-item-12">12. Tidak Meninggalkan Sekolah Tanpa Izin</h4>
-                                    <p>Siswa tidak diperbolehkan meninggalkan sekolah tanpa izin dari guru atau kepala sekolah.</p>
-                                    <h4 id="list-item-13">13. Mengikuti Ekstrakurikuler</h4>
-                                    <p>Siswa diharapkan mengikuti kegiatan ekstrakurikuler yang disediakan oleh sekolah.</p>
-                                    <h4 id="list-item-14">14. Tidak Membawa Makanan dari Luar</h4>
-                                    <p>Siswa tidak diperbolehkan membawa makanan dari luar kecuali dengan izin guru.</p>
-                                    <h4 id="list-item-15">15. Menjaga Fasilitas Sekolah</h4>
-                                    <p>Siswa wajib menjaga dan merawat fasilitas sekolah dengan baik.</p>
+                                    @foreach($tatatertib as $item)
+                                        <h4 id="list-item-{{ $loop->index + 1 }}">{{ $loop->index + 1 }}. {{ $item->t_nama_peraturan }}</h4>
+                                        <p>{{ $item->t_deskripsi }}</p>
+                                    @endforeach
                                 </div>
                             </div>
                         </div>
@@ -206,35 +180,35 @@
                                     $recentPosts = [
                                         (object)[
                                             'link' => '#',
-                                            'image' => 'sample_image/Sekolah-SD.jpg',
+                                            'image' => 'sample_image/Gambar.png',
                                             'title' => 'Judul Artikel 1',
                                             'description' => 'Deskripsi singkat artikel 1.',
                                             'date' => 'Tanggal 01-01-2024'
                                         ],
                                         (object)[
                                             'link' => '#',
-                                            'image' => 'sample_image/Sekolah-SD.jpg',
+                                            'image' => 'sample_image/Gambar.png',
                                             'title' => 'Judul Artikel 2',
                                             'description' => 'Deskripsi singkat artikel 2.',
                                             'date' => 'Tanggal 02-02-2024'
                                         ],
                                         (object)[
                                             'link' => '#',
-                                            'image' => 'sample_image/Sekolah-SD.jpg',
+                                            'image' => 'sample_image/Gambar.png',
                                             'title' => 'Judul Artikel 3',
                                             'description' => 'Deskripsi singkat artikel 3.',
                                             'date' => 'Tanggal 03-03-2024'
                                         ],
                                         (object)[
                                             'link' => '#',
-                                            'image' => 'sample_image/Sekolah-SD.jpg',
+                                            'image' => 'sample_image/Gambar.png',
                                             'title' => 'Judul Artikel 4',
                                             'description' => 'Deskripsi singkat artikel 4.',
                                             'date' => 'Tanggal 04-04-2024'
                                         ],
                                         (object)[
                                             'link' => '#',
-                                            'image' => 'sample_image/Sekolah-SD.jpg',
+                                            'image' => 'sample_image/Gambar.png',
                                             'title' => 'Judul Artikel 5',
                                             'description' => 'Deskripsi singkat artikel 5.',
                                             'date' => 'Tanggal 05-05-2024'
