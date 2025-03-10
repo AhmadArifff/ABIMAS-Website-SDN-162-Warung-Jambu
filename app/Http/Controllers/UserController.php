@@ -103,7 +103,8 @@ class UserController extends Controller
   }
   public function berita()
   {
-    return view('user/berita');
+    $ekstrakurikuler_all = Ekstrakurikuler::where('e_status', 'PUBLISH')->get();
+    return view('user/berita', ['ekstrakurikuler_all' => $ekstrakurikuler_all]);
   }
 
   public function tatatertib()
