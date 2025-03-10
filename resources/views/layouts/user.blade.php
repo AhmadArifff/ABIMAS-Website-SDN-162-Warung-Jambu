@@ -60,7 +60,11 @@
               <li><a href="{{url('penghargaan')}}">Penghargaan</a></li>
               <li class="menu-has-children"><a href="#">Ekstrakurikuler</a>
                 <ul>
-                    <li><a href="{{ url('ekstrakurikuler/pramuka') }}">Pramuka</a></li>
+                    @foreach($ekstrakurikuler_all as $ekstrakurikuler)
+                      <li><a href="{{ url('ekstrakurikuler/' . $ekstrakurikuler->e_nama_ekstrakurikuler) }}">{{ $ekstrakurikuler->e_nama_ekstrakurikuler }}</a></li>
+                    @endforeach
+                    
+                    {{-- <li><a href="{{ url('ekstrakurikuler/pramuka') }}">Pramuka</a></li>
                     <li><a href="{{ url('ekstrakurikuler/kesenian') }}">Kesenian</a></li>
                     <li><a href="{{ url('ekstrakurikuler/karate') }}">Karate</a></li>
                     <li><a href="{{ url('ekstrakurikuler/silat') }}">Silat</a></li>
@@ -68,7 +72,7 @@
                     <li><a href="{{ url('ekstrakurikuler/paskibra') }}">Paskibra</a></li>
                     <li><a href="{{ url('ekstrakurikuler/hoki') }}">Hoki</a></li>
                     <li><a href="{{ url('ekstrakurikuler/pmr') }}">PMR</a></li>
-                    <li><a href="{{ url('ekstrakurikuler/renang') }}">Renang</a></li>
+                    <li><a href="{{ url('ekstrakurikuler/renang') }}">Renang</a></li> --}}
                 </ul>
               </li>
             </ul>

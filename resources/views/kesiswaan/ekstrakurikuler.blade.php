@@ -79,13 +79,46 @@
 @endsection
 
 @section('hero')
-    <div id="hero">
+<div id="hero">
+    @if($ekstrakurikuler)
+        @if($ekstrakurikuler->e_foto_slide1)
+            <div class="hero-slide active">
+                <img id="preview-image1" src="{{ asset('kesiswaan_image/slide_image/'.$ekstrakurikuler->e_foto_slide1) }}" alt="Slide 1">
+                <h1 id="preview-title1">{{ $ekstrakurikuler->e_nama_ekstrakurikuler }}</h1>
+                <h2 id="preview-description1">{{ $ekstrakurikuler->e_deskripsi_slide }}</h2>
+            </div>
+        @endif
+        @if($ekstrakurikuler->e_foto_slide2)
+            <div class="hero-slide">
+                <img id="preview-image2" src="{{ asset('kesiswaan_image/slide_image/'.$ekstrakurikuler->e_foto_slide2) }}" alt="Slide 2">
+                <h1 id="preview-title2">{{ $ekstrakurikuler->e_nama_ekstrakurikuler }}</h1>
+                <h2 id="preview-description2">{{ $ekstrakurikuler->e_deskripsi_slide }}</h2>
+            </div>
+        @endif
+        @if($ekstrakurikuler->e_foto_slide3)
+            <div class="hero-slide">
+                <img id="preview-image3" src="{{ asset('kesiswaan_image/slide_image/'.$ekstrakurikuler->e_foto_slide3) }}" alt="Slide 3">
+                <h1 id="preview-title3">{{ $ekstrakurikuler->e_nama_ekstrakurikuler }}</h1>
+                <h2 id="preview-description3">{{ $ekstrakurikuler->e_deskripsi_slide }}</h2>
+            </div>
+        @endif
+    @else
         <div class="hero-slide active">
-            <img src="{{ asset($ekstrakurikuler['foto_kegiatan']) }}" alt="{{ $ekstrakurikuler['name'] }}">
-            <h1>{{ $ekstrakurikuler['name'] }}</h1>
-            <h2>{{ $ekstrakurikuler['description'] }}</h2>
+            <h1 id="preview-title1">Data Content Slide Belum Ditambahkan!</h1>
         </div>
-    </div>
+    @endif
+</div>
+<script>
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.hero-slide');
+    setInterval(() => {
+        slides[currentSlide].classList.remove('active');
+        slides[currentSlide].classList.add('previous');
+        currentSlide = (currentSlide + 1) % slides.length;
+        slides[currentSlide].classList.add('active');
+        slides[currentSlide].classList.remove('previous');
+    }, 5000);
+</script>
 @endsection
 
 @section('content')
@@ -94,19 +127,19 @@
             <div class="row">
                 <div class="col-lg-9">
                     <div class="article">
-                        <h1>{{ $ekstrakurikuler['name'] }}</h1>
-                        <img src="{{ asset($ekstrakurikuler['foto_kegiatan']) }}" alt="{{ $ekstrakurikuler['name'] }}" style="width: 100%; height: auto; margin-bottom: 20px;">
-                        <p>{{ $ekstrakurikuler['description'] }}</p>
+                        <h1 id="preview-main-title">{{ $ekstrakurikuler ? $ekstrakurikuler->e_nama_ekstrakurikuler : 'Data Content Judul Belum Ditambahkan!' }}</h1>
+                        <img src="{{ asset('kesiswaan_image/ekstrakurikuler_image/'.$ekstrakurikuler->e_foto) }}" style="width: 100%; height: auto; margin-bottom: 20px;">
+                        <p>{{ $ekstrakurikuler->e_deskripsi }}</p>
                         <div class="col-md-12">
                             <div class="row">
-                                @foreach($ekstrakurikuler['achievements'] as $achievement)
+                                @foreach($achievements as $achievement)
                                     <div class="col-md-6 col-lg-6 mb-4">
                                         <div class="card">
-                                            <img src="{{ asset($achievement['foto']) }}" class="card-img-top" alt="{{ $achievement['judul'] }}" style="height: 150px; object-fit: cover; width: 100%; image-rendering: optimizeSpeed;">
+                                            <img src="{{ asset('kesiswaan_image/penghargaan_image/'.$achievement->ph_foto) }}" class="card-img-top" alt="{{ $achievement->judul }}" style="height: 150px; object-fit: cover; width: 100%; image-rendering: optimizeSpeed;">
                                             <div class="card-body">
-                                                <h5 class="card-title">{{ $achievement['judul'] }}</h5>
-                                                <p class="card-text">{{ $achievement['deskripsi'] }}</p>
-                                                <p class="card-text text-right"><small class="text-muted">{{ $achievement['tanggal'] }}</small></p>
+                                                <h5 class="card-title">{{ $achievement->judul }}</h5>
+                                                <p class="card-text">{{ $achievement->deskripsi }}</p>
+                                                <p class="card-text text-right"><small class="text-muted">{{ \Carbon\Carbon::parse($achievement->tanggal)->format('d-m-Y') }}</small></p>
                                             </div>
                                         </div>
                                     </div>
@@ -147,35 +180,35 @@
                                     $recentPosts = [
                                         (object)[
                                             'link' => '#',
-                                            'image' => 'sample_image/Sekolah-SD.jpg',
+                                            'image' => 'sample_image/Gambar.png',
                                             'title' => 'Judul Artikel 1',
                                             'description' => 'Deskripsi singkat artikel 1.',
                                             'date' => 'Tanggal 01-01-2024'
                                         ],
                                         (object)[
                                             'link' => '#',
-                                            'image' => 'sample_image/Sekolah-SD.jpg',
+                                            'image' => 'sample_image/Gambar.png',
                                             'title' => 'Judul Artikel 2',
                                             'description' => 'Deskripsi singkat artikel 2.',
                                             'date' => 'Tanggal 02-02-2024'
                                         ],
                                         (object)[
                                             'link' => '#',
-                                            'image' => 'sample_image/Sekolah-SD.jpg',
+                                            'image' => 'sample_image/Gambar.png',
                                             'title' => 'Judul Artikel 3',
                                             'description' => 'Deskripsi singkat artikel 3.',
                                             'date' => 'Tanggal 03-03-2024'
                                         ],
                                         (object)[
                                             'link' => '#',
-                                            'image' => 'sample_image/Sekolah-SD.jpg',
+                                            'image' => 'sample_image/Gambar.png',
                                             'title' => 'Judul Artikel 4',
                                             'description' => 'Deskripsi singkat artikel 4.',
                                             'date' => 'Tanggal 04-04-2024'
                                         ],
                                         (object)[
                                             'link' => '#',
-                                            'image' => 'sample_image/Sekolah-SD.jpg',
+                                            'image' => 'sample_image/Gambar.png',
                                             'title' => 'Judul Artikel 5',
                                             'description' => 'Deskripsi singkat artikel 5.',
                                             'date' => 'Tanggal 05-05-2024'

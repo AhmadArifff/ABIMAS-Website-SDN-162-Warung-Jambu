@@ -144,35 +144,35 @@
                                     $recentPosts = [
                                         (object)[
                                             'link' => '#',
-                                            'image' => 'sample_image/Sekolah-SD.jpg',
+                                            'image' => 'sample_image/Gambar.png',
                                             'title' => 'Judul Artikel 1',
                                             'description' => 'Deskripsi singkat artikel 1.',
                                             'date' => 'Tanggal 01-01-2024'
                                         ],
                                         (object)[
                                             'link' => '#',
-                                            'image' => 'sample_image/Sekolah-SD.jpg',
+                                            'image' => 'sample_image/Gambar.png',
                                             'title' => 'Judul Artikel 2',
                                             'description' => 'Deskripsi singkat artikel 2.',
                                             'date' => 'Tanggal 02-02-2024'
                                         ],
                                         (object)[
                                             'link' => '#',
-                                            'image' => 'sample_image/Sekolah-SD.jpg',
+                                            'image' => 'sample_image/Gambar.png',
                                             'title' => 'Judul Artikel 3',
                                             'description' => 'Deskripsi singkat artikel 3.',
                                             'date' => 'Tanggal 03-03-2024'
                                         ],
                                         (object)[
                                             'link' => '#',
-                                            'image' => 'sample_image/Sekolah-SD.jpg',
+                                            'image' => 'sample_image/Gambar.png',
                                             'title' => 'Judul Artikel 4',
                                             'description' => 'Deskripsi singkat artikel 4.',
                                             'date' => 'Tanggal 04-04-2024'
                                         ],
                                         (object)[
                                             'link' => '#',
-                                            'image' => 'sample_image/Sekolah-SD.jpg',
+                                            'image' => 'sample_image/Gambar.png',
                                             'title' => 'Judul Artikel 5',
                                             'description' => 'Deskripsi singkat artikel 5.',
                                             'date' => 'Tanggal 05-05-2024'

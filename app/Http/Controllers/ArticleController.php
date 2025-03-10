@@ -6,6 +6,12 @@ use App\Category;
 
 use App\Article;
 use Illuminate\Http\Request;
+use App\Pembiasaan;
+use App\Kesiswaan;
+use App\Ekstrakurikuler;
+use App\Penghargaan;
+use App\Tatatertib;
+use App\User;
 
 class ArticleController extends Controller
 {
@@ -14,46 +20,78 @@ class ArticleController extends Controller
    *
    * @return \Illuminate\Http\Response
    */
-  public function index(Request $request)
-  {
-    $status     = $request->get('status');
-    $keyword    = $request->get('keyword') ? $request->get('keyword') : '';
-    $category   = $request->get('c') ? $request->get('c') : '';
+    public function index(Request $request)
+    {
+      $pembiasaan_all=Pembiasaan::where('p_status', 'DRAFT')->get();
+        $publishedMenus = Kesiswaan::where('k_status', 'PUBLISH')->pluck('k_nama_menu')->toArray();
 
-    if($status){
-      // $articles = \App\Article::where('status', strtoupper($status))->where('title', 'LIKE', "%$keyword%")->paginate(10);
-      $articles = Article::with('categories')
-                          ->whereHas('categories', function($q) use($category){
-                            $q->where('name', 'LIKE', "%$category%");
-                          })
-                          ->where('status', strtoupper($status))
-                          ->where('title', 'LIKE', "%$keyword%")
-                          ->orderBy('created_at', 'desc')
-                          ->paginate(10);
+        $kesiswaa_all = Kesiswaan::where('k_status', 'DRAFT')
+            ->whereNotIn('k_nama_menu', $publishedMenus) // Hanya mengambil DRAFT yang tidak punya PUBLISH dalam grupnya
+            ->get();
+        $publishedEkstrakurikulerNames = Ekstrakurikuler::where('e_status', 'PUBLISH')->pluck('e_nama_ekstrakurikuler')->toArray();
 
-    }else{
-      // $articles = \App\Article::with('categories')->where('title', 'LIKE', "%$keyword%")->paginate(10);
-      $articles = Article::with('categories')
-                          ->whereHas('categories', function($q) use($category) {
-                            $q->where('name', 'LIKE', "%$category%"); 
-                          })
-                          ->where('title', 'LIKE', "%$keyword%")
-                          ->orderBy('created_at', 'desc')
-                          ->paginate(10);
+        $ekstrakurikuler_all = Ekstrakurikuler::where('e_status', 'DRAFT')
+            ->whereNotIn('e_nama_ekstrakurikuler', $publishedEkstrakurikulerNames) // Hanya mengambil DRAFT yang tidak punya PUBLISH dalam grupnya
+            ->get();
+        $penghargaan_all=Penghargaan::where('ph_status', 'DRAFT')->get();
+        $tatatertib_all=Tatatertib::where('t_status', 'DRAFT')->get();
+        $user_all=User::all();
+
+        $menu = 'Article';
+      $status     = $request->get('status');
+      $keyword    = $request->get('keyword') ? $request->get('keyword') : '';
+      $category   = $request->get('c') ? $request->get('c') : '';
+
+      if($status){
+        // $articles = \App\Article::where('status', strtoupper($status))->where('title', 'LIKE', "%$keyword%")->paginate(10);
+        $articles = Article::with('categories')
+                            ->whereHas('categories', function($q) use($category){
+                              $q->where('name', 'LIKE', "%$category%");
+                            })
+                            ->where('status', strtoupper($status))
+                            ->where('title', 'LIKE', "%$keyword%")
+                            ->orderBy('created_at', 'desc')
+                            ->paginate(10);
+
+      }else{
+        // $articles = \App\Article::with('categories')->where('title', 'LIKE', "%$keyword%")->paginate(10);
+        $articles = Article::with('categories')
+                            ->whereHas('categories', function($q) use($category) {
+                              $q->where('name', 'LIKE', "%$category%"); 
+                            })
+                            ->where('title', 'LIKE', "%$keyword%")
+                            ->orderBy('created_at', 'desc')
+                            ->paginate(10);
+      }
+
+      return view('articles.index', ['articles'=>$articles, 'status'=>$status, 'keyword'=>$keyword, 'category'=>$category, 'menu'=>$menu, 'pembiasaan_all'=>$pembiasaan_all, 'kesiswaa_all'=>$kesiswaa_all, 'ekstrakurikuler_all'=>$ekstrakurikuler_all, 'penghargaan_all'=>$penghargaan_all, 'tatatertib_all'=>$tatatertib_all, 'user_all'=>$user_all]);
     }
-
-    return view('articles.index', ['articles'=>$articles]);
-  }
 
   /**
    * Show the form for creating a new resource.
    *
    * @return \Illuminate\Http\Response
    */
-  public function create()
-  {
-    return view('articles.create');
-  }
+    public function create()
+    {
+      $pembiasaan_all=Pembiasaan::where('p_status', 'DRAFT')->get();
+        $publishedMenus = Kesiswaan::where('k_status', 'PUBLISH')->pluck('k_nama_menu')->toArray();
+
+        $kesiswaa_all = Kesiswaan::where('k_status', 'DRAFT')
+            ->whereNotIn('k_nama_menu', $publishedMenus) // Hanya mengambil DRAFT yang tidak punya PUBLISH dalam grupnya
+            ->get();
+        $publishedEkstrakurikulerNames = Ekstrakurikuler::where('e_status', 'PUBLISH')->pluck('e_nama_ekstrakurikuler')->toArray();
+
+        $ekstrakurikuler_all = Ekstrakurikuler::where('e_status', 'DRAFT')
+            ->whereNotIn('e_nama_ekstrakurikuler', $publishedEkstrakurikulerNames) // Hanya mengambil DRAFT yang tidak punya PUBLISH dalam grupnya
+            ->get();
+        $penghargaan_all=Penghargaan::where('ph_status', 'DRAFT')->get();
+        $tatatertib_all=Tatatertib::where('t_status', 'DRAFT')->get();
+        $user_all=User::all();
+
+        $menu = 'Article';
+      return view('articles.create', ['menu'=>$menu, 'pembiasaan_all'=>$pembiasaan_all, 'kesiswaa_all'=>$kesiswaa_all, 'ekstrakurikuler_all'=>$ekstrakurikuler_all, 'penghargaan_all'=>$penghargaan_all, 'tatatertib_all'=>$tatatertib_all, 'user_all'=>$user_all]);
+    }
 
   /**
    * Store a newly created resource in storage.
@@ -98,11 +136,27 @@ class ArticleController extends Controller
    * @param  \App\Article  $article
    * @return \Illuminate\Http\Response
    */
-  public function edit($id)
-  {
-    $article = \App\Article::findOrFail($id);
-    return view('articles.edit', ['article'=>$article]);
-  }
+    public function edit($id)
+    {
+      $pembiasaan_all=Pembiasaan::where('p_status', 'DRAFT')->get();
+        $publishedMenus = Kesiswaan::where('k_status', 'PUBLISH')->pluck('k_nama_menu')->toArray();
+
+        $kesiswaa_all = Kesiswaan::where('k_status', 'DRAFT')
+            ->whereNotIn('k_nama_menu', $publishedMenus) // Hanya mengambil DRAFT yang tidak punya PUBLISH dalam grupnya
+            ->get();
+        $publishedEkstrakurikulerNames = Ekstrakurikuler::where('e_status', 'PUBLISH')->pluck('e_nama_ekstrakurikuler')->toArray();
+
+        $ekstrakurikuler_all = Ekstrakurikuler::where('e_status', 'DRAFT')
+            ->whereNotIn('e_nama_ekstrakurikuler', $publishedEkstrakurikulerNames) // Hanya mengambil DRAFT yang tidak punya PUBLISH dalam grupnya
+            ->get();
+        $penghargaan_all=Penghargaan::where('ph_status', 'DRAFT')->get();
+        $tatatertib_all=Tatatertib::where('t_status', 'DRAFT')->get();
+        $user_all=User::all();
+
+        $menu = 'Article';
+      $article = \App\Article::findOrFail($id);
+      return view('articles.edit', ['article'=>$article, 'menu'=>$menu, 'pembiasaan_all'=>$pembiasaan_all, 'kesiswaa_all'=>$kesiswaa_all, 'ekstrakurikuler_all'=>$ekstrakurikuler_all, 'penghargaan_all'=>$penghargaan_all, 'tatatertib_all'=>$tatatertib_all, 'user_all'=>$user_all]);
+    }
 
   /**
    * Update the specified resource in storage.
