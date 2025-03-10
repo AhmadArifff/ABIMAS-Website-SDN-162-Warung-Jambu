@@ -49,6 +49,7 @@
       <nav id="nav-menu-container">
         <ul class="nav-menu">
             <li class="{{$url=='home'?'menu-active':''}}"><a href="{{url('home')}}">Home</a></li>
+            <li class="{{$url=='berita'?'menu-active':''}}"><a href="{{url('berita')}}">Berita</a></li>            
             <li class="{{$url=='blog'?'menu-active':''}}"><a href="{{url('blog')}}">Blog</a></li>
             <li class="{{$url=='destination'?'menu-active':''}}"><a href="{{url('destination')}}">Destination</a></li>
             <li class="{{$url=='contact'?'menu-active':''}}"><a href="{{url('contact')}}">Contact </a></li>
@@ -132,7 +133,7 @@
             <div class="single-footer-widget">
               <h3 class="title">Informasi :</h3>
               <ul class="list-unstyled">
-                <li><a href="https://www.sdnduajambu.sch.id/berita/berita" title="Berita">Berita</a></li>
+                <li><a href="{{ url('/berita')}}" title="Berita">Berita</a></li>
                 <li><a href="https://www.sdnduajambu.sch.id/berita/artikel" title="Artikel">Artikel</a></li>
               </ul>
             </div>

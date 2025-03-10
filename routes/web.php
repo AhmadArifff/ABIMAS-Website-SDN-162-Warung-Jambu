@@ -9,6 +9,7 @@ Route::get('/blog/{slug}', 'UserController@show_article')->name('blog.show');
 Route::get('/destination', 'UserController@destination')->name('destination');
 Route::get('/destination/{slug}', 'UserController@show_destination')->name('destination.show');
 Route::get('/contact', 'UserController@contact')->name('contact');
+Route::get('/berita', 'UserController@berita')->name('berita');
 Route::get('/tatatertib', 'UserController@tatatertib')->name('tatatertib');
 Route::get('/pembiasaan', 'UserController@pembiasaan')->name('pembiasaan');
 Route::get('/penghargaan', 'UserController@penghargaan')->name('penghargaan');

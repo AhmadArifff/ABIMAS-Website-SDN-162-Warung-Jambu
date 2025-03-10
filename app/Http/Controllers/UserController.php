@@ -96,11 +96,14 @@ class UserController extends Controller
 
     return view('user/destination', $data, ['ekstrakurikuler_all' => $ekstrakurikuler_all]);
   }
-
   public function contact()
   {
     $ekstrakurikuler_all = Ekstrakurikuler::where('e_status', 'PUBLISH')->get();
     return view('user/contact', ['ekstrakurikuler_all' => $ekstrakurikuler_all]);
+  }
+  public function berita()
+  {
+    return view('user/berita');
   }
 
   public function tatatertib()
