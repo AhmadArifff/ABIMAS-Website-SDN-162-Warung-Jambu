@@ -96,7 +96,7 @@ class KesiswaanController extends Controller
         }
 
         $kesiswaan->save();
-        if ($menu == 'About') {
+        if ($menu == 'About'|| $menu == 'Berita') {
             return redirect()->route('admin.' . strtolower($kesiswaan->k_nama_menu) . '.index')->with('success-slide', 'Data Slide '.$request->k_nama_menu .' Telah Berhasil Ditambahkan');
         } else {
             return redirect()->route('admin.kesiswaan.' . strtolower($kesiswaan->k_nama_menu) . '.index')->with('success-slide', 'Data Slide '.$request->k_nama_menu .' Telah Berhasil Ditambahkan');
@@ -126,7 +126,7 @@ class KesiswaanController extends Controller
         if (!$kesiswaan) {
             return redirect()->back()->withErrors(['error' => 'Tidak Ada Data Slide Dengan Nama Slide ' . $menu . ' found']);
         }
-        if ($menu == 'About') {
+        if ($menu == 'About'|| $menu == 'Berita') {
             return view(strtolower($menu).'.edit_slide', ['kesiswaan' => $kesiswaan, 'isPublished' => $isPublished, 'menu' => $menu, 'kesiswaa_all' => $kesiswaa_all, 'ekstrakurikuler_all' => $ekstrakurikuler_all, 'penghargaan_all' => $penghargaan_all, 'tatatertib_all' => $tatatertib_all, 'user_all' => $user_all, 'pembiasaan_all' => $pembiasaan_all]);
         } else {
             return view('kesiswaan.admin.edit_slide', ['kesiswaan' => $kesiswaan, 'isPublished' => $isPublished, 'menu' => $menu, 'kesiswaa_all' => $kesiswaa_all, 'ekstrakurikuler_all' => $ekstrakurikuler_all, 'penghargaan_all' => $penghargaan_all, 'tatatertib_all' => $tatatertib_all, 'user_all' => $user_all, 'pembiasaan_all' => $pembiasaan_all]);
@@ -184,7 +184,7 @@ class KesiswaanController extends Controller
 
         try {
             $kesiswaan->save();
-            if ($menu == 'About') {
+            if ($menu == 'About'|| $menu == 'Berita') {
                 return redirect()->route('admin.' . strtolower($kesiswaan->k_nama_menu) . '.index')->with('success-slide', 'Data Slide '.$request->k_nama_menu .' Telah Berhasil Ditambahkan');
             } else {
                 return redirect()->route('admin.kesiswaan.' . strtolower($kesiswaan->k_nama_menu) . '.index')->with('success-slide', 'Data Slide '.$request->k_nama_menu .' Telah Berhasil Diubah');

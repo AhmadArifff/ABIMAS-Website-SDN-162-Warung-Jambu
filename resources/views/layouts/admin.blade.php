@@ -203,6 +203,9 @@
                     <li class="{{$url=='about'?'active':''}}">
                         <a href="{{url('admin/about')}}"><i class="menu-icon fa fa-user"></i>About </a>
                     </li>
+                    <li class="{{$url=='berita'?'active':''}}">
+                        <a href="{{url('admin/berita')}}"><i class="menu-icon fa fa-user"></i>Berita </a>
+                    </li>
                     <li class="menu-item-has-children dropdown">
                         <a href="#" class="dropdown-toggle d-flex align-items-center" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <i class="menu-icon fa fa-graduation-cap mr-2"></i>Kesiswaan</a>
