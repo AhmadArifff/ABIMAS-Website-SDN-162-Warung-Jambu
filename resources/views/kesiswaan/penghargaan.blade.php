@@ -80,21 +80,33 @@
 
 @section('hero')
     <div id="hero">
-        <div class="hero-slide active">
-            <img src="{{ asset('sample_image/1.jpg') }}" alt="Slide 1">
-            <h1>Blog Jogja-Travel</h1>
-            <h2>Kumpulan artikel-artikel wisata Jogja, Tips travelling, dan kesehatan</h2>
-        </div>
-        <div class="hero-slide">
-            <img src="{{ asset('sample_image/2.jpg') }}" alt="Slide 2">
-            <h1>Explore Jogja</h1>
-            <h2>Temukan keindahan alam dan budaya Jogja</h2>
-        </div>
-        <div class="hero-slide">
-            <img src="{{ asset('sample_image/3.jpg') }}" alt="Slide 3">
-            <h1>Travel Tips</h1>
-            <h2>Tips dan trik untuk perjalanan yang aman dan menyenangkan</h2>
-        </div>
+        @if($kesiswaan)
+            @if($kesiswaan->k_foto_slide1)
+                <div class="hero-slide active">
+                    <img id="preview-image1" src="{{ asset('kesiswaan_image/slide_image/'.$kesiswaan->k_foto_slide1) }}" alt="Slide 1">
+                    <h1 id="preview-title1">{{ $kesiswaan->k_judul_slide }}</h1>
+                    <h2 id="preview-description1">{{ $kesiswaan->k_deskripsi_slide }}</h2>
+                </div>
+            @endif
+            @if($kesiswaan->k_foto_slide2)
+                <div class="hero-slide">
+                    <img id="preview-image2" src="{{ asset('kesiswaan_image/slide_image/'.$kesiswaan->k_foto_slide2) }}" alt="Slide 2">
+                    <h1 id="preview-title2">{{ $kesiswaan->k_judul_slide }}</h1>
+                    <h2 id="preview-description2">{{ $kesiswaan->k_deskripsi_slide }}</h2>
+                </div>
+            @endif
+            @if($kesiswaan->k_foto_slide3)
+                <div class="hero-slide">
+                    <img id="preview-image3" src="{{ asset('kesiswaan_image/slide_image/'.$kesiswaan->k_foto_slide3) }}" alt="Slide 3">
+                    <h1 id="preview-title3">{{ $kesiswaan->k_judul_slide }}</h1>
+                    <h2 id="preview-description3">{{ $kesiswaan->k_deskripsi_slide }}</h2>
+                </div>
+            @endif
+        @else
+            <div class="hero-slide active">
+                <h1 id="preview-title1">Data Content Slide Belum Ditambahkan!</h1>
+            </div>
+        @endif
     </div>
     <script>
         let currentSlide = 0;
@@ -116,106 +128,18 @@
             <div class="row">
                 <div class="col-lg-9">
                     <div class="article">
-                        <h1>Penghargaan di Sekolah SD 163 Warung Jambu Kiaracondong</h1>
+                        <h1 id="preview-main-title">{{ $kesiswaan ? $kesiswaan->k_judul_isi_content : 'Data Content Judul Belum Ditambahkan!' }}</h1>
                         <div class="col-md-12">
                             <div class="row" id="activity-cards">
-                                @php
-                                    $activities = [
-                                        (object)[
-                                            'image' => 'sample_image/Sekolah-SD.jpg',
-                                            'title' => 'Penghargaan 1',
-                                            'description' => 'Deskripsi Penghargaan 1.',
-                                            'date' => '01-01-2024',
-                                            'detail' => 'Detail Penghargaan 1.'
-                                        ],
-                                        (object)[
-                                            'image' => 'sample_image/Sekolah-SD.jpg',
-                                            'title' => 'Penghargaan 2',
-                                            'description' => 'Deskripsi Penghargaan 2.',
-                                            'date' => '02-02-2024',
-                                            'detail' => 'Detail Penghargaan 2.'
-                                        ],
-                                        (object)[
-                                            'image' => 'sample_image/Sekolah-SD.jpg',
-                                            'title' => 'Penghargaan 3',
-                                            'description' => 'Deskripsi Penghargaan 3.',
-                                            'date' => '03-03-2024',
-                                            'detail' => 'Detail Penghargaan 3.'
-                                        ],
-                                        (object)[
-                                            'image' => 'sample_image/Sekolah-SD.jpg',
-                                            'title' => 'Penghargaan 4',
-                                            'description' => 'Deskripsi Penghargaan 4.',
-                                            'date' => '04-04-2024',
-                                            'detail' => 'Detail Penghargaan 4.'
-                                        ],
-                                        (object)[
-                                            'image' => 'sample_image/Sekolah-SD.jpg',
-                                            'title' => 'Penghargaan 5',
-                                            'description' => 'Deskripsi Penghargaan 5.',
-                                            'date' => '05-05-2024',
-                                            'detail' => 'Detail Penghargaan 5.'
-                                        ],
-                                        (object)[
-                                            'image' => 'sample_image/Sekolah-SD.jpg',
-                                            'title' => 'Penghargaan 6',
-                                            'description' => 'Deskripsi Penghargaan 6.',
-                                            'date' => '06-06-2024',
-                                            'detail' => 'Detail Penghargaan 6.'
-                                        ],
-                                        (object)[
-                                            'image' => 'sample_image/Sekolah-SD.jpg',
-                                            'title' => 'Penghargaan 7',
-                                            'description' => 'Deskripsi Penghargaan 7.',
-                                            'date' => '07-07-2024',
-                                            'detail' => 'Detail Penghargaan 7.'
-                                        ],
-                                        (object)[
-                                            'image' => 'sample_image/Sekolah-SD.jpg',
-                                            'title' => 'Penghargaan 8',
-                                            'description' => 'Deskripsi Penghargaan 8.',
-                                            'date' => '08-08-2024',
-                                            'detail' => 'Detail Penghargaan 8.'
-                                        ],
-                                        (object)[
-                                            'image' => 'sample_image/Sekolah-SD.jpg',
-                                            'title' => 'Penghargaan 9',
-                                            'description' => 'Deskripsi Penghargaan 9.',
-                                            'date' => '09-09-2024',
-                                            'detail' => 'Detail Penghargaan 9.'
-                                        ],
-                                        (object)[
-                                            'image' => 'sample_image/Sekolah-SD.jpg',
-                                            'title' => 'Penghargaan 10',
-                                            'description' => 'Deskripsi Penghargaan 10.',
-                                            'date' => '10-10-2024',
-                                            'detail' => 'Detail Penghargaan 10.'
-                                        ],
-                                        (object)[
-                                            'image' => 'sample_image/Sekolah-SD.jpg',
-                                            'title' => 'Penghargaan 11',
-                                            'description' => 'Deskripsi Penghargaan 11.',
-                                            'date' => '11-11-2024',
-                                            'detail' => 'Detail Penghargaan 11.'
-                                        ],
-                                        (object)[
-                                            'image' => 'sample_image/Sekolah-SD.jpg',
-                                            'title' => 'Penghargaan 12',
-                                            'description' => 'Deskripsi Penghargaan 12.',
-                                            'date' => '12-12-2024',
-                                            'detail' => 'Detail Penghargaan 12.'
-                                        ]
-                                    ];
-                                @endphp
-                                @foreach($activities as $index => $activity)
+                                @foreach($penghargaan as $index => $activity)
                                     @if($index < 6)
                                         <div class="col-md-6 col-lg-6 mb-4 activity-card" data-page="1" style="transition: transform 0.3s, opacity 0.3s;">
                                             <div class="card" style="transition: transform 0.3s;" data-toggle="modal" data-target="#activityModal{{ $index + 1 }}">
-                                                <img src="{{ asset($activity->image) }}" class="card-img-top" alt="{{ $activity->title }}" style="height: 150px; object-fit: cover; width: 100%; image-rendering: optimizeSpeed;">
+                                                <img src="{{ asset('kesiswaan_image/penghargaan_image/'.$activity->ph_foto) }}" class="card-img-top" alt="{{ $activity->ph_nama_kegiatan }}" style="height: 150px; object-fit: cover; width: 100%; image-rendering: optimizeSpeed;">
                                                 <div class="card-body">
-                                                    <h5 class="card-title">{{ $activity->title }}</h5>
-                                                    <p class="card-text">{{ $activity->description }}</p>
-                                                    <p class="card-text text-right"><small class="text-muted">{{ $activity->date }}</small></p>
+                                                    <h5 class="card-title">{{ $activity->ph_nama_kegiatan }}</h5>
+                                                    <p class="card-text">{{ $activity->ph_deskripsi }}</p>
+                                                    <p class="card-text text-right"><small class="text-muted">{{ \Carbon\Carbon::parse($activity->ph_create_at)->format('d-m-Y') }}</small></p>
                                                 </div>
                                             </div>
                                         </div>
@@ -224,14 +148,14 @@
                                             <div class="modal-dialog modal-lg" role="document">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
-                                                        <h5 class="modal-title" id="activityModalLabel{{ $index }}">{{ $activity->title }}</h5>
+                                                        <h5 class="modal-title" id="activityModalLabel{{ $index }}">{{ $activity->ph_nama_kegiatan }}</h5>
                                                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                             <span aria-hidden="true">&times;</span>
                                                         </button>
                                                     </div>
                                                     <div class="modal-body">
-                                                        <img src="{{ asset($activity->image) }}" class="img-fluid mb-3" alt="{{ $activity->title }}">
-                                                        <p>{{ $activity->detail }}</p>
+                                                        <img src="{{ asset('kesiswaan_image/pembiasaan_image/'.$activity->ph_foto) }}" class="img-fluid mb-3" alt="{{ $activity->ph_nama_kegiatan }}">
+                                                        <p>{{ $activity->ph_deskripsi }}</p>
                                                     </div>
                                                     <div class="modal-footer">
                                                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -241,12 +165,12 @@
                                         </div>
                                     @elseif($index < 12)
                                         <div class="col-md-6 col-lg-6 mb-4 activity-card" data-page="2" style="display: none; transition: transform 0.3s, opacity 0.3s;">
-                                            <div class="card" style="transition: transform 0.3s;" data-toggle="modal" data-target="#activityModal{{ $index }}">
-                                                <img src="{{ asset($activity->image) }}" class="card-img-top" alt="{{ $activity->title }}" style="height: 150px; object-fit: cover; width: 100%; image-rendering: optimizeSpeed;">
+                                            <div class="card" style="transition: transform 0.3s;" data-toggle="modal" data-target="#activityModal{{ $index + 1 }}">
+                                                <img src="{{ asset('kesiswaan_image/pembiasaan_image/'.$activity->ph_foto) }}" class="card-img-top" alt="{{ $activity->ph_nama_kegiatan }}" style="height: 150px; object-fit: cover; width: 100%; image-rendering: optimizeSpeed;">
                                                 <div class="card-body">
-                                                    <h5 class="card-title">{{ $activity->title }}</h5>
-                                                    <p class="card-text">{{ $activity->description }}</p>
-                                                    <p class="card-text text-right"><small class="text-muted">{{ $activity->date }}</small></p>
+                                                    <h5 class="card-title">{{ $activity->ph_nama_kegiatan }}</h5>
+                                                    <p class="card-text">{{ $activity->ph_deskripsi }}</p>
+                                                    <p class="card-text text-right"><small class="text-muted">{{ \Carbon\Carbon::parse($activity->ph_create_at)->format('d-m-Y') }}</small></p>
                                                 </div>
                                             </div>
                                         </div>
@@ -257,8 +181,9 @@
                                 <nav aria-label="Page navigation example">
                                     <ul class="pagination justify-content-center">
                                         <li class="page-item"><a class="page-link" href="#" data-page="prev">Previous</a></li>
-                                        <li class="page-item"><a class="page-link" href="#" data-page="1">1</a></li>
-                                        <li class="page-item"><a class="page-link" href="#" data-page="2">2</a></li>
+                                        @for ($i = 1; $i <= ceil($penghargaan->count() / 6); $i++)
+                                            <li class="page-item"><a class="page-link" href="#" data-page="{{ $i }}">{{ $i }}</a></li>
+                                        @endfor
                                         <li class="page-item"><a class="page-link" href="#" data-page="next">Next</a></li>
                                     </ul>
                                 </nav>
@@ -350,35 +275,35 @@
                                     $recentPosts = [
                                         (object)[
                                             'link' => '#',
-                                            'image' => 'sample_image/Sekolah-SD.jpg',
+                                            'image' => 'sample_image/Gambar.png',
                                             'title' => 'Judul Artikel 1',
                                             'description' => 'Deskripsi singkat artikel 1.',
                                             'date' => 'Tanggal 01-01-2024'
                                         ],
                                         (object)[
                                             'link' => '#',
-                                            'image' => 'sample_image/Sekolah-SD.jpg',
+                                            'image' => 'sample_image/Gambar.png',
                                             'title' => 'Judul Artikel 2',
                                             'description' => 'Deskripsi singkat artikel 2.',
                                             'date' => 'Tanggal 02-02-2024'
                                         ],
                                         (object)[
                                             'link' => '#',
-                                            'image' => 'sample_image/Sekolah-SD.jpg',
+                                            'image' => 'sample_image/Gambar.png',
                                             'title' => 'Judul Artikel 3',
                                             'description' => 'Deskripsi singkat artikel 3.',
                                             'date' => 'Tanggal 03-03-2024'
                                         ],
                                         (object)[
                                             'link' => '#',
-                                            'image' => 'sample_image/Sekolah-SD.jpg',
+                                            'image' => 'sample_image/Gambar.png',
                                             'title' => 'Judul Artikel 4',
                                             'description' => 'Deskripsi singkat artikel 4.',
                                             'date' => 'Tanggal 04-04-2024'
                                         ],
                                         (object)[
                                             'link' => '#',
-                                            'image' => 'sample_image/Sekolah-SD.jpg',
+                                            'image' => 'sample_image/Gambar.png',
                                             'title' => 'Judul Artikel 5',
                                             'description' => 'Deskripsi singkat artikel 5.',
                                             'date' => 'Tanggal 05-05-2024'
