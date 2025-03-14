@@ -1,19 +1,24 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Middleware\TrackVisitor;
+use Illuminate\Support\Facades\Auth;
 
-Route::get('/', function(){return redirect('/home');});
-Route::get('/home', 'UserController@home')->name('home');
-Route::get('/blog', 'UserController@blog')->name('blog');
-Route::get('/blog/{slug}', 'UserController@show_article')->name('blog.show');
-Route::get('/destination', 'UserController@destination')->name('destination');
-Route::get('/destination/{slug}', 'UserController@show_destination')->name('destination.show');
-Route::get('/contact', 'UserController@contact')->name('contact');
-Route::get('/berita', 'UserController@berita')->name('berita');
-Route::get('/tatatertib', 'UserController@tatatertib')->name('tatatertib');
-Route::get('/pembiasaan', 'UserController@pembiasaan')->name('pembiasaan');
-Route::get('/penghargaan', 'UserController@penghargaan')->name('penghargaan');
-Route::get('/strukturorganisasi', 'UserController@strukturorganisasi')->name('strukturorganisasi');
+Route::middleware([TrackVisitor::class])->group(function () {
+  Route::get('/', function(){return redirect('/home');});
+  Route::get('/home', 'UserController@home')->name('home');
+  Route::get('/blog', 'UserController@blog')->name('blog');
+  Route::get('/blog/{slug}', 'UserController@show_article')->name('blog.show');
+  Route::get('/destination', 'UserController@destination')->name('destination');
+  Route::get('/destination/{slug}', 'UserController@show_destination')->name('destination.show');
+  Route::get('/contact', 'UserController@contact')->name('contact');
+  Route::get('/berita', 'UserController@berita')->name('berita');
+  Route::get('/tatatertib', 'UserController@tatatertib')->name('tatatertib');
+  Route::get('/pembiasaan', 'UserController@pembiasaan')->name('pembiasaan');
+  Route::get('/penghargaan', 'UserController@penghargaan')->name('penghargaan');
+  Route::get('/ekstrakurikuler/{nama}', 'UserController@show')->name('ekstrakurikuler.show');
+  Route::get('/strukturorganisasi', 'UserController@strukturorganisasi')->name('strukturorganisasi');
+});
 
 Route::get('/ekstrakurikuler/pramuka', 'UserController@ekstrakurikuler_pramuka')->name('ekstrakurikuler.pramuka');
 Route::get('/ekstrakurikuler/kesenian', 'UserController@ekstrakurikuler_kesenian')->name('ekstrakurikuler.kesenian');
@@ -25,10 +30,7 @@ Route::get('/ekstrakurikuler/hoki', 'UserController@ekstrakurikuler_hoki')->name
 Route::get('/ekstrakurikuler/pmr', 'UserController@ekstrakurikuler_pmr')->name('ekstrakurikuler.pmr');
 Route::get('/ekstrakurikuler/renang', 'UserController@ekstrakurikuler_renang')->name('ekstrakurikuler.renang');
 
-Route::get('/ekstrakurikuler/{nama}', 'UserController@show')->name('ekstrakurikuler.show');
-
 Route::prefix('admin')->group(function(){
-
   Route::get('/', function(){
     return view('auth/login');
   });
@@ -41,7 +43,7 @@ Route::prefix('admin')->group(function(){
   Auth::routes();
   
   // Route Dashboard
-  Route::get('/dashboard', 'DashboardController@index')->middleware('auth');
+  Route::get('/dashboard', 'DashboardController@index')->name('dashboard')->middleware('auth');
   
   // route categories
   Route::get('/categories/{category}/restore', 'CategoryController@restore')->name('categories.restore');
@@ -56,15 +58,15 @@ Route::prefix('admin')->group(function(){
   // route destination
   Route::resource('/destinations', 'DestinationController')->middleware('auth');
     
-  // Route about
-  Route::get('/abouts', 'AboutController@index')->name('abouts.index')->middleware('auth');
-  Route::get('/abouts/{about}/edit', 'AboutController@edit')->name('abouts.edit')->middleware('auth');
-  Route::put('/abouts/{about}', 'AboutController@update')->name('abouts.update')->middleware('auth');
+  // Route abouts
+  Route::get('/abouts', 'AboutProfileController@index')->name('abouts.index')->middleware('auth');
+  Route::get('/abouts/create', 'AboutProfileController@create')->name('abouts.create')->middleware('auth');
+  Route::post('/abouts', 'AboutProfileController@store')->name('abouts.store')->middleware('auth');
+  Route::get('/abouts/{about}/edit', 'AboutProfileController@edit')->name('abouts.edit')->middleware('auth');
+  Route::put('/abouts/{about}', 'AboutProfileController@update')->name('abouts.update')->middleware('auth');
   
-  
-    
   // Route pembiasaan
-  Route::resource('pembiasaan', 'PembiasaanController')->except(['show']);;
+  Route::resource('pembiasaan', 'PembiasaanController')->except(['show']);
   Route::get('/kesiswaan/pembiasaan', 'PembiasaanController@index')->name('admin.kesiswaan.pembiasaan.index')->middleware('auth');
   Route::get('/kesiswaan/pembiasaan/create', 'PembiasaanController@create')->name('admin.kesiswaan.pembiasaan.create')->middleware('auth');
   Route::post('/kesiswaan/pembiasaan', 'PembiasaanController@store')->name('admin.kesiswaan.pembiasaan.store')->middleware('auth');
@@ -96,6 +98,7 @@ Route::prefix('admin')->group(function(){
   Route::delete('/kesiswaan/penghargaan/{penghargaan}/destroyrecycle', 'PenghargaanController@destroyrecycle')->name('admin.kesiswaan.penghargaan.destroyrecycle')->middleware('auth');
   Route::delete('/kesiswaan/penghargaan/{penghargaan}', 'PenghargaanController@destroy')->name('admin.kesiswaan.penghargaan.destroy')->middleware('auth');
   Route::post('/kesiswaan/penghargaan/{penghargaan}/restore', 'PenghargaanController@restore')->name('admin.kesiswaan.penghargaan.restore')->middleware('auth');
+  Route::post('/kesiswaan/penghargaan/{penghargaan}/restore', 'PenghargaanController@restore')->name('admin.kesiswaan.penghargaan.restore')->middleware('auth');
   Route::post('/kesiswaan/penghargaan/{penghargaan}/publish', 'PenghargaanController@publish')->name('publish.penghargaan')->middleware('auth');
   
   // Route ekstrakurikuler
@@ -121,4 +124,16 @@ Route::prefix('admin')->group(function(){
   Route::delete('/kesiswaan/tatatertib/{tatatertib}', 'TatatertibController@destroy')->name('admin.kesiswaan.tatatertib.destroy')->middleware('auth');
   Route::post('/kesiswaan/tatatertib/{tatatertib}/restore', 'TatatertibController@restore')->name('admin.kesiswaan.tatatertib.restore')->middleware('auth');
   Route::post('/kesiswaan/tatatertib/{tatatertib}/publish', 'TatatertibController@publish')->name('publish.tatatertib')->middleware('auth');
+
+  // Route about
+  Route::resource('about', 'AboutController')->except(['show']);
+  Route::get('/about', 'AboutController@index')->name('admin.about.index')->middleware('auth');
+  Route::get('/about/create', 'AboutController@create')->name('admin.about.create')->middleware('auth');
+  Route::post('/about', 'AboutController@store')->name('admin.about.store')->middleware('auth');
+  Route::get('/about/{about}/edit', 'AboutController@edit')->name('admin.about.edit')->middleware('auth');
+  Route::put('/about/{about}', 'AboutController@update')->name('admin.about.update')->middleware('auth');
+  Route::delete('/about/{about}/destroyrecycle', 'AboutController@destroyrecycle')->name('admin.about.destroyrecycle')->middleware('auth');
+  Route::delete('/about/{about}', 'AboutController@destroy')->name('admin.about.destroy')->middleware('auth');
+  Route::post('/about/{about}/restore', 'AboutController@restore')->name('admin.about.restore')->middleware('auth');
+  Route::post('/about/{about}/publish', 'AboutController@publish')->name('publish.about')->middleware('auth');
 });
