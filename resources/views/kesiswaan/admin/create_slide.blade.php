@@ -65,7 +65,9 @@
                             <div class="mb-3 mt-4">
                                 <a href="{{route(strtolower($menu) .'.index')}}" class="btn btn-md btn-secondary">Back</a>
                                 <button type="submit" name="status" value="draft" class="btn btn-md btn-warning">Draft</button>
-                                <button type="submit" name="status" value="publish" class="btn btn-md btn-success" {{ $publish==$menu ? 'disabled' : '' }}>Publish</button>
+                                @if(auth()->user()->role == 'admin')
+                                    <button type="submit" name="status" value="publish" class="btn btn-md btn-success" {{ $publish==$menu ? 'disabled' : '' }}>Publish</button>
+                                @endif
                             </div>
                         </div>
                     </form>

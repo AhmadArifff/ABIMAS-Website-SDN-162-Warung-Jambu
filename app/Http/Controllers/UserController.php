@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Category;
 use App\About;
+use App\AboutProfile;
 use App\Article;
 use App\Destination;
 use App\Pembiasaan;
@@ -26,9 +27,9 @@ class UserController extends Controller
     $ekstrakurikuler_all = Ekstrakurikuler::where('e_status', 'PUBLISH')->get();
     $data = [
       'categories' => Category::all(),
-      'about' => About::all()
+      'about' => AboutProfile::all()
     ];
-    return view('user/home', $data, ['ekstrakurikuler_all' => $ekstrakurikuler_all, 'menu' => 'home']);
+    return view('user/home', $data, ['ekstrakurikuler_all' => $ekstrakurikuler_all, 'menu' => 'Home']);
   }
 
   public function blog(Request $request)

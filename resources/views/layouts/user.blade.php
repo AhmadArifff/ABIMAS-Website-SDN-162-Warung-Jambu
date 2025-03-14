@@ -48,21 +48,21 @@
 
       <nav id="nav-menu-container">
         <ul class="nav-menu">
-            <li class="{{$url=='home'?'menu-active':''}}"><a href="{{url('home')}}">Home</a></li>
-            <li class="{{$url=='berita'?'menu-active':''}}"><a href="{{url('berita')}}">Berita</a></li>            
-            <li class="{{$url=='blog'?'menu-active':''}}"><a href="{{url('blog')}}">Blog</a></li>
-            <li class="{{$url=='destination'?'menu-active':''}}"><a href="{{url('destination')}}">Destination</a></li>
-            <li class="{{$url=='contact'?'menu-active':''}}"><a href="{{url('contact')}}">Contact </a></li>
+            <li class="{{$url=='home'?'menu-active':''}}"><a href="{{route('home')}}">Home</a></li>
+            <li class="{{$url=='berita'?'menu-active':''}}"><a href="{{route('berita')}}">Berita</a></li>            
+            <li class="{{$url=='blog'?'menu-active':''}}"><a href="{{route('blog')}}">Blog</a></li>
+            <li class="{{$url=='destination'?'menu-active':''}}"><a href="{{route('destination')}}">Destination</a></li>
+            <li class="{{$url=='contact'?'menu-active':''}}"><a href="{{route('contact')}}">Contact </a></li>
             <li class="menu-has-children {{$url=='kesiswaan'?'menu-active':''}}"><a href="#">Kesiswaan</a>
             <ul>
-              <li><a href="{{url('strukturorganisasi')}}">Struktur Organisasi SDN 163 Jambu Kiaracondong</a></li>
-              <li><a href="{{url('tatatertib')}}">Tatatertib Siswa SDN 163 Jambu Kiaracondong</a></li>
-              <li><a href="{{url('pembiasaan')}}">Pembiasaan</a></li>
-              <li><a href="{{url('penghargaan')}}">Penghargaan</a></li>
+              <li><a href="{{route('strukturorganisasi')}}">Struktur Organisasi SDN 163 Jambu Kiaracondong</a></li>
+              <li><a href="{{route('tatatertib')}}">Tatatertib Siswa SDN 163 Jambu Kiaracondong</a></li>
+              <li><a href="{{route('pembiasaan')}}">Pembiasaan</a></li>
+              <li><a href="{{route('penghargaan')}}">Penghargaan</a></li>
               <li class="menu-has-children"><a href="#">Ekstrakurikuler</a>
                 <ul>
                     @foreach($ekstrakurikuler_all as $ekstrakurikuler)
-                      <li><a href="{{ url('ekstrakurikuler/' . $ekstrakurikuler->e_nama_ekstrakurikuler) }}">{{ $ekstrakurikuler->e_nama_ekstrakurikuler }}</a></li>
+                      <li><a href="{{ route('ekstrakurikuler/' . $ekstrakurikuler->e_nama_ekstrakurikuler) }}">{{ $ekstrakurikuler->e_nama_ekstrakurikuler }}</a></li>
                     @endforeach
                     
                     {{-- <li><a href="{{ url('ekstrakurikuler/pramuka') }}">Pramuka</a></li>
@@ -133,7 +133,7 @@
             <div class="single-footer-widget">
               <h3 class="title">Informasi :</h3>
               <ul class="list-unstyled">
-                <li><a href="{{ url('/berita')}}" title="Berita">Berita</a></li>
+                <li><a href="{{ route('berita')}}" title="Berita">Berita</a></li>
                 <li><a href="https://www.sdnduajambu.sch.id/berita/artikel" title="Artikel">Artikel</a></li>
               </ul>
             </div>

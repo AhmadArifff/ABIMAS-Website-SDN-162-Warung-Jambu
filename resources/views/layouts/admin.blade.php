@@ -200,8 +200,8 @@
                     <li class="{{$url=='destinations'?'active':''}}">
                         <a href="{{url('admin/destinations')}}"><i class="menu-icon fa fa-paper-plane-o"></i>Destinations </a>
                     </li>
-                    <li class="{{$url=='abouts'?'active':''}}">
-                        <a href="{{url('admin/abouts')}}"><i class="menu-icon fa fa-user"></i>About </a>
+                    <li class="{{$url=='about'?'active':''}}">
+                        <a href="{{url('admin/about')}}"><i class="menu-icon fa fa-user"></i>About </a>
                     </li>
                     <li class="menu-item-has-children dropdown">
                         <a href="#" class="dropdown-toggle d-flex align-items-center" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

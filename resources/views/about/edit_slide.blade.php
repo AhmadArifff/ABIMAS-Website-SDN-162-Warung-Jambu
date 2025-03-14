@@ -78,7 +78,7 @@
                                 <div class="invalid-feedback"> {{$errors->first('k_foto_slide3')}}</div>
                             </div>
                             <div class="mb-3 mt-4">
-                                <a href="{{ route(strtolower($menu) .'.index') }}" class="btn btn-md btn-secondary">Back</a>
+                                <a href="{{ route('admin.'.strtolower($menu) .'.index') }}" class="btn btn-md btn-secondary">Back</a>
                                 <button type="submit" name="status" value="draft" class="btn btn-md btn-warning">Draft</button>
                                 @if(auth()->user()->role == 'admin')
                                     <button type="submit" name="status" value="publish" class="btn btn-md btn-success" {{ $isPublished && $kesiswaan->k_status !== 'PUBLISH' ? 'disabled' : '' }}>Publish</button>

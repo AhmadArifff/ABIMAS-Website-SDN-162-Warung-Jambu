@@ -13,6 +13,15 @@ use Illuminate\Support\Facades\File;
 
 class PembiasaanController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware(function ($request, $next) {
+            if (auth()->user()->role !== 'admin' && auth()->user()->role !== 'guru') {
+                return redirect()->route('dashboard')->withErrors(['error' => 'Anda tidak memiliki akses ke halaman ini']);
+            }
+            return $next($request);
+        });
+    }
     public function index(Request $request)
     {
         $menu = 'Pembiasaan';
