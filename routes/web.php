@@ -4,8 +4,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\TrackVisitor;
 use Illuminate\Support\Facades\Auth;
 
-Route::middleware([TrackVisitor::class])->group(function () {
-  Route::get('/', function(){return redirect('/home');});
+Route::get('/', function(){ return redirect('/home'); });
+
+Route::middleware(['trackvisitor'])->group(function () {
   Route::get('/home', 'UserController@home')->name('home');
   Route::get('/blog', 'UserController@blog')->name('blog');
   Route::get('/blog/{slug}', 'UserController@show_article')->name('blog.show');
@@ -31,17 +32,19 @@ Route::get('/ekstrakurikuler/pmr', 'UserController@ekstrakurikuler_pmr')->name('
 Route::get('/ekstrakurikuler/renang', 'UserController@ekstrakurikuler_renang')->name('ekstrakurikuler.renang');
 
 Route::prefix('admin')->group(function(){
-  Route::get('/', function(){
-    return view('auth/login');
-  });
-  
-  // handle route register
-  Route::match(["GET", "POST"], "/register", function(){ 
-    return redirect("/login"); 
-  })->name("register");
-  
+  Route::get('/login', 'Auth\LoginController@showLoginForm')->name('login')->withoutMiddleware(['trackvisitor']);
+  Route::post('/login', 'Auth\LoginController@login')->name('login.post')->withoutMiddleware(['trackvisitor']);
+  Route::post('/logout', 'Auth\LoginController@logout')->name('logout')->withoutMiddleware(['trackvisitor']);
+
+  Route::get('/', function () {
+    return redirect()->route('dashboard');
+  })->middleware('auth');
+
+  Route::match(['GET', 'POST'], '/register', function () {
+    return redirect('/login');
+  })->name('register')->withoutMiddleware(['trackvisitor']);
+
   Auth::routes();
-  
   // Route Dashboard
   Route::get('/dashboard', 'DashboardController@index')->name('dashboard')->middleware('auth');
   
@@ -57,7 +60,7 @@ Route::prefix('admin')->group(function(){
   
   // route destination
   Route::resource('/destinations', 'DestinationController')->middleware('auth');
-    
+  
   // Route abouts
   Route::get('/abouts', 'AboutProfileController@index')->name('abouts.index')->middleware('auth');
   Route::get('/abouts/create', 'AboutProfileController@create')->name('abouts.create')->middleware('auth');
@@ -136,4 +139,16 @@ Route::prefix('admin')->group(function(){
   Route::delete('/about/{about}', 'AboutController@destroy')->name('admin.about.destroy')->middleware('auth');
   Route::post('/about/{about}/restore', 'AboutController@restore')->name('admin.about.restore')->middleware('auth');
   Route::post('/about/{about}/publish', 'AboutController@publish')->name('publish.about')->middleware('auth');
+
+  // Route berita
+  Route::resource('berita', 'BeritaController')->except(['show']);
+  Route::get('/berita', 'BeritaController@index')->name('admin.berita.index')->middleware('auth');
+  Route::get('/berita/create', 'BeritaController@create')->name('admin.berita.create')->middleware('auth');
+  Route::post('/berita', 'BeritaController@store')->name('admin.berita.store')->middleware('auth');
+  Route::get('/berita/{berita}/edit', 'BeritaController@edit')->name('admin.berita.edit')->middleware('auth');
+  Route::put('/berita/{berita}', 'BeritaController@update')->name('admin.berita.update')->middleware('auth');
+  Route::delete('/berita/{berita}/destroyrecycle', 'BeritaController@destroyrecycle')->name('admin.berita.destroyrecycle')->middleware('auth');
+  Route::delete('/berita/{berita}', 'BeritaController@destroy')->name('admin.berita.destroy')->middleware('auth');
+  Route::post('/berita/{berita}/restore', 'BeritaController@restore')->name('admin.berita.restore')->middleware('auth');
+  Route::post('/berita/{berita}/publish', 'BeritaController@publish')->name('publish.berita')->middleware('auth');
 });
