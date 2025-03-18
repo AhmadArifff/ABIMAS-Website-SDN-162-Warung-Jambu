@@ -177,21 +177,6 @@
             </div>
         </div>
     </section>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const cards = document.querySelectorAll('.activity-card');
-            cards.forEach((card, index) => {
-                card.style.opacity = 0;
-                card.style.transform = 'translateY(50px)';
-                setTimeout(() => {
-                    card.style.transition = 'transform 1s, opacity 1s';
-                    card.style.opacity = 1;
-                    card.style.transform = 'translateY(0)';
-                }, index * 200);
-            });
-        });
-    </script>
     <style>
         @media (min-width: 992px) {
             .activity-card {
