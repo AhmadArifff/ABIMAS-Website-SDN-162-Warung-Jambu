@@ -13,6 +13,7 @@
 @endsection
 
 @section('content')
+    @if (auth()->user()->role == 'admin')
     <div class="row">
         <div class="col-md-12">
             <div class="card">
@@ -176,10 +177,11 @@
                         </tfoot>
                     </table>
                 </div>    
-            @endif
+                @endif
             </div>
         </div>
     </div>
+    @endif
 
     <div class="row">
         <div class="col-md-12">
@@ -292,15 +294,18 @@
                                 @if (Request::get('status') != 'hapus' && $item->p_status == 'hapus')
                                     @continue
                                 @endif
+                                @if (auth()->user()->role == 'guru' && $item->p_create_id != auth()->user()->id)
+                                    @continue
+                                @endif
                                 <tr>
                                     <td>{{$index+1}}</td>
                                     <td>{{$item->p_nama_kegiatan}}</td>
                                     <td>{{$item->p_deskripsi}}</td>
                                     <td>
                                         @if($item->p_foto)
-                                        <img src="{{ asset('kesiswaan_image/'. strtolower($menu) .'_image/' . $item->p_foto) }}" alt="Foto" width="50">
+                                            <img src="{{ asset('kesiswaan_image/pembiasaan_image/' . $item->p_foto) }}" alt="Foto" width="50">
                                         @else
-                                        No Image
+                                            No Image
                                         @endif
                                     </td>
                                     @if ($item->p_status == 'TIDAK')
@@ -338,6 +343,9 @@
                         <tbody>
                             @foreach ($penghargaan as $index => $item)
                                 @if (Request::get('status') != 'hapus' && $item->ph_status == 'hapus')
+                                    @continue
+                                @endif
+                                @if (auth()->user()->role == 'guru' && $item->ph_create_id != auth()->user()->id)
                                     @continue
                                 @endif
                                 <tr>
@@ -392,6 +400,9 @@
                         <tbody>
                             @foreach ($ekstrakurikuler as $index => $item)
                                 @if (Request::get('status') != 'hapus' && $item->e_status == 'hapus')
+                                    @continue
+                                @endif
+                                @if (auth()->user()->role == 'guru' && $item->e_create_id != auth()->user()->id)
                                     @continue
                                 @endif
                                 <tr>
@@ -463,6 +474,9 @@
                         <tbody>
                             @foreach ($tatatertib as $index => $item)
                                 @if (Request::get('status') != 'hapus' && $item->t_status == 'hapus')
+                                    @continue
+                                @endif
+                                @if (auth()->user()->role == 'guru' && $item->t_create_id != auth()->user()->id)
                                     @continue
                                 @endif
                                 <tr>

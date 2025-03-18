@@ -10,6 +10,7 @@ use App\Penghargaan;
 use App\Tatatertib;
 use App\User;
 use App\Pembiasaan;
+use App\AboutSejarah;
 
 class AboutController extends Controller
 {
@@ -66,9 +67,10 @@ class AboutController extends Controller
         $kesiswaan->where('k_nama_menu', $menu);
         $about = $about->paginate(10);
         $kesiswaan = $kesiswaan->paginate(10);
-        $pembiasaan_all=Pembiasaan::where('p_status', 'DRAFT')->get();
+        $pembiasaan_all = Pembiasaan::where('p_status', 'DRAFT')->get();
+        $aboutSejarah_all = AboutSejarah::all();
     
-        return view('about.index', compact('about', 'kesiswaan', 'ekstrakurikuler', 'penghargaan', 'tatatertib', 'user', 'menu', 'kesiswaa_all', 'ekstrakurikuler_all', 'penghargaan_all', 'tatatertib_all', 'user_all', 'about_all', 'pembiasaan_all'));
+        return view('about.index', compact('about', 'kesiswaan', 'ekstrakurikuler', 'penghargaan', 'tatatertib', 'user', 'menu', 'kesiswaa_all', 'ekstrakurikuler_all', 'penghargaan_all', 'tatatertib_all', 'user_all', 'about_all', 'pembiasaan_all', 'aboutSejarah_all'));
     }
 
     public function create(Request $request)
@@ -100,8 +102,9 @@ class AboutController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'visi' => 'required|string|max:255',
-            'misi' => 'required|string|max:255',
+            'visi.*' => 'required|string|max:255',
+            'misi.*' => 'required|string|max:255',
+            'sejarah' => 'required|string',
         ]);
 
         $kesiswaan = Kesiswaan::where('k_status', 'PUBLISH')->first();
@@ -109,15 +112,25 @@ class AboutController extends Controller
             return redirect()->back()->withErrors(['error' => 'Tidak Ada Data Slide Dengan Nama Slide "' . $kesiswaan->k_nama_menu . '" Yang PUBLISH']);
         }
 
-        $about = new About;
-        $about->k_id = $request->k_id;
-        $about->a_create_id = auth()->user()->id; // Set a_create_id based on the logged-in user
-        $about->a_visi = $request->visi;
-        $about->a_misi = $request->misi;
-        $about->a_status = $request->input('status'); // Set a_status based on the button clicked
+        // Create AboutSejarah entry
+        $aboutSejarah = new AboutSejarah;
+        $aboutSejarah->k_id = $request->k_id;
+        $aboutSejarah->as_create_id = auth()->user()->id; // Set as_create_id based on the logged-in user
+        $aboutSejarah->as_sejarah = $request->sejarah;
+        $aboutSejarah->save();
 
-        $about->save();
-        return redirect()->route('admin.kesiswaan.about.index')->with('success-isi-content', 'Data Isi Content '. $kesiswaan->k_nama_menu .' Telah Berhasil Ditambahkan');
+        foreach ($request->visi as $index => $visi) {
+            $about = new About;
+            $about->as_id = $aboutSejarah->as_id; // Link to AboutSejarah
+            $about->k_id = $request->input('k_id');
+            $about->a_create_id = auth()->user()->id; // Set a_create_id based on the logged-in user
+            $about->a_visi = $visi;
+            $about->a_misi = $request->misi[$index];
+            $about->a_status = $request->input('status'); // Set a_status based on the button clicked
+            $about->save();
+        }
+
+        return redirect()->route('admin.about.index')->with('success-isi-content', 'Data Isi Content '. $kesiswaan->k_nama_menu .' Telah Berhasil Ditambahkan');
     }
 
     public function edit($id)
@@ -136,40 +149,60 @@ class AboutController extends Controller
         $penghargaan_all = Penghargaan::where('ph_status', 'DRAFT')->get();
         $tatatertib_all = Tatatertib::where('t_status', 'DRAFT')->get();
         $user_all = User::all();
+        $pembiasaan_all=Pembiasaan::where('p_status', 'DRAFT')->get();
 
         $menu = 'About';
         $about = About::findOrFail($id);
+        $aboutSejarah = AboutSejarah::where('as_id', $about->as_id)->first();
         $kesiswaan = Kesiswaan::where('k_nama_menu', $menu)->where('k_status', 'PUBLISH')->first();
         
         if (!$kesiswaan) {
             return redirect()->back()->withErrors(['error' => 'Data Slide Harus Ada Status Publish!']);
         }
         
-        return view('kesiswaan/admin.edit', ['about' => $about, 'kesiswaan' => $kesiswaan, 'menu' => $menu, 'kesiswaa_all' => $kesiswaa_all, 'ekstrakurikuler_all' => $ekstrakurikuler_all, 'penghargaan_all' => $penghargaan_all, 'tatatertib_all' => $tatatertib_all, 'user_all' => $user_all, 'about_all' => $about_all]);
+        return view('about.edit', [
+            'about' => $about, 
+            'aboutSejarah' => $aboutSejarah,
+            'kesiswaan' => $kesiswaan, 
+            'menu' => $menu, 
+            'kesiswaa_all' => $kesiswaa_all, 
+            'ekstrakurikuler_all' => $ekstrakurikuler_all, 
+            'penghargaan_all' => $penghargaan_all, 
+            'tatatertib_all' => $tatatertib_all, 
+            'user_all' => $user_all, 
+            'about_all' => $about_all,
+            'pembiasaan_all' => $pembiasaan_all
+        ]);
     }
 
     public function update(Request $request, $id)
     {
         $about = About::findOrFail($id);
+        $aboutSejarah = AboutSejarah::where('as_id', $about->as_id)->first();
 
         $request->validate([
-            'visi' => 'required|string|max:255',
-            'misi' => 'required|string|max:255',
+            'a_visi' => 'required|string|max:255',
+            'a_misi' => 'required|string|max:255',
+            'as_sejarah' => 'required|string',
         ]);
-        
+
         $kesiswaan = Kesiswaan::where('k_status', 'PUBLISH')->first();
         if (!$kesiswaan) {
             return redirect()->back()->withErrors(['error' => 'Data Manage Content Slide Pembiasaan Tidak Terpublish! Tolong Publish Terlebih Dahulu!']);
         }
+
         $about->k_id = $request->k_id;
         $about->a_update_id = auth()->user()->id; // Set a_update_id based on the logged-in user
-        $about->a_visi = $request->visi;
-        $about->a_misi = $request->misi;
+        $about->a_visi = $request->a_visi;
+        $about->a_misi = $request->a_misi;
         $about->a_status = $request->input('status'); // Set a_status based on the button clicked
+
+        $aboutSejarah->as_sejarah = $request->as_sejarah;
+        $aboutSejarah->save();
 
         try {
             $about->save();
-            return redirect()->route('admin.kesiswaan.about.index')->with('success-isi-content', 'Data Isi Content '. $kesiswaan->k_nama_menu .' Telah Berhasil Diubah');
+            return redirect()->route('admin.about.index')->with('success-isi-content', 'Data Isi Content '. $kesiswaan->k_nama_menu .' Telah Berhasil Diubah');
         } catch (\Exception $e) {
             return redirect()->back()->withErrors(['error' => 'Failed to update About: ' . $e->getMessage()]);
         }

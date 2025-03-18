@@ -26,6 +26,7 @@ class About extends Model
     public $timestamps = false;
 
     protected $fillable = [
+        'as_id',
         'k_id',
         'a_create_id',
         'a_update_id',
@@ -41,6 +42,11 @@ class About extends Model
     public function kesiswaan()
     {
         return $this->belongsTo('App\Kesiswaan', 'k_id', 'k_id');
+    }
+
+    public function sejarah()
+    {
+        return $this->belongsTo('App\AboutSejarah', 'as_id', 'as_id');
     }
 
     public function creator()
