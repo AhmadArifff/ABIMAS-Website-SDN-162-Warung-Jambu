@@ -3,7 +3,7 @@
 @section('header')
     <style>
         #hero{
-            background: url('{{asset('user/images/destination.png')}}') top center;
+            background: url('{{asset('user/images/beasiswa.png')}}') top center;
             background-repeat: no-repeat;
             width:100%;
             background-size:cover;
@@ -23,8 +23,7 @@
 @endsection
 
 @section('hero')
-    <h1>Destinasi Jogja-Travel</h1>
-    <h2>Cek semua destinasi-destinasi yang dapat anda kunjungi untuk liburan anda</h2>
+    <h1>INFORMASI BEASISWA</h1>
 @endsection
 
 @section('content')
@@ -37,21 +36,21 @@
 
               {{-- <div class=" wow fadeInUp">
                 <div class="section-header">
-                  <h3 class="section-title">Daftar Destinasi</h3>
+                  <h3 class="section-title">Informasi Beasiswa</h3>
                   <p class="section-description">Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque</p>
                 </div>
               </div>
               <div class=" wow fadeInUp">
                 <div class="row justify-content-left">
-                  @foreach ($destinations as $destination)
+                  @foreach ($beasiswas as $beasiswa)
                     <div class="col-lg-4 col-md-6">
-                      <a href="{{route('destination.show', $destination->slug)}}" class="decoration-none">
+                      <a href="{{route('beasiswa.show', $beasiswa->slug)}}" class="decoration-none">
                           <div class="row">
-                            <div class="col-11 full-img" style="background-image: url({{asset('destinations_image/'.$destination->image)}})"></div>
+                            <div class="col-11 full-img" style="background-image: url({{asset('beasiswas_image/'.$beasiswa->image)}})"></div>
                           </div>
                           <div class="row">
                             <div class="col px-0 pt-2">
-                              <h4 style="color: #666666 !important;">{{$destination->title}}</h4>
+                              <h4 style="color: #666666 !important;">{{$beasiswa->title}}</h4>
                             </div>
                           </div>
                         </a>
@@ -61,10 +60,10 @@
               </div> --}}
 
               @if (empty(request()->segment(2)) )
-                @component('user.component.all_destination', ['destinations'=> $destinations])
+                @component('user.component.all_beasiswa', ['beasiswas'=> $beasiswas])
                 @endcomponent
               @else
-                @component('user.component.single_destination', ['destination'=> $destinations])
+                @component('user.component.single_beasiswa', ['beasiswa'=> $beasiswas])
                 @endcomponent
               @endif
 
@@ -77,10 +76,10 @@
     </section>
       
       {{-- @if (empty(request()->segment(2)) )
-        @component('user.component.all_destination', ['destinations'=> $destinations])
+        @component('user.component.all_beasiswa', ['beasiswas'=> $beasiswas])
         @endcomponent
       @else
-        @component('user.component.single_destination', ['destination'=> $destinations])
+        @component('user.component.single_beasiswa', ['beasiswa'=> $beasiswas])
         @endcomponent
       @endif --}}
 
