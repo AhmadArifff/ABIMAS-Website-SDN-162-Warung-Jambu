@@ -252,46 +252,46 @@
                         <thead class="text-light" style="background-color:#33b751 !important">
                             <tr>
                                 <th width="12px">No</th>
-                                <th class="text-center">Visi</th>
-                                <th class="text-center">Misi</th>
-                                <th class="text-center">Sejarah</th>
+                                <th class="text-center">Nama Kegiatan</th>
+                                <th class="text-center">Deskripsi</th>
+                                <th class="text-center">Foto</th>
                                 <th class="text-center">Status</th>
                                 <th width="88px">Action</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($about as $index => $item)
-                                @if (Request::get('a_status') != 'hapus' && $item->a_status == 'hapus')
+                            @foreach ($berita as $index => $item)
+                                @if (Request::get('-isi-content-status') != 'hapus' && $item->b_foto == 'HAPUS')
                                     @continue
                                 @endif
                                 <tr>
                                     <td>{{$index+1}}</td>
-                                    <td>{{$item->a_visi}}</td>
-                                    <td>{{$item->a_misi}}</td>
+                                    <td>{{$item->b_nama_kegiatan}}</td>
+                                    <td>{{$item->b_deskripsi}}</td>
                                     <td>
-                                        @foreach ($aboutSejarah_all as $sejarah)
-                                            @if ($sejarah->as_id == $item->as_id)
-                                                {{$sejarah->as_sejarah}}
-                                            @endif
-                                        @endforeach
+                                        @if($item->b_foto)
+                                            <img src="{{ asset('berita_image/' . $item->b_foto) }}" alt="Foto" width="50">
+                                        @else
+                                            No Image
+                                        @endif
                                     </td>
-                                    <td>{{$item->a_status}}</td>
+                                    <td>{{$item->b_foto}}</td>
                                     <td>
-                                        @if ($item->a_status == 'HAPUS')
-                                            <form class="d-inline" method="POST" action="{{route('admin.about.restore', [$item->a_id])}}">
+                                        @if ($item->b_status == 'HAPUS')
+                                            <form class="d-inline" method="POST" action="{{route('admin.berita.restore', [$item->b_id])}}">
                                                 @csrf   
                                                 <button type="button" class="btn btn-sm btn-success btn-restore" title="Restore" data-toggle="modal" data-target="#restoreModal"><i class="fa fa-undo"></i></button>
                                             </form>
-                                            <form class="d-inline" method="POST" action="{{route('admin.about.destroy', [$item->a_id])}}" >
+                                            <form class="d-inline" method="POST" action="{{route('admin.berita.destroy', [$item->b_id])}}" >
                                                 @method('delete')
                                                 @csrf   
                                                 <button type="button" class="btn btn-sm btn-danger btn-delete-permanent" title="Delete" data-toggle="modal" data-target="#deletePermanentModal"><i class="fa fa-trash"></i></button>
                                             </form>
                                         @else
-                                            <form action="{{ route('admin.about.edit', [$item->a_id]) }}" method="GET" class="d-inline">
+                                            <form action="{{ route('admin.berita.edit', [$item->b_id]) }}" method="GET" class="d-inline">
                                                 <button type="submit" class="btn btn-sm btn-warning text-light" title="Edit"><i class="fa fa-pencil"></i></button>
                                             </form>
-                                            <form class="d-inline" method="POST" action="{{route('admin.about.destroyrecycle', [$item->a_id])}}" >
+                                            <form class="d-inline" method="POST" action="{{route('admin.berita.destroyrecycle', [$item->b_id])}}" >
                                                 @method('delete')
                                                 @csrf   
                                                 <button type="button" class="btn btn-sm btn-danger btn-delete-recycle" title="Delete" data-toggle="modal" data-target="#deleteRecycleModal"><i class="fa fa-trash"></i></button>
@@ -302,7 +302,7 @@
                             @endforeach
                         </tbody>
                         <tfoot>
-                            {{$about->appends(Request::all())->links()}}
+                            {{$berita->appends(Request::all())->links()}}
                         </tfoot>
                     </table>
                 </div>

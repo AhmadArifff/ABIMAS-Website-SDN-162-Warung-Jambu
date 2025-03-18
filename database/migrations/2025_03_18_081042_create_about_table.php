@@ -15,6 +15,7 @@ class CreateAboutTable extends Migration
     {
         Schema::create('about', function (Blueprint $table) {
             $table->bigIncrements('a_id');
+            $table->unsignedBigInteger('as_id')->index();
             $table->unsignedBigInteger('k_id')->index();
             $table->unsignedBigInteger('a_create_id')->index();
             $table->unsignedBigInteger('a_update_id')->nullable();
@@ -26,6 +27,7 @@ class CreateAboutTable extends Migration
             $table->timestamp('a_update_at')->useCurrent()->nullable();
             $table->timestamp('a_delete_at')->nullable();
             $table->foreign('k_id')->references('k_id')->on('kesiswaan')->onDelete('restrict');
+            $table->foreign('as_id')->references('as_id')->on('about_sejarah')->onDelete('restrict');
             $table->foreign('a_create_id')->references('id')->on('users')->onDelete('restrict');
             $table->foreign('a_update_id')->references('id')->on('users')->onDelete('restrict');
             $table->foreign('a_delete_id')->references('id')->on('users')->onDelete('restrict');
