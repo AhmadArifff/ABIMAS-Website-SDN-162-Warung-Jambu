@@ -3,16 +3,15 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\About;
+use App\Berita;
 use App\Kesiswaan;
 use App\Ekstrakurikuler;
 use App\Penghargaan;
 use App\Tatatertib;
 use App\User;
 use App\Pembiasaan;
-use App\AboutSejarah;
 
-class AboutController extends Controller
+class BeritaController extends Controller
 {
     public function __construct()
     {
@@ -26,8 +25,8 @@ class AboutController extends Controller
 
     public function index(Request $request)
     {
-        $menu = 'About';
-        $about = About::query();
+        $menu = 'Berita';
+        $berita = Berita::query();
         $kesiswaan = Kesiswaan::query();
         $ekstrakurikuler = Ekstrakurikuler::query();
         $penghargaan = Penghargaan::query();
@@ -35,9 +34,9 @@ class AboutController extends Controller
         $user = User::query();
         
         if ($request->get('-isi-content-status')) {
-            $about->where('a_status', $request->get('-isi-content-status'));
+            $berita->where('b_foto', $request->get('-isi-content-status'));
         } else {
-            $about->whereIn('a_status', ['PUBLISH', 'DRAFT', 'TIDAK']);
+            $berita->whereIn('b_foto', ['PUBLISH', 'DRAFT', 'TIDAK']);
         }
 
         if ($request->get('-isi-slide-status')) {
@@ -49,7 +48,7 @@ class AboutController extends Controller
         if ($request->get('k_keyword')) {
             $kesiswaan->where('k_judul_slide', 'LIKE', "%{$request->get('k_keyword')}%");
         }
-        $about_all = About::where('a_status', 'DRAFT')->get();
+        $berita_all = Berita::where('b_foto', 'DRAFT')->get();
         $publishedMenus = Kesiswaan::where('k_status', 'PUBLISH')->pluck('k_nama_menu')->toArray();
 
         $kesiswaa_all = Kesiswaan::where('k_status', 'DRAFT')
@@ -65,17 +64,16 @@ class AboutController extends Controller
         $tatatertib_all = Tatatertib::where('t_status', 'DRAFT')->get();
         $user_all = User::all();
         $kesiswaan->where('k_nama_menu', $menu);
-        $about = $about->paginate(10);
+        $berita = $berita->paginate(10);
         $kesiswaan = $kesiswaan->paginate(10);
         $pembiasaan_all = Pembiasaan::where('p_status', 'DRAFT')->get();
-        $aboutSejarah_all = AboutSejarah::all();
     
-        return view('about.index', compact('about', 'kesiswaan', 'ekstrakurikuler', 'penghargaan', 'tatatertib', 'user', 'menu', 'kesiswaa_all', 'ekstrakurikuler_all', 'penghargaan_all', 'tatatertib_all', 'user_all', 'about_all', 'pembiasaan_all', 'aboutSejarah_all'));
+        return view('berita.index', compact('berita', 'kesiswaan', 'ekstrakurikuler', 'penghargaan', 'tatatertib', 'user', 'menu', 'kesiswaa_all', 'ekstrakurikuler_all', 'penghargaan_all', 'tatatertib_all', 'user_all', 'berita_all', 'pembiasaan_all'));
     }
 
     public function create(Request $request)
     {
-        $about_all = About::where('a_status', 'DRAFT')->get();
+        $berita_all = Berita::where('b_foto', 'DRAFT')->get();
         $publishedMenus = Kesiswaan::where('k_status', 'PUBLISH')->pluck('k_nama_menu')->toArray();
 
         $kesiswaa_all = Kesiswaan::where('k_status', 'DRAFT')
@@ -88,7 +86,7 @@ class AboutController extends Controller
             ->get();
         $penghargaan_all = Penghargaan::where('ph_status', 'DRAFT')->get();
         $tatatertib_all = Tatatertib::where('t_status', 'DRAFT')->get();
-        $pembiasaan_all=Pembiasaan::where('p_status', 'DRAFT')->get();
+        $pembiasaan_all = Pembiasaan::where('p_status', 'DRAFT')->get();
         $user_all = User::all();
 
         $menu = $request->query('menu');
@@ -96,15 +94,14 @@ class AboutController extends Controller
         if (!$kesiswaan) {
             return redirect()->back()->withErrors(['error' => 'Data Manage Content Slide Pembiasaan Tidak Terpublish! Tolong Publish Terlebih Dahulu!']);
         }
-        return view('about.create', compact('kesiswaan', 'menu', 'kesiswaa_all', 'ekstrakurikuler_all', 'penghargaan_all', 'tatatertib_all', 'user_all', 'about_all', 'pembiasaan_all'));
+        return view('berita.create', compact('kesiswaan', 'menu', 'kesiswaa_all', 'ekstrakurikuler_all', 'penghargaan_all', 'tatatertib_all', 'user_all', 'berita_all', 'pembiasaan_all'));
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            'visi.*' => 'required|string|max:255',
-            'misi.*' => 'required|string|max:255',
-            'sejarah' => 'required|string',
+            'nama_kegiatan' => 'required|string|max:255',
+            'deskripsi' => 'required|string',
         ]);
 
         $kesiswaan = Kesiswaan::where('k_status', 'PUBLISH')->first();
@@ -112,30 +109,20 @@ class AboutController extends Controller
             return redirect()->back()->withErrors(['error' => 'Tidak Ada Data Slide Dengan Nama Slide "' . $kesiswaan->k_nama_menu . '" Yang PUBLISH']);
         }
 
-        // Create AboutSejarah entry
-        $aboutSejarah = new AboutSejarah;
-        $aboutSejarah->k_id = $request->k_id;
-        $aboutSejarah->as_create_id = auth()->user()->id; // Set as_create_id based on the logged-in user
-        $aboutSejarah->as_sejarah = $request->sejarah;
-        $aboutSejarah->save();
+        $berita = new Berita;
+        $berita->k_id = $request->k_id;
+        $berita->b_create_id = auth()->user()->id; // Set b_create_id based on the logged-in user
+        $berita->b_nama_kegiatan = $request->nama_kegiatan;
+        $berita->b_deskripsi = $request->deskripsi;
+        $berita->b_foto = $request->input('status'); // Set b_foto based on the button clicked
 
-        foreach ($request->visi as $index => $visi) {
-            $about = new About;
-            $about->as_id = $aboutSejarah->as_id; // Link to AboutSejarah
-            $about->k_id = $request->input('k_id');
-            $about->a_create_id = auth()->user()->id; // Set a_create_id based on the logged-in user
-            $about->a_visi = $visi;
-            $about->a_misi = $request->misi[$index];
-            $about->a_status = $request->input('status'); // Set a_status based on the button clicked
-            $about->save();
-        }
-
-        return redirect()->route('admin.about.index')->with('success-isi-content', 'Data Isi Content '. $kesiswaan->k_nama_menu .' Telah Berhasil Ditambahkan');
+        $berita->save();
+        return redirect()->route('admin.kesiswaan.berita.index')->with('success-isi-content', 'Data Isi Content '. $kesiswaan->k_nama_menu .' Telah Berhasil Ditambahkan');
     }
 
     public function edit($id)
     {
-        $about_all = About::where('a_status', 'DRAFT')->get();
+        $berita_all = Berita::where('b_foto', 'DRAFT')->get();
         $publishedMenus = Kesiswaan::where('k_status', 'PUBLISH')->pluck('k_nama_menu')->toArray();
 
         $kesiswaa_all = Kesiswaan::where('k_status', 'DRAFT')
@@ -149,108 +136,88 @@ class AboutController extends Controller
         $penghargaan_all = Penghargaan::where('ph_status', 'DRAFT')->get();
         $tatatertib_all = Tatatertib::where('t_status', 'DRAFT')->get();
         $user_all = User::all();
-        $pembiasaan_all=Pembiasaan::where('p_status', 'DRAFT')->get();
 
-        $menu = 'About';
-        $about = About::findOrFail($id);
-        $aboutSejarah = AboutSejarah::where('as_id', $about->as_id)->first();
+        $menu = 'Berita';
+        $berita = Berita::findOrFail($id);
         $kesiswaan = Kesiswaan::where('k_nama_menu', $menu)->where('k_status', 'PUBLISH')->first();
         
         if (!$kesiswaan) {
             return redirect()->back()->withErrors(['error' => 'Data Slide Harus Ada Status Publish!']);
         }
         
-        return view('about.edit', [
-            'about' => $about, 
-            'aboutSejarah' => $aboutSejarah,
-            'kesiswaan' => $kesiswaan, 
-            'menu' => $menu, 
-            'kesiswaa_all' => $kesiswaa_all, 
-            'ekstrakurikuler_all' => $ekstrakurikuler_all, 
-            'penghargaan_all' => $penghargaan_all, 
-            'tatatertib_all' => $tatatertib_all, 
-            'user_all' => $user_all, 
-            'about_all' => $about_all,
-            'pembiasaan_all' => $pembiasaan_all
-        ]);
+        return view('kesiswaan/admin.edit', ['berita' => $berita, 'kesiswaan' => $kesiswaan, 'menu' => $menu, 'kesiswaa_all' => $kesiswaa_all, 'ekstrakurikuler_all' => $ekstrakurikuler_all, 'penghargaan_all' => $penghargaan_all, 'tatatertib_all' => $tatatertib_all, 'user_all' => $user_all, 'berita_all' => $berita_all]);
     }
 
     public function update(Request $request, $id)
     {
-        $about = About::findOrFail($id);
-        $aboutSejarah = AboutSejarah::where('as_id', $about->as_id)->first();
+        $berita = Berita::findOrFail($id);
 
         $request->validate([
-            'a_visi' => 'required|string|max:255',
-            'a_misi' => 'required|string|max:255',
-            'as_sejarah' => 'required|string',
+            'nama_kegiatan' => 'required|string|max:255',
+            'deskripsi' => 'required|string',
         ]);
-
+        
         $kesiswaan = Kesiswaan::where('k_status', 'PUBLISH')->first();
         if (!$kesiswaan) {
             return redirect()->back()->withErrors(['error' => 'Data Manage Content Slide Pembiasaan Tidak Terpublish! Tolong Publish Terlebih Dahulu!']);
         }
-
-        $about->k_id = $request->k_id;
-        $about->a_update_id = auth()->user()->id; // Set a_update_id based on the logged-in user
-        $about->a_visi = $request->a_visi;
-        $about->a_misi = $request->a_misi;
-        $about->a_status = $request->input('status'); // Set a_status based on the button clicked
-
-        $aboutSejarah->as_sejarah = $request->as_sejarah;
-        $aboutSejarah->save();
+        $berita->k_id = $request->k_id;
+        $berita->b_update_id = auth()->user()->id; // Set b_update_id based on the logged-in user
+        $berita->b_nama_kegiatan = $request->nama_kegiatan;
+        $berita->b_deskripsi = $request->deskripsi;
+        $berita->b_foto = $request->input('status'); // Set b_foto based on the button clicked
 
         try {
-            $about->save();
-            return redirect()->route('admin.about.index')->with('success-isi-content', 'Data Isi Content '. $kesiswaan->k_nama_menu .' Telah Berhasil Diubah');
+            $berita->save();
+            return redirect()->route('admin.kesiswaan.berita.index')->with('success-isi-content', 'Data Isi Content '. $kesiswaan->k_nama_menu .' Telah Berhasil Diubah');
         } catch (\Exception $e) {
-            return redirect()->back()->withErrors(['error' => 'Failed to update About: ' . $e->getMessage()]);
+            return redirect()->back()->withErrors(['error' => 'Failed to update Berita: ' . $e->getMessage()]);
         }
     }
 
     public function destroy($id)
     {
-        $about = About::findOrFail($id);
-        $about->delete();
-        return redirect()->route('admin.kesiswaan.about.index')->with('success-isi-content', 'Data Isi Content '. $about->a_visi .' Telah Berhasil Di Hapus Secara Permanen');
+        $berita = Berita::findOrFail($id);
+        $berita->delete();
+        return redirect()->route('admin.kesiswaan.berita.index')->with('success-isi-content', 'Data Isi Content '. $berita->b_nama_kegiatan .' Telah Berhasil Di Hapus Secara Permanen');
     }
 
     public function destroyrecycle($id)
     {
-        $about = About::findOrFail($id);
-        $about->a_delete_id = auth()->user()->id; // Set a_delete_id based on the logged-in user
-        $about->a_delete_at = now()->setTimezone('Asia/Jakarta'); // Set a_delete_at to the current time in Indonesia
-        $about->a_status = 'HAPUS'; // Set a_status to "HAPUS"
-        $about->save();
-        return redirect()->route('admin.kesiswaan.about.index')->with('success-isi-content', 'Data Isi Content '. $about->a_visi .' Telah Berhasil Di Hapus Dan Ada Di Tampilan Status DELETE');
+        $berita = Berita::findOrFail($id);
+        $berita->b_delete_id = auth()->user()->id; // Set b_delete_id based on the logged-in user
+        $berita->b_delete_at = now()->setTimezone('Asia/Jakarta'); // Set b_delete_at to the current time in Indonesia
+        $berita->b_foto = 'HAPUS'; // Set b_foto to "HAPUS"
+        $berita->save();
+        return redirect()->route('admin.kesiswaan.berita.index')->with('success-isi-content', 'Data Isi Content '. $berita->b_nama_kegiatan .' Telah Berhasil Di Hapus Dan Ada Di Tampilan Status DELETE');
     }
 
     public function restore($id)
     {
-        $about = About::findOrFail($id);
-        $about->a_delete_at = null; // Remove the deletion timestamp
-        $about->a_delete_id = null; // Set the delete ID to null
-        $about->a_status = 'DRAFT'; // Set the status to "DRAFT"
-        $about->a_update_id = auth()->user()->id; // Set update ID based on the logged-in user
-        $about->a_update_at = now()->setTimezone('Asia/Jakarta'); // Set update timestamp to the current time in Indonesia
-        $about->save();
-        return redirect()->route('admin.kesiswaan.about.index')->with('success-isi-content', 'Data Isi Content '. $about->a_visi .' Telah Berhasil Di Pulihkan Dan Ada Di Tampilan Status DRAFT');
+        $berita = Berita::findOrFail($id);
+        $berita->b_delete_at = null; // Remove the deletion timestamp
+        $berita->b_delete_id = null; // Set the delete ID to null
+        $berita->b_foto = 'DRAFT'; // Set the status to "DRAFT"
+        $berita->b_update_id = auth()->user()->id; // Set update ID based on the logged-in user
+        $berita->b_update_at = now()->setTimezone('Asia/Jakarta'); // Set update timestamp to the current time in Indonesia
+        $berita->save();
+        return redirect()->route('admin.kesiswaan.berita.index')->with('success-isi-content', 'Data Isi Content '. $berita->b_nama_kegiatan .' Telah Berhasil Di Pulihkan Dan Ada Di Tampilan Status DRAFT');
     }
 
     public function publish(Request $request, $id)
     {
-        $about = About::findOrFail($id);
+        $berita = Berita::findOrFail($id);
         $status = $request->input('status'); // Get the status from the form input
 
         if (!in_array($status, ['PUBLISH', 'TIDAK'])) {
             return redirect()->back()->withErrors(['error' => 'Status tidak valid']);
         }
 
-        $about->a_status = strtoupper($status); // Set the status based on the form input
-        $about->a_update_id = auth()->user()->id; // Set update ID based on the logged-in user
-        $about->a_update_at = now()->setTimezone('Asia/Jakarta'); // Set update timestamp to the current time in Indonesia
-        $about->save();
+        $berita->b_foto = strtoupper($status); // Set the status based on the form input
+        $berita->b_update_id = auth()->user()->id; // Set update ID based on the logged-in user
+        $berita->b_update_at = now()->setTimezone('Asia/Jakarta'); // Set update timestamp to the current time in Indonesia
+        $berita->save();
 
-        return redirect()->back()->with('success-isi-content', 'Data Isi Content '. $about->a_visi .' Telah Berhasil Diupdate');
+        return redirect()->back()->with('success-isi-content', 'Data Isi Content '. $berita->b_nama_kegiatan .' Telah Berhasil Diupdate');
     }
 }

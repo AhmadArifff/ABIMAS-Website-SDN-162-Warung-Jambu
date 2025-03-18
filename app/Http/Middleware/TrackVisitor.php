@@ -5,7 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use App\VisitorLog;
-use Illuminate\Support\Facades\Cache;
+use Carbon\Carbon;
 
 class TrackVisitor
 {
@@ -20,11 +20,36 @@ class TrackVisitor
     {
         $ipAddress = $request->ip();
         $url = $request->fullUrl();
-        $cacheKey = 'visitor_' . md5($ipAddress . $url);
+        $today = Carbon::today(); // Ambil tanggal hari ini
 
-        // Check if the visitor has already been logged today
-        if (!Cache::has($cacheKey)) {
-            // Simpan data pengunjung ke database
+        // Jika URL mengarah ke halaman admin atau auth, lewati middleware
+        if ($request->is('admin/*') || $request->is('login') || $request->is('register') || $request->is('user/*') || $request->routeIs('login') || $request->routeIs('register')) {
+            return $next($request);
+        }
+
+        // Daftar nama route yang akan dilacak
+        $trackedRoutes = [
+            'home', 'blog', 'blog.show', 'destination', 'destination.show', 'contact', 
+            'berita', 'tatatertib', 'pembiasaan', 'penghargaan', 'ekstrakurikuler.show', 
+            'strukturorganisasi', 'ekstrakurikuler.pramuka', 'ekstrakurikuler.kesenian', 
+            'ekstrakurikuler.karate', 'ekstrakurikuler.silat', 'ekstrakurikuler.olimpiade', 
+            'ekstrakurikuler.paskibra', 'ekstrakurikuler.hoki', 'ekstrakurikuler.pmr', 
+            'ekstrakurikuler.renang'
+        ];
+
+        // Jika nama route tidak ada dalam daftar, lewati middleware
+        $route = $request->route();
+        if ($route && !in_array($route->getName(), $trackedRoutes)) {
+            return $next($request);
+        }
+
+        $existingVisit = VisitorLog::where('v_ip_address', $ipAddress)
+            ->where('v_url', $url)
+            ->whereDate('v_visited_at', $today)
+            ->first();
+
+        // Jika belum tercatat, simpan data ke database
+        if (!$existingVisit) {
             VisitorLog::create([
                 'v_ip_address' => $ipAddress,
                 'v_user_agent' => $request->userAgent(),
@@ -32,9 +57,6 @@ class TrackVisitor
                 'v_url' => $url,
                 'v_visited_at' => now(),
             ]);
-
-            // Set cache to expire in 24 hours
-            Cache::put($cacheKey, true, now()->addDay());
         }
 
         return $next($request);

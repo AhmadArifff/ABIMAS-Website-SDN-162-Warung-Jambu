@@ -96,7 +96,7 @@ class KesiswaanController extends Controller
         }
 
         $kesiswaan->save();
-        if ($menu == 'About') {
+        if ($menu == 'About'|| $menu == 'Berita') {
             return redirect()->route('admin.' . strtolower($kesiswaan->k_nama_menu) . '.index')->with('success-slide', 'Data Slide '.$request->k_nama_menu .' Telah Berhasil Ditambahkan');
         } else {
             return redirect()->route('admin.kesiswaan.' . strtolower($kesiswaan->k_nama_menu) . '.index')->with('success-slide', 'Data Slide '.$request->k_nama_menu .' Telah Berhasil Ditambahkan');
@@ -126,7 +126,7 @@ class KesiswaanController extends Controller
         if (!$kesiswaan) {
             return redirect()->back()->withErrors(['error' => 'Tidak Ada Data Slide Dengan Nama Slide ' . $menu . ' found']);
         }
-        if ($menu == 'About') {
+        if ($menu == 'About'|| $menu == 'Berita') {
             return view(strtolower($menu).'.edit_slide', ['kesiswaan' => $kesiswaan, 'isPublished' => $isPublished, 'menu' => $menu, 'kesiswaa_all' => $kesiswaa_all, 'ekstrakurikuler_all' => $ekstrakurikuler_all, 'penghargaan_all' => $penghargaan_all, 'tatatertib_all' => $tatatertib_all, 'user_all' => $user_all, 'pembiasaan_all' => $pembiasaan_all]);
         } else {
             return view('kesiswaan.admin.edit_slide', ['kesiswaan' => $kesiswaan, 'isPublished' => $isPublished, 'menu' => $menu, 'kesiswaa_all' => $kesiswaa_all, 'ekstrakurikuler_all' => $ekstrakurikuler_all, 'penghargaan_all' => $penghargaan_all, 'tatatertib_all' => $tatatertib_all, 'user_all' => $user_all, 'pembiasaan_all' => $pembiasaan_all]);
@@ -184,7 +184,7 @@ class KesiswaanController extends Controller
 
         try {
             $kesiswaan->save();
-            if ($menu == 'About') {
+            if ($menu == 'About'|| $menu == 'Berita') {
                 return redirect()->route('admin.' . strtolower($kesiswaan->k_nama_menu) . '.index')->with('success-slide', 'Data Slide '.$request->k_nama_menu .' Telah Berhasil Ditambahkan');
             } else {
                 return redirect()->route('admin.kesiswaan.' . strtolower($kesiswaan->k_nama_menu) . '.index')->with('success-slide', 'Data Slide '.$request->k_nama_menu .' Telah Berhasil Diubah');
@@ -228,7 +228,12 @@ class KesiswaanController extends Controller
             if ($kesiswaan->k_foto_slide3) {
                 File::delete('kesiswaan_image/slide_image/' . $kesiswaan->k_foto_slide3);
             }
-            return redirect()->route('admin.kesiswaan.'. strtolower($kesiswaan->k_nama_menu) .'.index')->with('success-slide', 'Data Slide '.$menu .' Telah Berhasil Di Hapus Permanen');
+            if ($menu == 'About' || $menu == 'Berita') {
+                return redirect()->route('admin.' . strtolower($kesiswaan->k_nama_menu) . '.index')->with('success-slide', 'Data Slide '.$kesiswaan->k_nama_menu .' Telah Berhasil Di Hapus');
+            } else {
+                return redirect()->route('admin.kesiswaan.' . strtolower($kesiswaan->k_nama_menu) . '.index')->with('success-slide', 'Data Slide '.$kesiswaan->k_nama_menu .' Telah Berhasil Di Hapus');
+            }
+            // return redirect()->route('admin.kesiswaan.'. strtolower($kesiswaan->k_nama_menu) .'.index')->with('success-slide', 'Data Slide '.$menu .' Telah Berhasil Di Hapus Permanen');
         } catch (\Illuminate\Database\QueryException $e) {
             if ($e->getCode() == '23000') {
                 return redirect()->back()->with('error', 'Tidak dapat menghapus karena data slide ini terkait dengan data "management isi content" dengan data Nama Kegiatan : ' . $kolom);
@@ -247,8 +252,8 @@ class KesiswaanController extends Controller
         $kesiswaan->k_status = 'HAPUS';
         $menu = $kesiswaan->k_nama_menu;
         $kesiswaan->save();
-        if ($menu == 'About') {
-            return redirect()->route('admin.' . strtolower($kesiswaan->k_nama_menu) . '.index')->with('success-slide', 'Data Slide '.$kesiswaan->k_nama_menu .' Telah Berhasil Ditambahkan');
+        if ($menu == 'About' || $menu == 'Berita') {
+            return redirect()->route('admin.' . strtolower($kesiswaan->k_nama_menu) . '.index')->with('success-slide', 'Data Slide '.$kesiswaan->k_nama_menu .' Telah Berhasil Di Hapus');
         } else {
             return redirect()->route('admin.kesiswaan.' . strtolower($kesiswaan->k_nama_menu) . '.index')->with('success-slide', 'Data Slide '.$kesiswaan->k_nama_menu .' Telah Berhasil Di Hapus');
         }
@@ -263,8 +268,13 @@ class KesiswaanController extends Controller
         $kesiswaan->k_status = 'DRAFT';
         $kesiswaan->k_update_id = auth()->user()->id;
         $kesiswaan->k_update_at = now()->setTimezone('Asia/Jakarta');
+        $menu = $kesiswaan->k_nama_menu;
         $kesiswaan->save();
-        return redirect()->route('admin.kesiswaan.'. strtolower($kesiswaan->k_nama_menu) .'.index')->with('success-slide', 'Data Slide '.$kesiswaan->k_nama_menu .' Telah Berhasil Di Pulihkan Dan Ada Di Tampilan Status DRAFT');
+        if ($menu == 'About' || $menu == 'Berita') {
+            return redirect()->route('admin.' . strtolower($kesiswaan->k_nama_menu) . '.index')->with('success-slide', 'Data Slide '.$kesiswaan->k_nama_menu .' Telah Berhasil Di Pulihkan');
+        } else {
+            return redirect()->route('admin.kesiswaan.' . strtolower($kesiswaan->k_nama_menu) . '.index')->with('success-slide', 'Data Slide '.$kesiswaan->k_nama_menu .' Telah Berhasil Di Pulihkan');
+        }
     }
     public function publish(Request $request, $id)
     {
