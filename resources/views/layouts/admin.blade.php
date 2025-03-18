@@ -191,7 +191,7 @@
                     <li class="{{$url=='dashboard'?'active':''}}">
                     <a href="{{url('admin/dashboard')}}"><i class="menu-icon fa fa-laptop"></i>Dashboard </a>
                     </li>
-                    <li class="{{$url=='categories'?'active':''}}">
+                    {{-- <li class="{{$url=='categories'?'active':''}}">
                         <a href="{{url('admin/categories')}}"><i class="menu-icon fa fa-list-ul"></i>Categories </a>
                     </li>
                     <li class="{{$url=='articles'?'active':''}}">
@@ -199,22 +199,30 @@
                     </li>
                     <li class="{{$url=='destinations'?'active':''}}">
                         <a href="{{url('admin/destinations')}}"><i class="menu-icon fa fa-paper-plane-o"></i>Destinations </a>
-                    </li>
-                    <li class="{{$url=='about'?'active':''}}">
-                        <a href="{{url('admin/about')}}"><i class="menu-icon fa fa-user"></i>About </a>
-                    </li>
+                    </li> --}}
+                    @if(auth()->user()->role == 'admin')
+                        <li class="{{$url=='about'?'active':''}}">
+                            <a href="{{url('admin/about')}}"><i class="menu-icon fa fa-user"></i>About </a>
+                        </li>
+                        <li class="{{$url=='users'?'active':''}}">
+                            <a href="{{url('admin/users')}}"><i class="menu-icon fa fa-users"></i>User </a>
+                        </li>
+                        <li class="{{$url=='informasi-media'?'active':''}}">
+                            <a href="{{url('admin/informasi-media')}}"><i class="menu-icon fa fa-info-circle"></i>Informasi & Media Sosial </a>
+                        </li>
+                    @endif
                     <li class="{{$url=='berita'?'active':''}}">
                         <a href="{{url('admin/berita')}}"><i class="menu-icon fa fa-user"></i>Berita </a>
                     </li>
                     <li class="menu-item-has-children dropdown">
-                        <a href="#" class="dropdown-toggle d-flex align-items-center" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <i class="menu-icon fa fa-graduation-cap mr-2"></i>Kesiswaan</a>
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="menu-icon fa fa-graduation-cap"></i>Kesiswaan</a>
                         <ul class="sub-menu children dropdown-menu">
-                            {{-- <li class="d-flex align-items-center"><i class="fa fa-sitemap mr-2"></i><a href="{{url('admin/kesiswaan/strukturorganisasi')}}">Struktur Organisasi</a></li> --}}
-                            <li class="d-flex align-items-center"><i class="fa fa-futbol-o mr-2"></i><a href="{{ url('admin/kesiswaan/ekstrakurikuler') }}">Ekstrakurikuler</a></li>
-                            <li class="d-flex align-items-center"><i class="fa fa-trophy mr-2"></i><a href="{{url('admin/kesiswaan/penghargaan')}}">Penghargaan</a></li>
-                            <li class="d-flex align-items-center"><i class="fa fa-clock-o mr-2"></i><a href="{{url('admin/kesiswaan/pembiasaan')}}">Pembiasaan</a></li>
-                            <li class="d-flex align-items-center"><i class="fa fa-gavel mr-2"></i><a href="{{url('admin/kesiswaan/tatatertib')}}">Tatatertib</a></li>
+                            {{-- <li><i class="fa fa-sitemap"></i><a href="{{url('admin/kesiswaan/strukturorganisasi')}}">Struktur Organisasi</a></li> --}}
+                            <li><i class="fa fa-futbol-o"></i><a href="{{ url('admin/kesiswaan/ekstrakurikuler') }}">Ekstrakurikuler</a></li>
+                            <li><i class="fa fa-trophy"></i><a href="{{url('admin/kesiswaan/penghargaan')}}">Penghargaan</a></li>
+                            <li><i class="fa fa-clock-o"></i><a href="{{url('admin/kesiswaan/pembiasaan')}}">Pembiasaan</a></li>
+                            <li><i class="fa fa-gavel"></i><a href="{{url('admin/kesiswaan/tatatertib')}}">Tatatertib</a></li>
                         </ul>
                     </li>
                 </ul>
@@ -239,150 +247,152 @@
                 <div class="top-right">
                     <div class="header-menu">
                         <div class="header-left">
-                            <div class="dropdown for-notification">
-                                <button class="btn btn-secondary dropdown-toggle" type="button" id="notification" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <i class="fa fa-bell"></i>
-                                    @php
-                                        $kesiswaan_count = $kesiswaa_all->filter(function($item) use ($kesiswaa_all) {
-                                            $same_menu_items = $kesiswaa_all->where('k_nama_menu', $item->k_nama_menu);
-                                            $published_item = $same_menu_items->where('k_status', 'PUBLISH')->first();
-                                            return !$published_item && $same_menu_items->where('k_status', 'DRAFT')->count() > 1 || $same_menu_items->where('k_status', 'DRAFT')->count() == 1;
-                                        })->count();
-                                    @endphp
-                                    <span class="count bg-danger">{{ $kesiswaan_count + $ekstrakurikuler_all->count() + $penghargaan_all->count() + $tatatertib_all->count() + $pembiasaan_all->count() }}</span>
-                                </button>
-                                <div class="dropdown-menu shadow" aria-labelledby="notification" style="width: 400px; max-height: 400px; overflow-y: auto;">
-                                    <p class="red text-dark">You have {{ $kesiswaa_all->count() + $ekstrakurikuler_all->count() + $penghargaan_all->count() + $tatatertib_all->count() + $pembiasaan_all->count() }} Notifications</p>
-                                    @if ($menu == 'Pembiasaan' || $menu == 'Penghargaan' || $menu == 'Ekstrakurikuler' || $menu == 'Tatatertib')
-                                    @php
-                                        // Ambil semua k_nama_menu yang memiliki status PUBLISH
-                                        $publishedMenus = $kesiswaa_all->where('k_status', 'PUBLISH')->pluck('k_nama_menu')->unique();
-
-                                        // Filter data agar hanya menampilkan DRAFT yang tidak memiliki PUBLISH dalam grupnya
-                                        $filteredKesiswaan = $kesiswaa_all->filter(function ($item) use ($publishedMenus) {
-                                            return $item->k_status === 'DRAFT' && !$publishedMenus->contains($item->k_nama_menu);
-                                        });
-
-                                        // Grouping berdasarkan k_nama_menu agar tidak ada duplikasi pengecekan
-                                        $groupedKesiswaan = $filteredKesiswaan->groupBy('k_nama_menu');
-                                    @endphp
-                                        @foreach($groupedKesiswaan as $menuName => $items)
-                                            @foreach($items as $item)
-                                                <a class="dropdown-item media bg-flat-color-1 text-dark" href="#">
-                                                    <div class="d-flex flex-column mr-3">
-                                                        <img src="{{ $item->k_foto_slide1 ? asset('kesiswaan_image/slide_image/' . $item->k_foto_slide1) : asset('sample_image/Gambar.png') }}" alt="content image" style="width: 50px; height: 50px;" loading="lazy">
-                                                        <img src="{{ $item->k_foto_slide2 ? asset('kesiswaan_image/slide_image/' . $item->k_foto_slide2) : asset('sample_image/Gambar.png') }}" alt="content image" style="width: 50px; height: 50px;" loading="lazy">
-                                                        <img src="{{ $item->k_foto_slide3 ? asset('kesiswaan_image/slide_image/' . $item->k_foto_slide3) : asset('sample_image/Gambar.png') }}" alt="content image" style="width: 50px; height: 50px;" loading="lazy">
-                                                    </div>
-                                                    <div class="media-body">
-                                                        <p class="text-dark">{{ $item->k_judul_slide }}</p>
-                                                        <p>{{ Str::limit($item->k_deskripsi_slide, 30, '...') }}</p>
-                                                        @foreach($user_all as $itemuser)
-                                                            @if($item->k_create_id == $itemuser->id)
-                                                                <p>{{ \Carbon\Carbon::parse($item->k_create_at)->format('d M Y') }} by {{ $itemuser->name ?? 'Unknown' }}</p>
-                                                            @endif
-                                                        @endforeach
-                                                        <form action="{{ route('publish.kesiswaan', $item->k_id) }}" method="POST" class="text-right">
-                                                            @csrf
-                                                            <button type="submit" name="status" value="publish" class="btn btn-md btn-success">Disetujui</button>
-                                                            <button type="submit" name="status" value="tidak" class="btn btn-md btn-danger">Tidak Disetujui</button>
-                                                        </form>
-                                                    </div>
-                                                </a>
-                                            @endforeach
-                                        @endforeach
+                            @if(auth()->user()->role == 'admin')
+                                <div class="dropdown for-notification">
+                                    <button class="btn btn-secondary dropdown-toggle" type="button" id="notification" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <i class="fa fa-bell"></i>
                                         @php
-                                            // Ambil semua e_nama_ekstrakurikuler yang memiliki status PUBLISH
-                                            $publishedEkstrakurikulerNames = $ekstrakurikuler_all->where('e_status', 'PUBLISH')->pluck('e_nama_ekstrakurikuler')->unique();
+                                            $kesiswaan_count = $kesiswaa_all->filter(function($item) use ($kesiswaa_all) {
+                                                $same_menu_items = $kesiswaa_all->where('k_nama_menu', $item->k_nama_menu);
+                                                $published_item = $same_menu_items->where('k_status', 'PUBLISH')->first();
+                                                return !$published_item && $same_menu_items->where('k_status', 'DRAFT')->count() > 1 || $same_menu_items->where('k_status', 'DRAFT')->count() == 1;
+                                            })->count();
+                                        @endphp
+                                        <span class="count bg-danger">{{ $kesiswaan_count + $ekstrakurikuler_all->count() + $penghargaan_all->count() + $tatatertib_all->count() + $pembiasaan_all->count() }}</span>
+                                    </button>
+                                    <div class="dropdown-menu shadow" aria-labelledby="notification" style="width: 400px; max-height: 400px; overflow-y: auto;">
+                                        <p class="red text-dark">You have {{ $kesiswaa_all->count() + $ekstrakurikuler_all->count() + $penghargaan_all->count() + $tatatertib_all->count() + $pembiasaan_all->count() }} Notifications</p>
+                                        @if ($menu == 'Pembiasaan' || $menu == 'Penghargaan' || $menu == 'Ekstrakurikuler' || $menu == 'Tatatertib')
+                                        @php
+                                            // Ambil semua k_nama_menu yang memiliki status PUBLISH
+                                            $publishedMenus = $kesiswaa_all->where('k_status', 'PUBLISH')->pluck('k_nama_menu')->unique();
 
                                             // Filter data agar hanya menampilkan DRAFT yang tidak memiliki PUBLISH dalam grupnya
-                                            $filteredEkstrakurikuler = $ekstrakurikuler_all->filter(function ($item) use ($publishedEkstrakurikulerNames) {
-                                                return $item->e_status === 'DRAFT' && !$publishedEkstrakurikulerNames->contains($item->e_nama_ekstrakurikuler);
+                                            $filteredKesiswaan = $kesiswaa_all->filter(function ($item) use ($publishedMenus) {
+                                                return $item->k_status === 'DRAFT' && !$publishedMenus->contains($item->k_nama_menu);
                                             });
 
-                                            // Grouping berdasarkan e_nama_ekstrakurikuler agar tidak ada duplikasi pengecekan
-                                            $groupedEkstrakurikuler = $filteredEkstrakurikuler->groupBy('e_nama_ekstrakurikuler');
+                                            // Grouping berdasarkan k_nama_menu agar tidak ada duplikasi pengecekan
+                                            $groupedKesiswaan = $filteredKesiswaan->groupBy('k_nama_menu');
                                         @endphp
-                                        @foreach($groupedEkstrakurikuler as $ekstrakurikulerName => $items)
-                                            @foreach($items as $item)
-                                                <a class="dropdown-item media bg-flat-color-2 text-dark" href="#">
-                                                    <img src="{{ $item->e_foto ? asset('kesiswaan_image/ekstrakurikuler_image/' . $item->e_foto) : asset('sample_image/Gambar.png') }}" alt="content image" class="mr-3" style="width: 50px; height: 50px;">
+                                            @foreach($groupedKesiswaan as $menuName => $items)
+                                                @foreach($items as $item)
+                                                    <a class="dropdown-item media bg-flat-color-1 text-dark" href="#">
+                                                        <div class="d-flex flex-column mr-3">
+                                                            <img src="{{ $item->k_foto_slide1 ? asset('kesiswaan_image/slide_image/' . $item->k_foto_slide1) : asset('sample_image/Gambar.png') }}" alt="content image" style="width: 50px; height: 50px;" loading="lazy">
+                                                            <img src="{{ $item->k_foto_slide2 ? asset('kesiswaan_image/slide_image/' . $item->k_foto_slide2) : asset('sample_image/Gambar.png') }}" alt="content image" style="width: 50px; height: 50px;" loading="lazy">
+                                                            <img src="{{ $item->k_foto_slide3 ? asset('kesiswaan_image/slide_image/' . $item->k_foto_slide3) : asset('sample_image/Gambar.png') }}" alt="content image" style="width: 50px; height: 50px;" loading="lazy">
+                                                        </div>
+                                                        <div class="media-body">
+                                                            <p class="text-dark">{{ $item->k_judul_slide }}</p>
+                                                            <p>{{ Str::limit($item->k_deskripsi_slide, 30, '...') }}</p>
+                                                            @foreach($user_all as $itemuser)
+                                                                @if($item->k_create_id == $itemuser->id)
+                                                                    <p>{{ \Carbon\Carbon::parse($item->k_create_at)->format('d M Y') }} by {{ $itemuser->name ?? 'Unknown' }}</p>
+                                                                @endif
+                                                            @endforeach
+                                                            <form action="{{ route('publish.kesiswaan', $item->k_id) }}" method="POST" class="text-right">
+                                                                @csrf
+                                                                <button type="submit" name="status" value="publish" class="btn btn-md btn-success">Disetujui</button>
+                                                                <button type="submit" name="status" value="tidak" class="btn btn-md btn-danger">Tidak Disetujui</button>
+                                                            </form>
+                                                        </div>
+                                                    </a>
+                                                @endforeach
+                                            @endforeach
+                                            @php
+                                                // Ambil semua e_nama_ekstrakurikuler yang memiliki status PUBLISH
+                                                $publishedEkstrakurikulerNames = $ekstrakurikuler_all->where('e_status', 'PUBLISH')->pluck('e_nama_ekstrakurikuler')->unique();
+
+                                                // Filter data agar hanya menampilkan DRAFT yang tidak memiliki PUBLISH dalam grupnya
+                                                $filteredEkstrakurikuler = $ekstrakurikuler_all->filter(function ($item) use ($publishedEkstrakurikulerNames) {
+                                                    return $item->e_status === 'DRAFT' && !$publishedEkstrakurikulerNames->contains($item->e_nama_ekstrakurikuler);
+                                                });
+
+                                                // Grouping berdasarkan e_nama_ekstrakurikuler agar tidak ada duplikasi pengecekan
+                                                $groupedEkstrakurikuler = $filteredEkstrakurikuler->groupBy('e_nama_ekstrakurikuler');
+                                            @endphp
+                                            @foreach($groupedEkstrakurikuler as $ekstrakurikulerName => $items)
+                                                @foreach($items as $item)
+                                                    <a class="dropdown-item media bg-flat-color-2 text-dark" href="#">
+                                                        <img src="{{ $item->e_foto ? asset('kesiswaan_image/ekstrakurikuler_image/' . $item->e_foto) : asset('sample_image/Gambar.png') }}" alt="content image" class="mr-3" style="width: 50px; height: 50px;">
+                                                        <div class="media-body">
+                                                            <p class="text-dark">{{ $item->e_nama_ekstrakurikuler }}</p>
+                                                            <p>{{ Str::limit($item->e_deskripsi, 30, '...') }}</p>
+                                                            @foreach($user_all as $itemuser)
+                                                                @if($item->e_create_id == $itemuser->id)
+                                                                    <p>{{ \Carbon\Carbon::parse($item->e_create_at)->format('d M Y') }} by {{ $itemuser->name ?? 'Unknown' }}</p>
+                                                                @endif
+                                                            @endforeach
+                                                            <form action="{{ route('publish.ekstrakurikuler', $item->e_id) }}" method="POST" class="text-right">
+                                                                @csrf
+                                                                <button type="submit" name="status" value="publish" class="btn btn-md btn-success">Disetujui</button>
+                                                                <button type="submit" name="status" value="tidak" class="btn btn-md btn-danger">Tidak Disetujui</button>
+                                                            </form>
+                                                        </div>
+                                                    </a>
+                                                @endforeach
+                                            @endforeach
+                                            @foreach($penghargaan_all as $item)
+                                                <a class="dropdown-item media bg-flat-color-3 text-dark" href="#">
+                                                    <img src="{{ $item->ph_foto ? asset('kesiswaan_image/penghargaan_image/' . $item->ph_foto) : asset('sample_image/Gambar.png') }}" alt="content image" class="mr-3" style="width: 50px; height: 50px;">
                                                     <div class="media-body">
-                                                        <p class="text-dark">{{ $item->e_nama_ekstrakurikuler }}</p>
-                                                        <p>{{ Str::limit($item->e_deskripsi, 30, '...') }}</p>
+                                                        <p class="text-dark">{{ $item->ph_nama_kegiatan }}</p>
+                                                        <p>{{ Str::limit($item->ph_deskripsi, 30, '...') }}</p>
                                                         @foreach($user_all as $itemuser)
-                                                            @if($item->e_create_id == $itemuser->id)
-                                                                <p>{{ \Carbon\Carbon::parse($item->e_create_at)->format('d M Y') }} by {{ $itemuser->name ?? 'Unknown' }}</p>
+                                                            @if($item->ph_create_id == $itemuser->id)
+                                                                <p>{{ \Carbon\Carbon::parse($item->ph_create_at)->format('d M Y') }} by {{ $itemuser->name ?? 'Unknown' }}</p>
                                                             @endif
                                                         @endforeach
-                                                        <form action="{{ route('publish.ekstrakurikuler', $item->e_id) }}" method="POST" class="text-right">
+                                                        <form action="{{ route('publish.penghargaan', $item->ph_id) }}" method="POST" class="text-right">
                                                             @csrf
-                                                            <button type="submit" name="status" value="publish" class="btn btn-md btn-success">Disetujui</button>
+                                                            <button type="submit" name="status" value="publish" class="btn btn-md btn-success">Publish</button>
                                                             <button type="submit" name="status" value="tidak" class="btn btn-md btn-danger">Tidak Disetujui</button>
                                                         </form>
                                                     </div>
                                                 </a>
                                             @endforeach
-                                        @endforeach
-                                        @foreach($penghargaan_all as $item)
-                                            <a class="dropdown-item media bg-flat-color-3 text-dark" href="#">
-                                                <img src="{{ $item->ph_foto ? asset('kesiswaan_image/penghargaan_image/' . $item->ph_foto) : asset('sample_image/Gambar.png') }}" alt="content image" class="mr-3" style="width: 50px; height: 50px;">
-                                                <div class="media-body">
-                                                    <p class="text-dark">{{ $item->ph_nama_kegiatan }}</p>
-                                                    <p>{{ Str::limit($item->ph_deskripsi, 30, '...') }}</p>
-                                                    @foreach($user_all as $itemuser)
-                                                        @if($item->ph_create_id == $itemuser->id)
-                                                            <p>{{ \Carbon\Carbon::parse($item->ph_create_at)->format('d M Y') }} by {{ $itemuser->name ?? 'Unknown' }}</p>
-                                                        @endif
-                                                    @endforeach
-                                                    <form action="{{ route('publish.penghargaan', $item->ph_id) }}" method="POST" class="text-right">
-                                                        @csrf
-                                                        <button type="submit" name="status" value="publish" class="btn btn-md btn-success">Publish</button>
-                                                        <button type="submit" name="status" value="tidak" class="btn btn-md btn-danger">Tidak Disetujui</button>
-                                                    </form>
-                                                </div>
-                                            </a>
-                                        @endforeach
-                                        @foreach($tatatertib_all as $item)
-                                            <a class="dropdown-item media bg-flat-color-4 text-dark" href="#">
-                                                <div class="media-body">
-                                                    <p class="text-dark">{{ $item->t_nama_peraturan }}</p>
-                                                    <p>{{ Str::limit($item->t_deskripsi, 30, '...') }}</p>
-                                                    @foreach($user_all as $itemuser)
-                                                        @if($item->t_create_id == $itemuser->id)
-                                                            <p>{{ \Carbon\Carbon::parse($item->t_create_at)->format('d M Y') }} by {{ $itemuser->name ?? 'Unknown' }}</p>
-                                                        @endif
-                                                    @endforeach
-                                                    <form action="{{ route('publish.tatatertib', $item->t_id) }}" method="POST" class="text-right">
-                                                        @csrf
-                                                        <button type="submit" name="status" value="publish" class="btn btn-md btn-success">Publish</button>
-                                                        <button type="submit" name="status" value="tidak" class="btn btn-md btn-danger">Tidak Disetujui</button>
-                                                    </form>
-                                                </div>
-                                            </a>
-                                        @endforeach
-                                        @foreach($pembiasaan_all as $item)
-                                            <a class="dropdown-item media bg-flat-color-4 text-dark" href="#">
-                                                <img src="{{ $item->p_foto ? asset('kesiswaan_image/pembiasaan_image/' . $item->p_foto) : asset('sample_image/Gambar.png') }}" alt="content image" class="mr-3" style="width: 50px; height: 50px;">
-                                                <div class="media-body">
-                                                    <p class="text-dark">{{ $item->p_nama_kegiatan }}</p>
-                                                    <p>{{ Str::limit($item->p_deskripsi, 30, '...') }}</p>
-                                                    @foreach($user_all as $itemuser)
-                                                        @if($item->p_create_id == $itemuser->id)
-                                                            <p>{{ \Carbon\Carbon::parse($item->p_create_at)->format('d M Y') }} by {{ $itemuser->name ?? 'Unknown' }}</p>
-                                                        @endif
-                                                    @endforeach
-                                                    <form action="{{ route('publish.pembiasaan', $item->p_id) }}" method="POST" class="text-right">
-                                                        @csrf
-                                                        <button type="submit" name="status" value="publish" class="btn btn-md btn-success">Publish</button>
-                                                        <button type="submit" name="status" value="tidak" class="btn btn-md btn-danger">Tidak Disetujui</button>
-                                                    </form>
-                                                </div>
-                                            </a>
-                                        @endforeach
-                                    @endif
+                                            @foreach($tatatertib_all as $item)
+                                                <a class="dropdown-item media bg-flat-color-4 text-dark" href="#">
+                                                    <div class="media-body">
+                                                        <p class="text-dark">{{ $item->t_nama_peraturan }}</p>
+                                                        <p>{{ Str::limit($item->t_deskripsi, 30, '...') }}</p>
+                                                        @foreach($user_all as $itemuser)
+                                                            @if($item->t_create_id == $itemuser->id)
+                                                                <p>{{ \Carbon\Carbon::parse($item->t_create_at)->format('d M Y') }} by {{ $itemuser->name ?? 'Unknown' }}</p>
+                                                            @endif
+                                                        @endforeach
+                                                        <form action="{{ route('publish.tatatertib', $item->t_id) }}" method="POST" class="text-right">
+                                                            @csrf
+                                                            <button type="submit" name="status" value="publish" class="btn btn-md btn-success">Publish</button>
+                                                            <button type="submit" name="status" value="tidak" class="btn btn-md btn-danger">Tidak Disetujui</button>
+                                                        </form>
+                                                    </div>
+                                                </a>
+                                            @endforeach
+                                            @foreach($pembiasaan_all as $item)
+                                                <a class="dropdown-item media bg-flat-color-4 text-dark" href="#">
+                                                    <img src="{{ $item->p_foto ? asset('kesiswaan_image/pembiasaan_image/' . $item->p_foto) : asset('sample_image/Gambar.png') }}" alt="content image" class="mr-3" style="width: 50px; height: 50px;">
+                                                    <div class="media-body">
+                                                        <p class="text-dark">{{ $item->p_nama_kegiatan }}</p>
+                                                        <p>{{ Str::limit($item->p_deskripsi, 30, '...') }}</p>
+                                                        @foreach($user_all as $itemuser)
+                                                            @if($item->p_create_id == $itemuser->id)
+                                                                <p>{{ \Carbon\Carbon::parse($item->p_create_at)->format('d M Y') }} by {{ $itemuser->name ?? 'Unknown' }}</p>
+                                                            @endif
+                                                        @endforeach
+                                                        <form action="{{ route('publish.pembiasaan', $item->p_id) }}" method="POST" class="text-right">
+                                                            @csrf
+                                                            <button type="submit" name="status" value="publish" class="btn btn-md btn-success">Publish</button>
+                                                            <button type="submit" name="status" value="tidak" class="btn btn-md btn-danger">Tidak Disetujui</button>
+                                                        </form>
+                                                    </div>
+                                                </a>
+                                            @endforeach
+                                        @endif
+                                    </div>
                                 </div>
-                            </div>
+                            @endif
                         </div>
                         <div class="user-area dropdown float-right">
                             <a href="#" class="dropdown-toggle active" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

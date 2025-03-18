@@ -62,7 +62,7 @@
               <li class="menu-has-children"><a href="#">Ekstrakurikuler</a>
                 <ul>
                     @foreach($ekstrakurikuler_all as $ekstrakurikuler)
-                      <li><a href="{{ route('ekstrakurikuler/' . $ekstrakurikuler->e_nama_ekstrakurikuler) }}">{{ $ekstrakurikuler->e_nama_ekstrakurikuler }}</a></li>
+                      <li><a href="{{ url('ekstrakurikuler/' . $ekstrakurikuler->e_nama_ekstrakurikuler) }}">{{ $ekstrakurikuler->e_nama_ekstrakurikuler }}</a></li>
                     @endforeach
                     
                     {{-- <li><a href="{{ url('ekstrakurikuler/pramuka') }}">Pramuka</a></li>
@@ -105,15 +105,9 @@
             <div class="single-footer-widget">
               <h3 class="title">Tautan:</h3>
               <ul class="list-unstyled">
-                <li><a href="https://guru.kemdikbud.go.id/" title="Buku Guru dan Siswa SP" target="_parent">Buku Guru dan Siswa SP</a></li>
-                <li><a href="https://sdnduajambu.blogspot.com/2020/08/blog-post.html" title="Buletin Sekolah" target="_blank">Buletin Sekolah</a></li>
-                <li><a href="https://sdnduajambu.blogspot.com/2020/08/perangkat-pembelajaran-lengkap-sdn-2.html" title="Kumpulan RPP Semua Kelas" target="_blank">Kumpulan RPP Semua Kelas</a></li>
-                <li><a href="https://sdnduajambu.blogspot.com/2020/08/kumpulan-soal-online-kelas-5.html" title="Kumpulan Soal Online" target="_blank">Kumpulan Soal Online</a></li>
-                <li><a href="https://sdnduajambu.blogspot.com/2020/07/format-laporan-bdr-sd-negeri-2-jambu.html" title="Laporan BDR" target="_blank">Laporan BDR</a></li>
-                <li><a href="http://sdnduajambu.sch.id/simpen" title="Pengumuman Kelulusan Online" target="_blank">Pengumuman Kelulusan Online</a></li>
-                <li><a href="https://sdn2jambu.weebly.com/" title="Platform Sekolah Penggerak" target="_blank">Platform Sekolah Penggerak</a></li>
-                <li><a href="https://sdnduajambu.sch.id/ppdb" title="PPDB Online SDN-2 Jambu" target="_blank">PPDB Online SDN-2 Jambu</a></li>
-                <li><a href="https://inlislite.perpusnas.go.id/?read=installerphp" title="Unduh Aplikasi Perpustakaan Digital" target="_blank">Unduh Aplikasi Perpustakaan Digital</a></li>
+                @foreach($tautan as $link)
+                    <li><a href="{{ $link->tt_url }}" title="{{ ucwords($link->tt_nama_tautan) }}" target="_blank">{{ ucwords($link->tt_nama_tautan) }}</a></li>
+                @endforeach
               </ul>
             </div>
           </div>
@@ -121,11 +115,19 @@
               <div class="single-footer-widget">
               <h3 class="title">Kunjungi Kami :</h3>
                 <div class="social-media">
-                <a href="https://www.facebook.com/profile.php?id=100089628607635" class="social-icon" style="font-size: 24px; margin-right: 10px; color: #3b5998;"><i class="fa fa-facebook"></i></a>
-                <a href="https://twitter.com/sdndua_jambu" class="social-icon" style="font-size: 24px; margin-right: 10px; color: #1da1f2;"><i class="fa fa-twitter"></i></a>
-                <a href="https://www.instagram.com/sdn2jambu_muarateweh/" class="social-icon" style="font-size: 24px; margin-right: 10px; color: #e1306c;"><i class="fa fa-instagram"></i></a>
-                <a href="https://www.youtube.com/channel/UCK6kMH030GyI0VjVSj9HMRA" class="social-icon" style="font-size: 24px; margin-right: 10px; color: #ff0000;"><i class="fa fa-youtube"></i></a>
-                <a href="https://wa.me/+6285249727400" class="social-icon" style="font-size: 24px; margin-right: 10px; color: #25d366;"><i class="fa fa-whatsapp"></i></a>
+                @foreach($media as $social)
+                  @if(strtolower($social->ms_nama_media) == 'facebook')
+                  <a href="{{ $social->ms_url }}" class="social-icon" style="font-size: 24px; margin-right: 10px; color: #3b5998;"><i class="fa fa-facebook"></i></a>
+                  @elseif(strtolower($social->ms_nama_media) == 'twitter')
+                  <a href="{{ $social->ms_url }}" class="social-icon" style="font-size: 24px; margin-right: 10px; color: #1da1f2;"><i class="fa fa-twitter"></i></a>
+                  @elseif(strtolower($social->ms_nama_media) == 'instagram')
+                  <a href="{{ $social->ms_url }}" class="social-icon" style="font-size: 24px; margin-right: 10px; color: #e1306c;"><i class="fa fa-instagram"></i></a>
+                  @elseif(strtolower($social->ms_nama_media) == 'youtube')
+                  <a href="{{ $social->ms_url }}" class="social-icon" style="font-size: 24px; margin-right: 10px; color: #ff0000;"><i class="fa fa-youtube"></i></a>
+                  {{-- @elseif(strtolower($social->ms_nama_media) == 'whatsapp')
+                  <a href="{{ $social->ms_url }}" class="social-icon" style="font-size: 24px; margin-right: 10px; color: #25d366;"><i class="fa fa-whatsapp"></i></a> --}}
+                  @endif
+                @endforeach
                 </div>
               </div>
             </div>

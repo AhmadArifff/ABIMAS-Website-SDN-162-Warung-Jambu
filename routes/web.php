@@ -1,12 +1,12 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Middleware\TrackVisitor;
+// use App\Http\Middleware\TrackVisitor;
 use Illuminate\Support\Facades\Auth;
 
 Route::get('/', function(){ return redirect('/home'); });
 
-Route::middleware(['trackvisitor'])->group(function () {
+// Route::middleware(['trackvisitor'])->group(function () {
   Route::get('/home', 'UserController@home')->name('home');
   Route::get('/blog', 'UserController@blog')->name('blog');
   Route::get('/blog/{slug}', 'UserController@show_article')->name('blog.show');
@@ -19,17 +19,9 @@ Route::middleware(['trackvisitor'])->group(function () {
   Route::get('/penghargaan', 'UserController@penghargaan')->name('penghargaan');
   Route::get('/ekstrakurikuler/{nama}', 'UserController@show')->name('ekstrakurikuler.show');
   Route::get('/strukturorganisasi', 'UserController@strukturorganisasi')->name('strukturorganisasi');
-});
-
-Route::get('/ekstrakurikuler/pramuka', 'UserController@ekstrakurikuler_pramuka')->name('ekstrakurikuler.pramuka');
-Route::get('/ekstrakurikuler/kesenian', 'UserController@ekstrakurikuler_kesenian')->name('ekstrakurikuler.kesenian');
-Route::get('/ekstrakurikuler/karate', 'UserController@ekstrakurikuler_karate')->name('ekstrakurikuler.karate');
-Route::get('/ekstrakurikuler/silat', 'UserController@ekstrakurikuler_silat')->name('ekstrakurikuler.silat');
-Route::get('/ekstrakurikuler/olimpiade', 'UserController@ekstrakurikuler_olimpiade')->name('ekstrakurikuler.olimpiade');
-Route::get('/ekstrakurikuler/paskibra', 'UserController@ekstrakurikuler_paskibra')->name('ekstrakurikuler.paskibra');
-Route::get('/ekstrakurikuler/hoki', 'UserController@ekstrakurikuler_hoki')->name('ekstrakurikuler.hoki');
-Route::get('/ekstrakurikuler/pmr', 'UserController@ekstrakurikuler_pmr')->name('ekstrakurikuler.pmr');
-Route::get('/ekstrakurikuler/renang', 'UserController@ekstrakurikuler_renang')->name('ekstrakurikuler.renang');
+  Route::get('/pembiasaan/detail/{id}', 'UserController@pembiasaandetail')->name('pembiasaan.detail');
+  Route::get('/penghargaan/detail/{id}', 'UserController@penghargaandetail')->name('penghargaan.detail');
+// });
 
 Route::prefix('admin')->group(function(){
   Route::get('/login', 'Auth\LoginController@showLoginForm')->name('login')->withoutMiddleware(['trackvisitor']);
@@ -151,4 +143,27 @@ Route::prefix('admin')->group(function(){
   Route::delete('/berita/{berita}', 'BeritaController@destroy')->name('admin.berita.destroy')->middleware('auth');
   Route::post('/berita/{berita}/restore', 'BeritaController@restore')->name('admin.berita.restore')->middleware('auth');
   Route::post('/berita/{berita}/publish', 'BeritaController@publish')->name('publish.berita')->middleware('auth');
+
+  // Route users
+  Route::resource('users', 'UsersController')->except(['show']);
+  Route::get('/users', 'UsersController@index')->name('admin.users.index')->middleware('auth');
+  Route::get('/users/create', 'UsersController@create')->name('admin.users.create')->middleware('auth');
+  Route::post('/users', 'UsersController@store')->name('admin.users.store')->middleware('auth');
+  Route::get('/users/{user}/edit', 'UsersController@edit')->name('admin.users.edit')->middleware('auth');
+  Route::put('/users/{user}', 'UsersController@update')->name('admin.users.update')->middleware('auth');
+  Route::delete('/users/{user}/destroyrecycle', 'UsersController@destroyrecycle')->name('admin.users.destroyrecycle')->middleware('auth');
+  Route::delete('/users/{user}', 'UsersController@destroy')->name('admin.users.destroy')->middleware('auth');
+  Route::post('/users/{user}/restore', 'UsersController@restore')->name('admin.users.restore')->middleware('auth');
+  Route::post('/users/{user}/publish', 'UsersController@publish')->name('publish.users')->middleware('auth');
+
+  // Route informasi & media sosial
+  Route::get('/informasi-media', 'InformasiMediaController@index')->name('admin.informasi-media.index')->middleware('auth');
+  Route::get('/informasi-media/create', 'InformasiMediaController@create')->name('admin.informasi-media.create')->middleware('auth');
+  Route::post('/informasi-media', 'InformasiMediaController@store')->name('admin.informasi-media.store')->middleware('auth');
+  Route::get('/informasi-media/{informasiMedia}/edit', 'InformasiMediaController@edit')->name('admin.informasi-media.edit')->middleware('auth');
+  Route::put('/informasi-media/{informasiMedia}', 'InformasiMediaController@update')->name('admin.informasi-media.update')->middleware('auth');
+  Route::delete('/informasi-media/{informasiMedia}/destroyrecycle', 'InformasiMediaController@destroyrecycle')->name('admin.informasi-media.destroyrecycle')->middleware('auth');
+  Route::delete('/informasi-media/{informasiMedia}', 'InformasiMediaController@destroy')->name('admin.informasi-media.destroy')->middleware('auth');
+  Route::post('/informasi-media/{informasiMedia}/restore', 'InformasiMediaController@restore')->name('admin.informasi-media.restore')->middleware('auth');
+  Route::post('/informasi-media/{informasiMedia}/publish', 'InformasiMediaController@publish')->name('publish.informasi-media')->middleware('auth');
 });

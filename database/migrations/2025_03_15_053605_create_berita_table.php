@@ -21,7 +21,8 @@ class CreateBeritaTable extends Migration
             $table->unsignedBigInteger('b_delete_id')->nullable();
             $table->string('b_nama_kegiatan', 255);
             $table->text('b_deskripsi');
-            $table->enum('b_foto', ['PUBLISH', 'DRAFT', 'HAPUS', 'TIDAK']);
+            $table->string('b_foto', 255)->nullable();
+            $table->enum('b_status', ['PUBLISH', 'DRAFT', 'HAPUS', 'TIDAK']);
             $table->timestamp('b_create_at')->useCurrent();
             $table->timestamp('b_update_at')->useCurrent()->nullable();
             $table->timestamp('b_delete_at')->nullable();
