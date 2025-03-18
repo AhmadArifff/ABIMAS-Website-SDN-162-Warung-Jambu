@@ -185,7 +185,7 @@
                 card.style.opacity = 0;
                 card.style.transform = 'translateY(50px)';
                 setTimeout(() => {
-                    card.style.transition = 'transform 2s, opacity 1s';
+                    card.style.transition = 'transform 1s, opacity 1s';
                     card.style.opacity = 1;
                     card.style.transform = 'translateY(0)';
                 }, index * 200);
