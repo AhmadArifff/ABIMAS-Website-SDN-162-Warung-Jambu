@@ -52,15 +52,6 @@
                     <li class="{{$url=='abouts'?'active':''}}">
                         <a href="{{url('admin/abouts')}}"><i class="menu-icon fa fa-user"></i>About </a>
                     </li>
-                    <li class="{{$url=='pendaftarans'?'active':''}}">
-                        <a href="{{url('admin/pendaftarans')}}"><i class="menu-icon fa fa-user"></i>pendaftaran </a>
-                    </li>
-                    <li class="{{$url=='beasiswas'?'active':''}}">
-                        <a href="{{url('admin/beasiswas')}}"><i class="menu-icon fa fa-paper-plane-o"></i>Beasiswa </a>
-                    </li>
-                    <li class="{{$url=='beasiswas'?'active':''}}">
-                        <a href="{{url('guru')}}"><i class="menu-icon fa fa-paper-plane-o"></i>guru </a>
-                    </li>
                 </ul>
             </div><!-- /.navbar-collapse -->
         </nav>
@@ -190,10 +181,6 @@
         </div>
     <!-- End Modal Logout -->
 
-
-
-
-
     <!-- Scripts -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script>
@@ -218,10 +205,5 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/js/bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jquery-match-height@0.7.2/dist/jquery.matchHeight.min.js"></script>
     <script src="{{asset('ElaAdmin/js/main.js')}}"></script>
-
-
-
-
-    
 </body>
 </html>
