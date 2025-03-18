@@ -8,6 +8,9 @@ use App\Category;
 use App\About;
 use App\Article;
 use App\Destination;
+use App\Beasiswa;
+use App\Guru;
+use App\Pendaftaran;
 
 class UserController extends Controller
 {
@@ -62,33 +65,73 @@ class UserController extends Controller
     return view('user/blog', $data);
   }
 
-  public function destination(Request $request){
+  public function beasiswa(Request $request){
       $keyword    = $request->get('s') ? $request->get('s') : '';
 
-      $destinations           = Destination::where('title', 'LIKE', "%$keyword%")->orderBy('created_at', 'desc')->paginate(10);
-      $other_destinations     = Destination::select('title','slug')->where('status', 'PUBLISH')->orderBy('created_at','desc')->limit(5)->get();
+      $beasiswas           = Beasiswa::where('title', 'LIKE', "%$keyword%")->orderBy('created_at', 'desc')->paginate(10);
+      $other_beasiswas     = Beasiswa::select('title','slug')->where('status', 'PUBLISH')->orderBy('created_at','desc')->limit(5)->get();
 
       $data = [
-          'destinations'  => $destinations,
-          'other'         => $other_destinations
+          'beasiswas'  => beasiswa::where('status','PUBLISH')->get(),
+          'other'         => $other_beasiswas
       ];
 
-      return view('user/destination', $data);
+      return view('user/beasiswa', $data);
   }
 
-  public function show_destination($slug){
-      $destinations       = Destination::where('slug', $slug)->firstOrFail();
-      $other_destinations = Destination::select('title','slug')->where('status', 'PUBLISH')->orderBy('created_at','desc')->limit(5)->get();
+  public function show_beasiswa($slug){
+      $beasiswas       = Beasiswa::where('slug', $slug)->firstOrFail();
+      $other_beasiswas = Beasiswa::select('title','slug')->where('status', 'PUBLISH')->orderBy('created_at','desc')->limit(5)->get();
 
       $data = [
-          'destinations'  => $destinations,
-          'other'         => $other_destinations
+          'beasiswas'  => $beasiswas,
+          'other'         => $other_beasiswas
       ];
 
-      return view('user/destination', $data);
+      return view('user/beasiswa', $data);
   }
 
   public function contact(){
       return view('user/contact');
   }
+
+  public function destination(Request $request){
+    $keyword    = $request->get('s') ? $request->get('s') : '';
+
+    $destinations           = Destination::where('title', 'LIKE', "%$keyword%")->orderBy('created_at', 'desc')->paginate(10);
+    $other_destinations     = Destination::select('title','slug')->where('status', 'PUBLISH')->orderBy('created_at','desc')->limit(5)->get();
+
+    $data = [
+        'destinations'  => $destinations,
+        'other'         => $other_destinations
+    ];
+
+    return view('user/destination', $data);
 }
+
+public function show_destination($slug){
+    $destinations       = Destination::where('slug', $slug)->firstOrFail();
+    $other_destinations = Destination::select('title','slug')->where('status', 'PUBLISH')->orderBy('created_at','desc')->limit(5)->get();
+
+    $data = [
+        'destinations'  => $destinations,
+        'other'         => $other_destinations
+    ];
+
+    return view('user/destination', $data);
+}
+
+public function informasi()
+  {
+    $data = [
+      'categories'    => Category::all(), 
+      'about'         => About::all(),
+      'beasiswas'     => beasiswa::where('status','PUBLISH')->get(),
+      'gurus'         => Guru::all(),
+      'pendaftarans'  => Pendaftaran::all()
+
+    ];
+    return view('user/informasi', $data);
+  }
+}
+

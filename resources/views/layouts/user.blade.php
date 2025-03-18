@@ -52,6 +52,7 @@
           <li class="{{$url=='blog'?'menu-active':''}}"><a href="{{url('blog')}}">Blog</a></li>
           <li class="{{$url=='destination'?'menu-active':''}}"><a href="{{url('destination')}}">Destination</a></li>
           <li class="{{$url=='contact'?'menu-active':''}}"><a href="{{url('contact')}}">Contact </a></li>
+          <li class="{{$url=='informasi'?'menu-active':''}}"><a href="{{url('informasi')}}">Informasi</a></li>
         </ul>
       </nav><!-- #nav-menu-container -->
     </div>
