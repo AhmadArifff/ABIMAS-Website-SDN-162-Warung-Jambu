@@ -37,22 +37,55 @@
 
   <!--========================== Header ============================-->
   <header id="header">
-    <div class="container">
+    <div class="container d-flex align-items-center justify-content-between">
 
-      <div id="logo" class="pull-left">
-        <a href="#hero">
-          <img src="{{asset('user/images/icon.png')}}" style="margin-right:5px"/></img>
-          <h2 class="d-inline text-light">Jogja-Travel</h2>
+      <div id="logo">
+        <a href="#hero" class="d-flex align-items-center">
+          <img src="{{asset('sample_image/logo_.png')}}" style="margin-right:5px; height: 40px;"/>
+          <h6 class="d-inline text-light mb-0">SDN 163 WARUNGJAMBU KIARACONDONG</h6>
         </a>
       </div>
 
       <nav id="nav-menu-container">
         <ul class="nav-menu">
+<<<<<<< HEAD
           <li class="{{$url=='home'?'menu-active':''}}"><a href="{{url('home')}}">Home</a></li>
           <li class="{{$url=='blog'?'menu-active':''}}"><a href="{{url('blog')}}">Blog</a></li>
           <li class="{{$url=='destination'?'menu-active':''}}"><a href="{{url('destination')}}">Destination</a></li>
           <li class="{{$url=='contact'?'menu-active':''}}"><a href="{{url('contact')}}">Contact </a></li>
           <li class="{{$url=='informasi'?'menu-active':''}}"><a href="{{url('informasi')}}">Informasi</a></li>
+=======
+            <li class="{{$url=='home'?'menu-active':''}}"><a href="{{route('home')}}">Home</a></li>
+            <li class="{{$url=='berita'?'menu-active':''}}"><a href="{{route('berita')}}">Berita</a></li>            
+            <li class="{{$url=='blog'?'menu-active':''}}"><a href="{{route('blog')}}">Blog</a></li>
+            <li class="{{$url=='destination'?'menu-active':''}}"><a href="{{route('destination')}}">Destination</a></li>
+            <li class="{{$url=='contact'?'menu-active':''}}"><a href="{{route('contact')}}">Contact </a></li>
+            <li class="menu-has-children {{$url=='kesiswaan'?'menu-active':''}}"><a href="#">Kesiswaan</a>
+            <ul>
+              <li><a href="{{route('strukturorganisasi')}}">Struktur Organisasi SDN 163 Jambu Kiaracondong</a></li>
+              <li><a href="{{route('tatatertib')}}">Tatatertib Siswa SDN 163 Jambu Kiaracondong</a></li>
+              <li><a href="{{route('pembiasaan')}}">Pembiasaan</a></li>
+              <li><a href="{{route('penghargaan')}}">Penghargaan</a></li>
+              <li class="menu-has-children"><a href="#">Ekstrakurikuler</a>
+                <ul>
+                    @foreach($ekstrakurikuler_all as $ekstrakurikuler)
+                      <li><a href="{{ url('ekstrakurikuler/' . $ekstrakurikuler->e_nama_ekstrakurikuler) }}">{{ $ekstrakurikuler->e_nama_ekstrakurikuler }}</a></li>
+                    @endforeach
+                    
+                    {{-- <li><a href="{{ url('ekstrakurikuler/pramuka') }}">Pramuka</a></li>
+                    <li><a href="{{ url('ekstrakurikuler/kesenian') }}">Kesenian</a></li>
+                    <li><a href="{{ url('ekstrakurikuler/karate') }}">Karate</a></li>
+                    <li><a href="{{ url('ekstrakurikuler/silat') }}">Silat</a></li>
+                    <li><a href="{{ url('ekstrakurikuler/olimpiade') }}">Olimpiade</a></li>
+                    <li><a href="{{ url('ekstrakurikuler/paskibra') }}">Paskibra</a></li>
+                    <li><a href="{{ url('ekstrakurikuler/hoki') }}">Hoki</a></li>
+                    <li><a href="{{ url('ekstrakurikuler/pmr') }}">PMR</a></li>
+                    <li><a href="{{ url('ekstrakurikuler/renang') }}">Renang</a></li> --}}
+                </ul>
+              </li>
+            </ul>
+          </li>
+>>>>>>> be8b2b83b87cf522a1c98946187e9b334ddac469
         </ul>
       </nav><!-- #nav-menu-container -->
     </div>
@@ -66,30 +99,68 @@
   </section>
 
   <main id="main">
-
     @yield('content')
-
   </main>
 
   <!--==========================
     Footer
   ============================-->
   <footer id="footer">
-    <div class="footer-top">
+    <div class="footer-widget-area js-doc-bottom-el">
       <div class="container">
-
+        <div class="row">
+          <div class="col-md-3 col-sm-6 mb-3">
+            <div class="single-footer-widget">
+              <h3 class="title">Tautan:</h3>
+              <ul class="list-unstyled">
+                @foreach($tautan as $link)
+                    <li><a href="{{ $link->tt_url }}" title="{{ ucwords($link->tt_nama_tautan) }}" target="_blank">{{ ucwords($link->tt_nama_tautan) }}</a></li>
+                @endforeach
+              </ul>
+            </div>
+          </div>
+            <div class="col-md-3 col-sm-6 mb-3">
+              <div class="single-footer-widget">
+              <h3 class="title">Kunjungi Kami :</h3>
+                <div class="social-media">
+                @foreach($media as $social)
+                  @if(strtolower($social->ms_nama_media) == 'facebook')
+                  <a href="{{ $social->ms_url }}" class="social-icon" style="font-size: 24px; margin-right: 10px; color: #3b5998;"><i class="fa fa-facebook"></i></a>
+                  @elseif(strtolower($social->ms_nama_media) == 'twitter')
+                  <a href="{{ $social->ms_url }}" class="social-icon" style="font-size: 24px; margin-right: 10px; color: #1da1f2;"><i class="fa fa-twitter"></i></a>
+                  @elseif(strtolower($social->ms_nama_media) == 'instagram')
+                  <a href="{{ $social->ms_url }}" class="social-icon" style="font-size: 24px; margin-right: 10px; color: #e1306c;"><i class="fa fa-instagram"></i></a>
+                  @elseif(strtolower($social->ms_nama_media) == 'youtube')
+                  <a href="{{ $social->ms_url }}" class="social-icon" style="font-size: 24px; margin-right: 10px; color: #ff0000;"><i class="fa fa-youtube"></i></a>
+                  {{-- @elseif(strtolower($social->ms_nama_media) == 'whatsapp')
+                  <a href="{{ $social->ms_url }}" class="social-icon" style="font-size: 24px; margin-right: 10px; color: #25d366;"><i class="fa fa-whatsapp"></i></a> --}}
+                  @endif
+                @endforeach
+                </div>
+              </div>
+            </div>
+          <div class="col-md-3 col-sm-6 mb-3">
+            <div class="single-footer-widget">
+              <h3 class="title">Informasi :</h3>
+              <ul class="list-unstyled">
+                <li><a href="{{ route('berita')}}" title="Berita">Berita</a></li>
+                <li><a href="https://www.sdnduajambu.sch.id/berita/artikel" title="Artikel">Artikel</a></li>
+              </ul>
+            </div>
+          </div>
+            <div class="col-md-3 col-sm-6 mb-3">
+            <div class="single-footer-widget">
+              <h3 class="title">Lokasi Sekolah:</h3>
+              <div class="map-responsive">
+              <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1983.158327062084!2d107.6288757!3d-6.9381734!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e68e80b29802555%3A0x7c4e5aec77737b9c!2sSDN%20162%20Warung%20Jambu!5e0!3m2!1sen!2sid!4v1698765432100!5m2!1sen!2sid" width="300" height="250" frameborder="0" style="border:0" allowfullscreen></iframe>
+              </div>
+            </div>
+            </div>
+        </div>
       </div>
     </div>
-
-    <div class="container">
-      <div class="copyright">
-        &copy; Copyright <strong>Regna</strong>. All Rights Reserved
-      </div>
-      <div class="credits">
-        Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
-      </div>
-    </div>
-  </footer><!-- #footer -->
+  </footer>
+  <!-- #footer -->
 
   <a href="#" class="back-to-top"><i class="fa fa-chevron-up"></i></a>
 
