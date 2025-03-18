@@ -254,6 +254,10 @@
                                 <th width="12px">No</th>
                                 <th class="text-center">Visi</th>
                                 <th class="text-center">Misi</th>
+<<<<<<< HEAD
+=======
+                                <th class="text-center">Sejarah</th>
+>>>>>>> be8b2b83b87cf522a1c98946187e9b334ddac469
                                 <th class="text-center">Status</th>
                                 <th width="88px">Action</th>
                             </tr>
@@ -267,6 +271,16 @@
                                     <td>{{$index+1}}</td>
                                     <td>{{$item->a_visi}}</td>
                                     <td>{{$item->a_misi}}</td>
+<<<<<<< HEAD
+=======
+                                    <td>
+                                        @foreach ($aboutSejarah_all as $sejarah)
+                                            @if ($sejarah->as_id == $item->as_id)
+                                                {{$sejarah->as_sejarah}}
+                                            @endif
+                                        @endforeach
+                                    </td>
+>>>>>>> be8b2b83b87cf522a1c98946187e9b334ddac469
                                     <td>{{$item->a_status}}</td>
                                     <td>
                                         @if ($item->a_status == 'HAPUS')

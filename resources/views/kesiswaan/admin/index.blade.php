@@ -13,6 +13,10 @@
 @endsection
 
 @section('content')
+<<<<<<< HEAD
+=======
+    @if (auth()->user()->role == 'admin')
+>>>>>>> be8b2b83b87cf522a1c98946187e9b334ddac469
     <div class="row">
         <div class="col-md-12">
             <div class="card">
@@ -176,10 +180,18 @@
                         </tfoot>
                     </table>
                 </div>    
+<<<<<<< HEAD
             @endif
             </div>
         </div>
     </div>
+=======
+                @endif
+            </div>
+        </div>
+    </div>
+    @endif
+>>>>>>> be8b2b83b87cf522a1c98946187e9b334ddac469
 
     <div class="row">
         <div class="col-md-12">
@@ -292,15 +304,27 @@
                                 @if (Request::get('status') != 'hapus' && $item->p_status == 'hapus')
                                     @continue
                                 @endif
+<<<<<<< HEAD
+=======
+                                @if (auth()->user()->role == 'guru' && $item->p_create_id != auth()->user()->id)
+                                    @continue
+                                @endif
+>>>>>>> be8b2b83b87cf522a1c98946187e9b334ddac469
                                 <tr>
                                     <td>{{$index+1}}</td>
                                     <td>{{$item->p_nama_kegiatan}}</td>
                                     <td>{{$item->p_deskripsi}}</td>
                                     <td>
                                         @if($item->p_foto)
+<<<<<<< HEAD
                                         <img src="{{ asset('kesiswaan_image/'. strtolower($menu) .'_image/' . $item->p_foto) }}" alt="Foto" width="50">
                                         @else
                                         No Image
+=======
+                                            <img src="{{ asset('kesiswaan_image/pembiasaan_image/' . $item->p_foto) }}" alt="Foto" width="50">
+                                        @else
+                                            No Image
+>>>>>>> be8b2b83b87cf522a1c98946187e9b334ddac469
                                         @endif
                                     </td>
                                     @if ($item->p_status == 'TIDAK')
@@ -340,6 +364,12 @@
                                 @if (Request::get('status') != 'hapus' && $item->ph_status == 'hapus')
                                     @continue
                                 @endif
+<<<<<<< HEAD
+=======
+                                @if (auth()->user()->role == 'guru' && $item->ph_create_id != auth()->user()->id)
+                                    @continue
+                                @endif
+>>>>>>> be8b2b83b87cf522a1c98946187e9b334ddac469
                                 <tr>
                                     <td>{{$index+1}}</td>
                                     <td>{{$item->ph_nama_kegiatan}}</td>
@@ -394,6 +424,12 @@
                                 @if (Request::get('status') != 'hapus' && $item->e_status == 'hapus')
                                     @continue
                                 @endif
+<<<<<<< HEAD
+=======
+                                @if (auth()->user()->role == 'guru' && $item->e_create_id != auth()->user()->id)
+                                    @continue
+                                @endif
+>>>>>>> be8b2b83b87cf522a1c98946187e9b334ddac469
                                 <tr>
                                     <td>{{$index+1}}</td>
                                     <td>{{$item->e_judul_slide}}</td>
@@ -465,6 +501,12 @@
                                 @if (Request::get('status') != 'hapus' && $item->t_status == 'hapus')
                                     @continue
                                 @endif
+<<<<<<< HEAD
+=======
+                                @if (auth()->user()->role == 'guru' && $item->t_create_id != auth()->user()->id)
+                                    @continue
+                                @endif
+>>>>>>> be8b2b83b87cf522a1c98946187e9b334ddac469
                                 <tr>
                                     <td>{{$index+1}}</td>
                                     <td>{{$item->t_nama_peraturan}}</td>

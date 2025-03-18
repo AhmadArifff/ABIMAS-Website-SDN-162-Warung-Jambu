@@ -134,14 +134,22 @@
                                 @foreach($pembiasaan as $index => $activity)
                                     @if($index < 6)
                                         <div class="col-md-6 col-lg-6 mb-4 activity-card" data-page="1" style="transition: transform 0.3s, opacity 0.3s;">
+<<<<<<< HEAD
                                             <div class="card" style="transition: transform 0.3s;" data-toggle="modal" data-target="#activityModal{{ $index + 1 }}">
+=======
+                                            <a href="{{ route('pembiasaan.detail', ['id' => $activity->p_id]) }}" class="card" style="transition: transform 0.3s;" data-toggle="modal" data-target="#activityModal{{ $index + 1 }}">
+>>>>>>> be8b2b83b87cf522a1c98946187e9b334ddac469
                                                 <img src="{{ asset('kesiswaan_image/pembiasaan_image/'.$activity->p_foto) }}" class="card-img-top" alt="{{ $activity->p_nama_kegiatan }}" style="height: 150px; object-fit: cover; width: 100%; image-rendering: optimizeSpeed;">
                                                 <div class="card-body">
                                                     <h5 class="card-title">{{ $activity->p_nama_kegiatan }}</h5>
                                                     <p class="card-text">{{ $activity->p_deskripsi }}</p>
                                                     <p class="card-text text-right"><small class="text-muted">{{ \Carbon\Carbon::parse($activity->p_create_at)->format('d-m-Y') }}</small></p>
                                                 </div>
+<<<<<<< HEAD
                                             </div>
+=======
+                                            </a>
+>>>>>>> be8b2b83b87cf522a1c98946187e9b334ddac469
                                         </div>
                                         <!-- Modal -->
                                         <div class="modal fade" id="activityModal{{ $index + 1 }}" tabindex="-1" role="dialog" aria-labelledby="activityModalLabel{{ $index + 1 }}" aria-hidden="true">

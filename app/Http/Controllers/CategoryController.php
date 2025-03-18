@@ -4,6 +4,12 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use File;
+use App\Pembiasaan;
+use App\Kesiswaan;
+use App\Ekstrakurikuler;
+use App\Penghargaan;
+use App\Tatatertib;
+use App\User;
 
 class CategoryController extends Controller
 {
@@ -14,8 +20,24 @@ class CategoryController extends Controller
      */
     public function index()
     {
+        $pembiasaan_all=Pembiasaan::where('p_status', 'DRAFT')->get();
+        $publishedMenus = Kesiswaan::where('k_status', 'PUBLISH')->pluck('k_nama_menu')->toArray();
+
+        $kesiswaa_all = Kesiswaan::where('k_status', 'DRAFT')
+            ->whereNotIn('k_nama_menu', $publishedMenus) // Hanya mengambil DRAFT yang tidak punya PUBLISH dalam grupnya
+            ->get();
+        $publishedEkstrakurikulerNames = Ekstrakurikuler::where('e_status', 'PUBLISH')->pluck('e_nama_ekstrakurikuler')->toArray();
+
+        $ekstrakurikuler_all = Ekstrakurikuler::where('e_status', 'DRAFT')
+            ->whereNotIn('e_nama_ekstrakurikuler', $publishedEkstrakurikulerNames) // Hanya mengambil DRAFT yang tidak punya PUBLISH dalam grupnya
+            ->get();
+        $penghargaan_all=Penghargaan::where('ph_status', 'DRAFT')->get();
+        $tatatertib_all=Tatatertib::where('t_status', 'DRAFT')->get();
+        $user_all=User::all();
+
+        $menu = 'Category';
         $categories = \App\Category::paginate(10);
-        return view('categories.index', ['categories'=>$categories]);
+        return view('categories.index', ['categories'=>$categories, 'menu'=>$menu, 'pembiasaan_all'=>$pembiasaan_all, 'kesiswaa_all'=>$kesiswaa_all, 'ekstrakurikuler_all'=>$ekstrakurikuler_all, 'penghargaan_all'=>$penghargaan_all, 'tatatertib_all'=>$tatatertib_all, 'user_all'=>$user_all]);
     }
 
     /**
@@ -80,8 +102,24 @@ class CategoryController extends Controller
      */
     public function edit($id)
     {
+        $pembiasaan_all=Pembiasaan::where('p_status', 'DRAFT')->get();
+        $publishedMenus = Kesiswaan::where('k_status', 'PUBLISH')->pluck('k_nama_menu')->toArray();
+
+        $kesiswaa_all = Kesiswaan::where('k_status', 'DRAFT')
+            ->whereNotIn('k_nama_menu', $publishedMenus) // Hanya mengambil DRAFT yang tidak punya PUBLISH dalam grupnya
+            ->get();
+        $publishedEkstrakurikulerNames = Ekstrakurikuler::where('e_status', 'PUBLISH')->pluck('e_nama_ekstrakurikuler')->toArray();
+
+        $ekstrakurikuler_all = Ekstrakurikuler::where('e_status', 'DRAFT')
+            ->whereNotIn('e_nama_ekstrakurikuler', $publishedEkstrakurikulerNames) // Hanya mengambil DRAFT yang tidak punya PUBLISH dalam grupnya
+            ->get();
+        $penghargaan_all=Penghargaan::where('ph_status', 'DRAFT')->get();
+        $tatatertib_all=Tatatertib::where('t_status', 'DRAFT')->get();
+        $user_all=User::all();
+
+        $menu = 'Category';
         $category = \App\Category::findOrFail($id);
-        return view('categories.edit', ['category'=>$category]);
+        return view('categories.edit', ['category'=>$category, 'menu'=>$menu, 'pembiasaan_all'=>$pembiasaan_all, 'kesiswaa_all'=>$kesiswaa_all, 'ekstrakurikuler_all'=>$ekstrakurikuler_all, 'penghargaan_all'=>$penghargaan_all, 'tatatertib_all'=>$tatatertib_all, 'user_all'=>$user_all]);
     }
 
     /**

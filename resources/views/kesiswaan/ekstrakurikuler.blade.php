@@ -133,16 +133,36 @@
                         <div class="col-md-12">
                             <div class="row">
                                 @foreach($achievements as $achievement)
+<<<<<<< HEAD
                                     <div class="col-md-6 col-lg-6 mb-4">
                                         <div class="card">
+=======
+                                    <div class="col-md-6 col-lg-6 mb-4" style="transition: transform 0.3s, opacity 0.3s;">
+                                        <a href="{{ route('penghargaan.detail', ['id' => $achievement->id]) }}" class="card" style="transition: transform 0.3s;" data-toggle="modal" data-target="#achievementModal{{ $loop->index + 1 }}">
+>>>>>>> be8b2b83b87cf522a1c98946187e9b334ddac469
                                             <img src="{{ asset('kesiswaan_image/penghargaan_image/'.$achievement->ph_foto) }}" class="card-img-top" alt="{{ $achievement->judul }}" style="height: 150px; object-fit: cover; width: 100%; image-rendering: optimizeSpeed;">
                                             <div class="card-body">
                                                 <h5 class="card-title">{{ $achievement->judul }}</h5>
                                                 <p class="card-text">{{ $achievement->deskripsi }}</p>
                                                 <p class="card-text text-right"><small class="text-muted">{{ \Carbon\Carbon::parse($achievement->tanggal)->format('d-m-Y') }}</small></p>
                                             </div>
+<<<<<<< HEAD
                                         </div>
                                     </div>
+=======
+                                        </a>
+                                    </div>
+                                    <script>
+                                        document.querySelectorAll('.col-md-6.col-lg-6.mb-4').forEach(item => {
+                                            item.addEventListener('mouseover', () => {
+                                                item.style.transform = 'scale(1.05)';
+                                            });
+                                            item.addEventListener('mouseout', () => {
+                                                item.style.transform = 'scale(1)';
+                                            });
+                                        });
+                                    </script>
+>>>>>>> be8b2b83b87cf522a1c98946187e9b334ddac469
                                 @endforeach
                             </div>
                         </div>

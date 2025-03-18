@@ -7,7 +7,10 @@
 @section('second-breadcrumb')
     <li>Create</li>
 @endsection
+<<<<<<< HEAD
 @if ($menu == 'Pembiasaan' || $menu == 'Penghargaan' || $menu == 'Ekstrakurikuler' || $menu == 'Tatatertib')
+=======
+>>>>>>> be8b2b83b87cf522a1c98946187e9b334ddac469
 @section('content')
     <div class="row">
         <div class="col-md-12">
@@ -16,7 +19,11 @@
                     <div class="col-12 mb-3">
                         <h3 align="center"></h3>
                     </div>
+<<<<<<< HEAD
                     <form action="{{route(strtolower($menu) .'.store')}}" method="POST" enctype="multipart/form-data">
+=======
+                    <form action="{{route('admin.'.strtolower($menu) .'.store')}}" method="POST" enctype="multipart/form-data">
+>>>>>>> be8b2b83b87cf522a1c98946187e9b334ddac469
                             @if ($errors->any())
                                 <div class="alert alert-danger">
                                     <ul>
@@ -30,7 +37,10 @@
                         @if ($menu == 'Pembiasaan' || $menu == 'Penghargaan' || $menu == 'Ekstrakurikuler')
                         <div class="col-10">
                         @endif
+<<<<<<< HEAD
                             @if ($menu == 'Tatatertib')
+=======
+>>>>>>> be8b2b83b87cf522a1c98946187e9b334ddac469
                                 <div class="d-flex align-items-end mt-2 mb-2 shadow card p-2">
                                     <div class="col-12">
                                         <label for="p_nama_kegiatan" class="col-form-label font-weight-bold">Jumlah Data</label>
@@ -42,6 +52,7 @@
                                         <div class="col-12" style="border: 1px solid #ddd; padding: 10px;">
                                             <div class="row">
                                                 <div class="col-sm-6">
+<<<<<<< HEAD
                                                     <label for="p_nama_kegiatan" class="col-form-label font-weight-bold">Nama {{$menu}}</label>
                                                     @if ($menu == 'Pembiasaan' || $menu == 'Penghargaan' || $menu == 'Tatatertib')
                                                     <input type="text" name="k_id" id="k_id" placeholder="k_id..." class="form-control {{$errors->first('k_id') ? "is-invalid" : ""}}" value="{{ $kesiswaan->k_id }}" required oninput="updatePreview()" hidden>
@@ -51,6 +62,14 @@
                                                 <div class="col-sm-6">
                                                     <label for="p_deskripsi" class="col-form-label font-weight-bold">Deskripsi</label>
                                                     <textarea name="deskripsi[]" placeholder="Deskripsi..." class="form-control {{$errors->first('deskripsi') ? "is-invalid" : ""}}" required oninput="updatePreview()"></textarea>
+=======
+                                                    <label for="visi" class="col-form-label font-weight-bold">Visi</label>
+                                                    <textarea name="visi[]" placeholder="Visi..." class="form-control {{$errors->first('visi') ? "is-invalid" : ""}}" required oninput="updatePreview()"></textarea>
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <label for="misi" class="col-form-label font-weight-bold">Misi</label>
+                                                    <textarea name="misi[]" placeholder="Misi..." class="form-control {{$errors->first('misi') ? "is-invalid" : ""}}" required oninput="updatePreview()"></textarea>
+>>>>>>> be8b2b83b87cf522a1c98946187e9b334ddac469
                                                 </div>
                                             </div>
                                         </div>
@@ -65,12 +84,21 @@
                                             <div class="col-12" style="border: 1px solid #ddd; padding: 10px;">
                                                 <div class="row">
                                                     <div class="col-sm-6">
+<<<<<<< HEAD
                                                         <label for="p_nama_kegiatan" class="col-form-label font-weight-bold">Nama Kegiatan</label>
                                                         <input type="text" name="nama_kegiatan[]" placeholder="Nama Kegiatan..." class="form-control {{$errors->first('nama_kegiatan') ? "is-invalid" : ""}}" required oninput="updatePreview()">
                                                     </div>
                                                     <div class="col-sm-6">
                                                         <label for="p_deskripsi" class="col-form-label font-weight-bold">Deskripsi</label>
                                                         <textarea name="deskripsi[]" placeholder="Deskripsi..." class="form-control {{$errors->first('deskripsi') ? "is-invalid" : ""}}" required oninput="updatePreview()"></textarea>
+=======
+                                                        <label for="visi" class="col-form-label font-weight-bold">Visi</label>
+                                                        <textarea name="visi[]" placeholder="Visi..." class="form-control {{$errors->first('visi') ? "is-invalid" : ""}}" required oninput="updatePreview()"></textarea>
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                        <label for="misi" class="col-form-label font-weight-bold">Misi</label>
+                                                        <textarea name="misi[]" placeholder="Misi..." class="form-control {{$errors->first('misi') ? "is-invalid" : ""}}" required oninput="updatePreview()"></textarea>
+>>>>>>> be8b2b83b87cf522a1c98946187e9b334ddac469
                                                     </div>
                                                 </div>
                                             </div>
@@ -92,6 +120,7 @@
                                         right: 10px;
                                     }
                                 </style>
+<<<<<<< HEAD
                             @endif
                             @if ($menu == 'Pembiasaan' || $menu == 'Penghargaan' || $menu == 'Ekstrakurikuler')
                                 @if ($menu == 'Ekstrakurikuler')
@@ -178,12 +207,33 @@
                                     }
                                 });
                             </script>
+=======
+                            <div class="col-12">
+                                <div class="mb-3 row shadow card p-3">
+                                    <div class="col-12" style="border: 1px solid #ddd; padding: 10px;">
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <label for="sejarah" class="font-weight-bold">Sejarah SDN 162 Warung Jambu Kiara Condong</label>
+                                                <textarea name="sejarah" id="sejarah" placeholder="Sejarah..." class="form-control {{$errors->first('sejarah') ? "is-invalid" : ""}}" required style="width: 100%;">{{old('sejarah')}}</textarea>
+                                                <input type="text" name="k_id" id="k_id" placeholder="k_id..." class="form-control {{$errors->first('k_id') ? "is-invalid" : ""}}" value="{{ $kesiswaan->k_id }}" required oninput="updatePreview()" hidden>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mb-3 mt-4">
+                                <a href="{{route('admin.'.strtolower($menu) .'.index')}}" class="btn btn-md btn-secondary">Back</a>
+                                <button type="submit" name="status" value="draft" class="btn btn-md btn-warning">Draft</button>
+                                <button type="submit" name="status" value="publish" class="btn btn-md btn-success">Publish</button>
+                            </div>
+>>>>>>> be8b2b83b87cf522a1c98946187e9b334ddac469
                         </div>
                     </form>
                 </div>
             </div>
         </div>
     </div>
+<<<<<<< HEAD
 
     <div class="card mt-4 shadow">
         <div class="card-body">
@@ -469,3 +519,6 @@
     </script>
 @endsection
 @endif
+=======
+@endsection
+>>>>>>> be8b2b83b87cf522a1c98946187e9b334ddac469

@@ -123,134 +123,22 @@
 
 @section('content')
     <!--========================== Article Section ============================-->
-    <section id="about">
+    <section id="about" style="user-select: none;">
         <div class="container wow fadeIn">
             <div class="row">
-                <div class="col-lg-9">
+                <div class="col-lg-9 col-md-8 col-sm-12">
                     <div class="article">
                         <h1 id="preview-main-title">{{ $kesiswaan ? $kesiswaan->k_judul_isi_content : 'Data Content Judul Belum Ditambahkan!' }}</h1>
-                        <div class="col-md-12">
-                            <div class="row" id="activity-cards">
-                                @foreach($penghargaan as $index => $activity)
-                                    @if($index < 6)
-                                        <div class="col-md-6 col-lg-6 mb-4 activity-card" data-page="1" style="transition: transform 0.3s, opacity 0.3s;">
-<<<<<<< HEAD
-                                            <div class="card" style="transition: transform 0.3s;" data-toggle="modal" data-target="#activityModal{{ $index + 1 }}">
-=======
-                                            <a href="{{ route('penghargaan.detail', ['id' => $activity->ph_id]) }}" class="card" style="transition: transform 0.3s;" data-toggle="modal" data-target="#activityModal{{ $index + 1 }}">
->>>>>>> be8b2b83b87cf522a1c98946187e9b334ddac469
-                                                <img src="{{ asset('kesiswaan_image/penghargaan_image/'.$activity->ph_foto) }}" class="card-img-top" alt="{{ $activity->ph_nama_kegiatan }}" style="height: 150px; object-fit: cover; width: 100%; image-rendering: optimizeSpeed;">
-                                                <div class="card-body">
-                                                    <h5 class="card-title">{{ $activity->ph_nama_kegiatan }}</h5>
-                                                    <p class="card-text">{{ $activity->ph_deskripsi }}</p>
-                                                    <p class="card-text text-right"><small class="text-muted">{{ \Carbon\Carbon::parse($activity->ph_create_at)->format('d-m-Y') }}</small></p>
-                                                </div>
-<<<<<<< HEAD
-                                            </div>
-=======
-                                            </a>
->>>>>>> be8b2b83b87cf522a1c98946187e9b334ddac469
-                                        </div>
-                                        <!-- Modal -->
-                                        <div class="modal fade" id="activityModal{{ $index + 1 }}" tabindex="-1" role="dialog" aria-labelledby="activityModalLabel{{ $index + 1 }}" aria-hidden="true">
-                                            <div class="modal-dialog modal-lg" role="document">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h5 class="modal-title" id="activityModalLabel{{ $index }}">{{ $activity->ph_nama_kegiatan }}</h5>
-                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                            <span aria-hidden="true">&times;</span>
-                                                        </button>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        <img src="{{ asset('kesiswaan_image/pembiasaan_image/'.$activity->ph_foto) }}" class="img-fluid mb-3" alt="{{ $activity->ph_nama_kegiatan }}">
-                                                        <p>{{ $activity->ph_deskripsi }}</p>
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    @elseif($index < 12)
-                                        <div class="col-md-6 col-lg-6 mb-4 activity-card" data-page="2" style="display: none; transition: transform 0.3s, opacity 0.3s;">
-                                            <div class="card" style="transition: transform 0.3s;" data-toggle="modal" data-target="#activityModal{{ $index + 1 }}">
-                                                <img src="{{ asset('kesiswaan_image/pembiasaan_image/'.$activity->ph_foto) }}" class="card-img-top" alt="{{ $activity->ph_nama_kegiatan }}" style="height: 150px; object-fit: cover; width: 100%; image-rendering: optimizeSpeed;">
-                                                <div class="card-body">
-                                                    <h5 class="card-title">{{ $activity->ph_nama_kegiatan }}</h5>
-                                                    <p class="card-text">{{ $activity->ph_deskripsi }}</p>
-                                                    <p class="card-text text-right"><small class="text-muted">{{ \Carbon\Carbon::parse($activity->ph_create_at)->format('d-m-Y') }}</small></p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    @endif
-                                @endforeach
-                            </div>
-                            <div class="text-center">
-                                <nav aria-label="Page navigation example">
-                                    <ul class="pagination justify-content-center">
-                                        <li class="page-item"><a class="page-link" href="#" data-page="prev">Previous</a></li>
-                                        @for ($i = 1; $i <= ceil($penghargaan->count() / 6); $i++)
-                                            <li class="page-item"><a class="page-link" href="#" data-page="{{ $i }}">{{ $i }}</a></li>
-                                        @endfor
-                                        <li class="page-item"><a class="page-link" href="#" data-page="next">Next</a></li>
-                                    </ul>
-                                </nav>
-                            </div>
-                        </div>
+                        @if ($menu == 'Pembiasaan')
+                            <img src="{{ asset('kesiswaan_image/' . strtolower($menu) . '_image/' . $pembiasaandetail->p_foto) }}" style="width: 100%; height: 400px; object-fit: cover; margin-bottom: 20px;">
+                            <p>{{ $pembiasaandetail->p_deskripsi }}</p>
+                        @elseif ($menu == 'Penghargaan')
+                            <img src="{{ asset('kesiswaan_image/' . strtolower($menu) . '_image/' . $penghargaandetail->ph_foto) }}" style="width: 100%; height: 400px; object-fit: cover; margin-bottom: 20px;">
+                            <p>{{ $penghargaandetail->ph_deskripsi }}</p>
+                            
+                        @endif
                     </div>
                 </div>
-                <script>
-                    document.querySelectorAll('.page-link').forEach(link => {
-                        link.addEventListener('click', function(e) {
-                            e.preventDefault();
-                            const currentPage = document.querySelector('.page-link.active') ? parseInt(document.querySelector('.page-link.active').getAttribute('data-page')) : 1;
-                            let page = this.getAttribute('data-page');
-                            if (page === 'prev') {
-                                page = currentPage > 1 ? currentPage - 1 : 1;
-                            } else if (page === 'next') {
-                                page = currentPage < 2 ? currentPage + 1 : 2;
-                            } else {
-                                page = parseInt(page);
-                            }
-                            document.querySelectorAll('.activity-card').forEach(card => {
-                                card.style.opacity = 0;
-                                setTimeout(() => {
-                                    card.style.display = card.getAttribute('data-page') == page ? 'block' : 'none';
-                                    card.style.opacity = 1;
-                                }, 300);
-                            });
-                            document.querySelectorAll('.page-link').forEach(link => {
-                                link.classList.remove('active');
-                            });
-                            document.querySelector(`.page-link[data-page="${page}"]`).classList.add('active');
-                        });
-                    });
-
-                    document.querySelectorAll('.activity-card .card').forEach(card => {
-                        card.addEventListener('mouseover', () => {
-                            card.style.transform = 'scale(1.05)';
-                        });
-                        card.addEventListener('mouseout', () => {
-                            card.style.transform = 'scale(1)';
-                        });
-                    });
-                </script>
-                <style>
-                    @media (min-width: 992px) {
-                        .activity-card {
-                            margin-bottom: 30px;
-                        }
-                    }
-                    @media (max-width: 576px) {
-                        .activity-card {
-                            width: 100% !important;
-                            height: auto !important;
-                        }
-                        .activity-card img {
-                            height: auto !important;
-                        }
-                    }
-                </style>
                 <div class="col-md-3">
                     <!-- Search Element -->
                     <div class="mb-4">
