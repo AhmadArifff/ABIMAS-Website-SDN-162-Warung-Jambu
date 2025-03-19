@@ -8,6 +8,8 @@ use App\Kesiswaan;
 use App\Ekstrakurikuler;
 use App\Penghargaan;
 use App\Tatatertib;
+use App\Berita;
+use App\Beasiswa;
 use App\User;
 use Illuminate\Support\Facades\File;
 
@@ -16,7 +18,7 @@ class TatatertibController extends Controller
     public function __construct()
     {
         $this->middleware(function ($request, $next) {
-            if (auth()->user()->role !== 'admin' && auth()->user()->role !== 'guru') {
+            if (auth()->user()->role !== 'admin') {
                 return redirect()->route('dashboard')->withErrors(['error' => 'Anda tidak memiliki akses ke halaman ini']);
             }
             return $next($request);
@@ -57,12 +59,14 @@ class TatatertibController extends Controller
         $penghargaan_all=Penghargaan::where('ph_status', 'DRAFT')->get();
         $tatatertib_all=Tatatertib::where('t_status', 'DRAFT')->get();
         $user_all=User::all();
+        $berita_all = Berita::where('b_status', 'DRAFT')->get();
 
         $kesiswaan->where('k_nama_menu', $menu);
         $tatatertib = $tatatertib->paginate(10);
         $kesiswaan = $kesiswaan->paginate(10);
+        $beasiswa_all = Beasiswa::where('status', 'DRAFT')->get();
     
-        return view('kesiswaan.admin.index', compact('tatatertib', 'kesiswaan', 'menu', 'pembiasaan_all', 'kesiswaa_all', 'ekstrakurikuler_all', 'penghargaan_all', 'tatatertib_all', 'user_all'));
+        return view('kesiswaan.admin.index', compact('tatatertib', 'kesiswaan', 'menu', 'pembiasaan_all', 'kesiswaa_all', 'ekstrakurikuler_all', 'penghargaan_all', 'tatatertib_all', 'user_all', 'berita_all', 'beasiswa_all'));
     }
 
     public function create(Request $request)
@@ -80,6 +84,7 @@ class TatatertibController extends Controller
             ->get();
         $penghargaan_all=Penghargaan::where('ph_status', 'DRAFT')->get();
         $tatatertib_all=Tatatertib::where('t_status', 'DRAFT')->get();
+        $beasiswa_all = Beasiswa::where('status', 'DRAFT')->get();
         $user_all=User::all();
 
         $menu = $request->query('menu');
@@ -87,6 +92,7 @@ class TatatertibController extends Controller
         if (!$kesiswaan) {
             return redirect()->back()->withErrors(['error' => 'Data Manage Content Slide Tatatertib Tidak Terpublish! Tolong Publish Terlebih Dahulu!']);
         }
+        $berita_all = Berita::where('b_status', 'DRAFT')->get();
         $tatatertib = [
             'rules' => [
             [
@@ -103,7 +109,7 @@ class TatatertibController extends Controller
             ]
             ]
           ];
-        return view('kesiswaan/admin.create', compact('kesiswaan', 'menu','tatatertib', 'pembiasaan_all', 'kesiswaa_all', 'ekstrakurikuler_all', 'penghargaan_all', 'tatatertib_all', 'user_all','publishedEkstrakurikulerNames'));
+        return view('kesiswaan/admin.create', compact('kesiswaan', 'menu','tatatertib', 'pembiasaan_all', 'kesiswaa_all', 'ekstrakurikuler_all', 'penghargaan_all', 'tatatertib_all', 'user_all','publishedEkstrakurikulerNames','publishedMenus','berita_all','beasiswa_all'));
     }
 
     public function store(Request $request)
@@ -147,6 +153,7 @@ class TatatertibController extends Controller
             ->get();
         $penghargaan_all=Penghargaan::where('ph_status', 'DRAFT')->get();
         $tatatertib_all=Tatatertib::where('t_status', 'DRAFT')->get();
+        $beasiswa_all = Beasiswa::where('status', 'DRAFT')->get();
         $user_all=User::all();
         $tatatertib_preview = [
             'rules' => [
@@ -164,6 +171,7 @@ class TatatertibController extends Controller
             ]
             ]
         ];
+        $berita_all = Berita::where('b_status', 'DRAFT')->get();
         $menu = 'Tatatertib';
         $tatatertib = Tatatertib::findOrFail($id);
         $kesiswaan = Kesiswaan::where('k_nama_menu', $menu)->where('k_status', 'PUBLISH')->first();
@@ -172,7 +180,7 @@ class TatatertibController extends Controller
             return redirect()->back()->withErrors(['error' => 'Data Slide Harus Ada Status Publish!']);
         }
         
-        return view('kesiswaan/admin.edit', ['tatatertib' => $tatatertib, 'kesiswaan' => $kesiswaan, 'menu' => $menu, 'tatatertib_preview' => $tatatertib_preview, 'pembiasaan_all' => $pembiasaan_all, 'kesiswaa_all' => $kesiswaa_all, 'ekstrakurikuler_all' => $ekstrakurikuler_all, 'penghargaan_all' => $penghargaan_all, 'tatatertib_all' => $tatatertib_all, 'user_all' => $user_all]);
+        return view('kesiswaan/admin.edit', ['tatatertib' => $tatatertib, 'kesiswaan' => $kesiswaan, 'menu' => $menu, 'tatatertib_preview' => $tatatertib_preview, 'pembiasaan_all' => $pembiasaan_all, 'kesiswaa_all' => $kesiswaa_all, 'ekstrakurikuler_all' => $ekstrakurikuler_all, 'penghargaan_all' => $penghargaan_all, 'tatatertib_all' => $tatatertib_all, 'user_all' => $user_all, 'berita_all' => $berita_all, 'beasiswa_all' => $beasiswa_all]);
     }
 
     public function update(Request $request, $id)

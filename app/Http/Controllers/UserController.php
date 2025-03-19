@@ -5,15 +5,22 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Category;
 use App\About;
+use App\AboutSejarah;
 use App\AboutProfile;
 use App\Article;
 use App\Destination;
 use App\Pembiasaan;
 use App\Kesiswaan;
 use App\Ekstrakurikuler;
+use App\Berita;
 use App\Penghargaan;
 use App\Tatatertib;
+use App\MediaSosial;
+use App\Tautan;
 use App\User;
+use App\Beasiswa;
+use App\Guru;
+use App\Pendaftaran;
 
 class UserController extends Controller
 {
@@ -24,16 +31,42 @@ class UserController extends Controller
 
   public function home()
   {
+    $media = MediaSosial::all();
+    $tautan = Tautan::all();
     $ekstrakurikuler_all = Ekstrakurikuler::where('e_status', 'PUBLISH')->get();
+    $kesiswaan = Kesiswaan::first(); // Adjust this query as needed
+    $berita = Berita::where('b_status', 'PUBLISH')->get(); // Adjust this query as needed
+    $categories = Category::all(); // Adjust this query as needed
+    $beasiswas = Beasiswa::where('status', 'PUBLISH')->get(); // Adjust this query as needed
+    $about = About::where('a_status', 'PUBLISH')->get();
+    $aboutsejarah = AboutSejarah::all(); // Adjust this query as needed
+    $gurus = Guru::all(); // Adjust this query as needed
+    $pembiasaan = Pembiasaan::where('p_status', 'PUBLISH')->get();
+    $penghargaan = Penghargaan::where('ph_status', 'PUBLISH')->get();
+
     $data = [
-      'categories' => Category::all(),
-      'about' => AboutProfile::all()
+      'categories' => $categories,
+      'about' => AboutProfile::all(),
+      'kesiswaan' => $kesiswaan,
+      'berita' => $berita,
+      'ekstrakurikuler_all' => $ekstrakurikuler_all,
+      'menu' => 'Home',
+      'media' => $media,
+      'tautan' => $tautan,
+      'beasiswas' => $beasiswas,
+      'aboutsejarah' => $aboutsejarah,
+      'gurus' => $gurus,
+      'pembiasaan' => $pembiasaan,
+      'penghargaan' => $penghargaan
     ];
-    return view('user/home', $data, ['ekstrakurikuler_all' => $ekstrakurikuler_all, 'menu' => 'Home']);
+
+    return view('user.home', $data);
   }
 
   public function blog(Request $request)
   {
+    $media = MediaSosial::all();
+    $tautan = Tautan::all();
     $ekstrakurikuler_all = Ekstrakurikuler::where('e_status', 'PUBLISH')->get();
     $keyword = $request->get('s') ? $request->get('s') : '';
     $category = $request->get('c') ? $request->get('c') : '';
@@ -53,11 +86,13 @@ class UserController extends Controller
       'recents' => $recents
     ];
 
-    return view('user/blog', $data, ['ekstrakurikuler_all' => $ekstrakurikuler_all]);
+    return view('user/blog', $data, ['ekstrakurikuler_all' => $ekstrakurikuler_all, 'media' => $media, 'tautan' => $tautan]);
   }
 
   public function show_article($slug)
   {
+    $media = MediaSosial::all();
+    $tautan = Tautan::all();
     $ekstrakurikuler_all = Ekstrakurikuler::where('e_status', 'PUBLISH')->get();
     $articles = Article::where('slug', $slug)->first();
     $recents = Article::select('title', 'slug')->where('status', 'PUBLISH')->orderBy('created_at', 'desc')->limit(5)->get();
@@ -65,11 +100,13 @@ class UserController extends Controller
       'articles' => $articles,
       'recents' => $recents
     ];
-    return view('user/blog', $data, ['ekstrakurikuler_all' => $ekstrakurikuler_all]);
+    return view('user/blog', $data, ['ekstrakurikuler_all' => $ekstrakurikuler_all, 'media' => $media, 'tautan' => $tautan]);
   }
 
   public function destination(Request $request)
   {
+    $media = MediaSosial::all();
+    $tautan = Tautan::all();
     $ekstrakurikuler_all = Ekstrakurikuler::where('e_status', 'PUBLISH')->get();
     $keyword = $request->get('s') ? $request->get('s') : '';
 
@@ -81,11 +118,13 @@ class UserController extends Controller
       'other' => $other_destinations
     ];
 
-    return view('user/destination', $data, ['ekstrakurikuler_all' => $ekstrakurikuler_all]);
+    return view('user/destination', $data, ['ekstrakurikuler_all' => $ekstrakurikuler_all, 'media' => $media, 'tautan' => $tautan]);
   }
 
   public function show_destination($slug)
   {
+    $media = MediaSosial::all();
+    $tautan = Tautan::all();
     $ekstrakurikuler_all = Ekstrakurikuler::where('e_status', 'PUBLISH')->get();
     $destinations = Destination::where('slug', $slug)->firstOrFail();
     $other_destinations = Destination::select('title', 'slug')->where('status', 'PUBLISH')->orderBy('created_at', 'desc')->limit(5)->get();
@@ -95,33 +134,23 @@ class UserController extends Controller
       'other' => $other_destinations
     ];
 
-    return view('user/destination', $data, ['ekstrakurikuler_all' => $ekstrakurikuler_all]);
+    return view('user/destination', $data, ['ekstrakurikuler_all' => $ekstrakurikuler_all, 'media' => $media, 'tautan' => $tautan]);
   }
   public function contact()
   {
+    $media = MediaSosial::all();
+    $tautan = Tautan::all();
+    $berita = Berita::where('b_status', 'PUBLISH')->get();
     $ekstrakurikuler_all = Ekstrakurikuler::where('e_status', 'PUBLISH')->get();
-    return view('user/contact', ['ekstrakurikuler_all' => $ekstrakurikuler_all]);
+    return view('user/contact', ['ekstrakurikuler_all' => $ekstrakurikuler_all, 'media' => $media, 'tautan' => $tautan, 'berita' => $berita]);
   }
   public function berita()
   {
+    $media = MediaSosial::all();
+    $tautan = Tautan::all();
     $ekstrakurikuler_all = Ekstrakurikuler::where('e_status', 'PUBLISH')->get();
-    return view('user/berita', ['ekstrakurikuler_all' => $ekstrakurikuler_all]);
-  }
-
-  public function tatatertib()
-  {
-    $ekstrakurikuler_all = Ekstrakurikuler::where('e_status', 'PUBLISH')->get();
-    $tatatertib = Tatatertib::where('t_status', 'PUBLISH')->get();
-    $menu = 'Tatatertib';
-    $kesiswaan = Kesiswaan::where('k_nama_menu', $menu)->where('k_status', 'PUBLISH')->first();
-    return view('kesiswaan/tatatertib', ['tatatertib' => $tatatertib, 'kesiswaan' => $kesiswaan, 'ekstrakurikuler_all' => $ekstrakurikuler_all]);
-  }
-
-  public function pembiasaan()
-  {
-    $ekstrakurikuler_all = Ekstrakurikuler::where('e_status', 'PUBLISH')->get();
-    $pembiasaan = Pembiasaan::where('p_status', 'PUBLISH')->get();
-    $menu = 'Pembiasaan';
+    $berita = Berita::where('b_status', 'PUBLISH')->get();
+    $menu = 'Berita';
     $kesiswaan = Kesiswaan::where('k_nama_menu', $menu)->where('k_status', 'PUBLISH')->first();
     $recentPosts = [
         (object)[
@@ -160,282 +189,231 @@ class UserController extends Controller
             'date' => 'Tanggal 05-05-2024'
         ]
     ];
-    return view('kesiswaan/pembiasaan', ['pembiasaan' => $pembiasaan, 'kesiswaan' => $kesiswaan, 'recentPosts' => $recentPosts, 'ekstrakurikuler_all' => $ekstrakurikuler_all]);
+    return view('user/berita', ['ekstrakurikuler_all' => $ekstrakurikuler_all, 'berita' => $berita, 'kesiswaan' => $kesiswaan, 'recentPosts' => $recentPosts, 'media' => $media, 'tautan' => $tautan]);
+  }
+
+  public function tatatertib()
+  {
+    $media = MediaSosial::all();
+    $tautan = Tautan::all();
+    $ekstrakurikuler_all = Ekstrakurikuler::where('e_status', 'PUBLISH')->get();
+    $tatatertib = Tatatertib::where('t_status', 'PUBLISH')->get();
+    $menu = 'Tatatertib';
+    $berita = Berita::where('b_status', 'PUBLISH')->get();
+    $kesiswaan = Kesiswaan::where('k_nama_menu', $menu)->where('k_status', 'PUBLISH')->first();
+    return view('kesiswaan/tatatertib', ['tatatertib' => $tatatertib, 'kesiswaan' => $kesiswaan, 'ekstrakurikuler_all' => $ekstrakurikuler_all, 'media' => $media, 'tautan' => $tautan, 'berita' => $berita]);
+  }
+
+  public function pembiasaan()
+  {
+    $media = MediaSosial::all();
+    $tautan = Tautan::all();
+    $ekstrakurikuler_all = Ekstrakurikuler::where('e_status', 'PUBLISH')->get();
+    $pembiasaan = Pembiasaan::where('p_status', 'PUBLISH')->get();
+    $menu = 'Pembiasaan';
+    $berita = Berita::where('b_status', 'PUBLISH')->get();
+    $kesiswaan = Kesiswaan::where('k_nama_menu', $menu)->where('k_status', 'PUBLISH')->first();
+    $recentPosts = [
+        (object)[
+            'link' => '#',
+            'image' => 'sample_image/Gambar.png',
+            'title' => 'Judul Artikel 1',
+            'description' => 'Deskripsi singkat artikel 1.',
+            'date' => 'Tanggal 01-01-2024'
+        ],
+        (object)[
+            'link' => '#',
+            'image' => 'sample_image/Gambar.png',
+            'title' => 'Judul Artikel 2',
+            'description' => 'Deskripsi singkat artikel 2.',
+            'date' => 'Tanggal 02-02-2024'
+        ],
+        (object)[
+            'link' => '#',
+            'image' => 'sample_image/Gambar.png',
+            'title' => 'Judul Artikel 3',
+            'description' => 'Deskripsi singkat artikel 3.',
+            'date' => 'Tanggal 03-03-2024'
+        ],
+        (object)[
+            'link' => '#',
+            'image' => 'sample_image/Gambar.png',
+            'title' => 'Judul Artikel 4',
+            'description' => 'Deskripsi singkat artikel 4.',
+            'date' => 'Tanggal 04-04-2024'
+        ],
+        (object)[
+            'link' => '#',
+            'image' => 'sample_image/Gambar.png',
+            'title' => 'Judul Artikel 5',
+            'description' => 'Deskripsi singkat artikel 5.',
+            'date' => 'Tanggal 05-05-2024'
+        ]
+    ];
+    return view('kesiswaan/pembiasaan', ['pembiasaan' => $pembiasaan, 'kesiswaan' => $kesiswaan, 'recentPosts' => $recentPosts, 'ekstrakurikuler_all' => $ekstrakurikuler_all, 'media' => $media, 'tautan' => $tautan, 'berita' => $berita]);
   }
 
   public function penghargaan()
   {
+    $media = MediaSosial::all();
+    $tautan = Tautan::all();
     $ekstrakurikuler_all = Ekstrakurikuler::where('e_status', 'PUBLISH')->get();
     $penghargaan = Penghargaan::where('ph_status', 'PUBLISH')->get();
     $menu = 'Penghargaan';
+    $berita = Berita::where('b_status', 'PUBLISH')->get();
     $kesiswaan = Kesiswaan::where('k_nama_menu', $menu)->where('k_status', 'PUBLISH')->first();
-    return view('kesiswaan/penghargaan', ['penghargaan' => $penghargaan, 'kesiswaan' => $kesiswaan, 'ekstrakurikuler_all' => $ekstrakurikuler_all]);
+    return view('kesiswaan/penghargaan', ['penghargaan' => $penghargaan, 'kesiswaan' => $kesiswaan, 'ekstrakurikuler_all' => $ekstrakurikuler_all, 'media' => $media, 'tautan' => $tautan, 'berita' => $berita]);
   }
   public function strukturorganisasi()
   {
+    $media = MediaSosial::all();
+    $tautan = Tautan::all();
+    $berita = Berita::where('b_status', 'PUBLISH')->get();
+    $guru = Guru::all();
     $ekstrakurikuler_all = Ekstrakurikuler::where('e_status', 'PUBLISH')->get();
     $strukturorganisasi = [
       'foto' => 'sample_image/strukturorganisasi.jpg',
       'deskripsi' => 'Struktur organisasi SDN 163 Warung Jambu Kiaracondong terdiri dari berbagai jabatan yang memiliki peran penting dalam menjalankan kegiatan sekolah.',
-      'jabatan' => [
-        [
-          'nama_jabatan' => 'Kepala Sekolah',
-          'nama' => 'Budi Santoso',
-          'masa_jabatan' => '2020 - Sekarang'
-        ],
-        [
-          'nama_jabatan' => 'Wakil Kepala Sekolah',
-          'nama' => 'Siti Aminah',
-          'masa_jabatan' => '2021 - Sekarang'
-        ],
-        [
-          'nama_jabatan' => 'Kepala Tata Usaha',
-          'nama' => 'Ahmad Fauzi',
-          'masa_jabatan' => '2019 - Sekarang'
-        ],
-        [
-          'nama_jabatan' => 'Guru Kelas 1',
-          'nama' => 'Rina Marlina',
-          'masa_jabatan' => '2018 - Sekarang'
-        ],
-        [
-          'nama_jabatan' => 'Guru Kelas 2',
-          'nama' => 'Dewi Sartika',
-          'masa_jabatan' => '2017 - Sekarang'
-        ],
-        [
-          'nama_jabatan' => 'Guru Kelas 3',
-          'nama' => 'Hendra Wijaya',
-          'masa_jabatan' => '2016 - Sekarang'
-        ]
-      ]
     ];
-    return view('kesiswaan/strukturorganisasi', ['strukturorganisasi' => $strukturorganisasi, 'ekstrakurikuler_all' => $ekstrakurikuler_all]);
+    return view('kesiswaan/strukturorganisasi', ['strukturorganisasi' => $strukturorganisasi, 'ekstrakurikuler_all' => $ekstrakurikuler_all, 'media' => $media, 'tautan' => $tautan, 'berita' => $berita, 'guru' => $guru]);
   }
 
   public function show($nama)
   {
+    $media = MediaSosial::all();
+    $berita = Berita::where('b_status', 'PUBLISH')->get();
+    $tautan = Tautan::all();
     $ekstrakurikuler_all = Ekstrakurikuler::where('e_status', 'PUBLISH')->get();
     $ekstrakurikuler = Ekstrakurikuler::where('e_nama_ekstrakurikuler', $nama)->firstOrFail();
     $achievements = Penghargaan::where('e_id', $ekstrakurikuler->e_id)
       ->where('ph_status', 'PUBLISH')
-      ->get(['ph_foto', 'ph_nama_kegiatan as judul', 'ph_deskripsi', 'ph_create_at as tanggal']);
-    return view('kesiswaan/ekstrakurikuler', ['ekstrakurikuler' => $ekstrakurikuler, 'achievements' => $achievements, 'ekstrakurikuler_all' => $ekstrakurikuler_all, 'nama' => $nama]);
+      ->get(['ph_foto', 'ph_nama_kegiatan as judul', 'ph_deskripsi', 'ph_create_at as tanggal', 'ph_id as id']);
+    return view('kesiswaan/ekstrakurikuler', ['ekstrakurikuler' => $ekstrakurikuler, 'achievements' => $achievements, 'ekstrakurikuler_all' => $ekstrakurikuler_all, 'nama' => $nama, 'media' => $media, 'tautan' => $tautan, 'berita' => $berita]);
   }
 
-  // public function ekstrakurikuler_pramuka()
-  // {
-  //   $ekstrakurikuler = [
-  //     'name' => 'Pramuka',
-  //     'description' => 'Pramuka adalah kegiatan ekstrakurikuler yang bertujuan untuk melatih keterampilan, kedisiplinan, dan kemandirian siswa.',
-  //     'foto_kegiatan' => 'sample_image/Pramuka.jpg',
-  //     'achievements' => [
-  //       [
-  //         'foto' => 'sample_image/Pramuka_achievement.jpg',
-  //         'judul' => 'Lomba Pramuka Nasional',
-  //         'deskripsi' => 'Juara 1 Lomba Pramuka Nasional',
-  //         'tanggal' => '2023-08-15'
-  //       ],
-  //       [
-  //         'foto' => 'sample_image/Pramuka_achievement.jpg',
-  //         'judul' => 'Lomba Pramuka Regional',
-  //         'deskripsi' => 'Juara 2 Lomba Pramuka Regional',
-  //         'tanggal' => '2023-07-10'
-  //       ]
-  //     ]
-  //   ];
-  //   return view('kesiswaan/ekstrakurikuler', ['ekstrakurikuler' => $ekstrakurikuler]);
-  // }
+  public function pembiasaandetail($id)
+  {
+    $media = MediaSosial::all();
+    $tautan = Tautan::all();
+    $berita = Berita::where('b_status', 'PUBLISH')->get();
+    $ekstrakurikuler_all = Ekstrakurikuler::where('e_status', 'PUBLISH')->get();
+    $pembiasaandetail = Pembiasaan::where('p_id', $id)->where('p_status', 'PUBLISH')->firstOrFail();
+    $menu = 'Pembiasaan';
+    $kesiswaan = Kesiswaan::where('k_nama_menu', $menu)->where('k_status', 'PUBLISH')->first();
+    return view('kesiswaan/kesiswaan-detail', ['pembiasaandetail' => $pembiasaandetail, 'kesiswaan' => $kesiswaan, 'ekstrakurikuler_all' => $ekstrakurikuler_all, 'media' => $media, 'tautan' => $tautan, 'menu' => $menu, 'berita' => $berita]);
+  }
+  public function penghargaandetail($id)
+  {
+    $media = MediaSosial::all();
+    $tautan = Tautan::all();
+    $berita = Berita::where('b_status', 'PUBLISH')->get();
+    $ekstrakurikuler_all = Ekstrakurikuler::where('e_status', 'PUBLISH')->get();
+    $penghargaandetail = Penghargaan::where('ph_id', $id)->where('ph_status', 'PUBLISH')->firstOrFail();
+    $menu = 'Penghargaan';
+    $kesiswaan = Kesiswaan::where('k_nama_menu', $menu)->where('k_status', 'PUBLISH')->first();
+    return view('kesiswaan/kesiswaan-detail', ['penghargaandetail' => $penghargaandetail, 'kesiswaan' => $kesiswaan, 'ekstrakurikuler_all' => $ekstrakurikuler_all, 'media' => $media, 'tautan' => $tautan, 'menu' => $menu, 'berita' => $berita]);
+  }
+  public function tentang_kami()
+  {
+    $media = MediaSosial::all();
+    $tautan = Tautan::all();
+    $ekstrakurikuler_all = Ekstrakurikuler::where('e_status', 'PUBLISH')->get();
+    $about = About::where('a_status', 'PUBLISH')->get();
+    $aboutsejarah = AboutSejarah::all();
+    $menu = 'About';
+    $kesiswaan = Kesiswaan::where('k_nama_menu', $menu)->where('k_status', 'PUBLISH')->first();
+    $recentPosts = [
+        (object)[
+            'link' => '#',
+            'image' => 'sample_image/Gambar.png',
+            'title' => 'Judul Artikel 1',
+            'description' => 'Deskripsi singkat artikel 1.',
+            'date' => 'Tanggal 01-01-2024'
+        ],
+        (object)[
+            'link' => '#',
+            'image' => 'sample_image/Gambar.png',
+            'title' => 'Judul Artikel 2',
+            'description' => 'Deskripsi singkat artikel 2.',
+            'date' => 'Tanggal 02-02-2024'
+        ],
+        (object)[
+            'link' => '#',
+            'image' => 'sample_image/Gambar.png',
+            'title' => 'Judul Artikel 3',
+            'description' => 'Deskripsi singkat artikel 3.',
+            'date' => 'Tanggal 03-03-2024'
+        ],
+        (object)[
+            'link' => '#',
+            'image' => 'sample_image/Gambar.png',
+            'title' => 'Judul Artikel 4',
+            'description' => 'Deskripsi singkat artikel 4.',
+            'date' => 'Tanggal 04-04-2024'
+        ],
+        (object)[
+            'link' => '#',
+            'image' => 'sample_image/Gambar.png',
+            'title' => 'Judul Artikel 5',
+            'description' => 'Deskripsi singkat artikel 5.',
+            'date' => 'Tanggal 05-05-2024'
+        ]
+    ];
+    return view('user/tentang_kami', ['about' => $about, 'aboutsejarah' => $aboutsejarah, 'kesiswaan' => $kesiswaan, 'recentPosts' => $recentPosts, 'ekstrakurikuler_all' => $ekstrakurikuler_all, 'tautan' => $tautan, 'media' => $media]);
+  }
+  public function beasiswa(Request $request){
+    $keyword    = $request->get('s') ? $request->get('s') : '';
 
-  // public function ekstrakurikuler_kesenian()
-  // {
-  //   $ekstrakurikuler = [
-  //     'name' => 'Kesenian',
-  //     'description' => 'Kesenian adalah kegiatan ekstrakurikuler yang bertujuan untuk mengembangkan bakat dan minat siswa dalam bidang seni.',
-  //     'foto_kegiatan' => 'sample_image/Kesenian.jpg',
-  //     'achievements' => [
-  //       [
-  //         'foto' => 'sample_image/Kesenian_achievement.jpg',
-  //         'judul' => 'Festival Seni Sekolah',
-  //         'deskripsi' => 'Juara 2 Festival Seni Sekolah',
-  //         'tanggal' => '2023-07-20'
-  //       ],
-  //       [
-  //         'foto' => 'sample_image/Kesenian_achievement.jpg',
-  //         'judul' => 'Lomba Seni Daerah',
-  //         'deskripsi' => 'Juara 1 Lomba Seni Daerah',
-  //         'tanggal' => '2023-06-15'
-  //       ]
-  //     ]
-  //   ];
-  //   return view('kesiswaan/ekstrakurikuler', ['ekstrakurikuler' => $ekstrakurikuler]);
-  // }
+    $beasiswas           = Beasiswa::where('title', 'LIKE', "%$keyword%")->orderBy('created_at', 'desc')->paginate(10);
+    $other_beasiswas     = Beasiswa::select('title','slug')->where('status', 'PUBLISH')->orderBy('created_at','desc')->limit(5)->get();
 
-  // public function ekstrakurikuler_karate()
-  // {
-  //   $ekstrakurikuler = [
-  //     'name' => 'Karate',
-  //     'description' => 'Karate adalah kegiatan ekstrakurikuler yang bertujuan untuk melatih keterampilan bela diri dan kedisiplinan siswa.',
-  //     'foto_kegiatan' => 'sample_image/Karate.jpg',
-  //     'achievements' => [
-  //       [
-  //         'foto' => 'sample_image/Karate_achievement.jpg',
-  //         'judul' => 'Kejuaraan Karate Antar Sekolah',
-  //         'deskripsi' => 'Juara 3 Kejuaraan Karate Antar Sekolah',
-  //         'tanggal' => '2023-06-10'
-  //       ],
-  //       [
-  //         'foto' => 'sample_image/Karate_achievement.jpg',
-  //         'judul' => 'Kejuaraan Karate Nasional',
-  //         'deskripsi' => 'Juara 2 Kejuaraan Karate Nasional',
-  //         'tanggal' => '2023-05-05'
-  //       ]
-  //     ]
-  //   ];
-  //   return view('kesiswaan/ekstrakurikuler', ['ekstrakurikuler' => $ekstrakurikuler]);
-  // }
+    $data = [
+        'beasiswas'  => beasiswa::where('status','PUBLISH')->get(),
+        'other'         => $other_beasiswas
+    ];
+    $media = MediaSosial::all();
+    $tautan = Tautan::all();
+    $ekstrakurikuler_all = Ekstrakurikuler::where('e_status', 'PUBLISH')->get();
+    return view('user/beasiswa', $data, ['ekstrakurikuler_all' => $ekstrakurikuler_all, 'media' => $media, 'tautan' => $tautan]);
+}
 
-  // public function ekstrakurikuler_silat()
-  // {
-  //   $ekstrakurikuler = [
-  //     'name' => 'Silat',
-  //     'description' => 'Silat adalah kegiatan ekstrakurikuler yang bertujuan untuk melatih keterampilan bela diri dan kedisiplinan siswa.',
-  //     'foto_kegiatan' => 'sample_image/Silat.jpg',
-  //     'achievements' => [
-  //       [
-  //         'foto' => 'sample_image/Silat_achievement.jpg',
-  //         'judul' => 'Turnamen Silat Pelajar',
-  //         'deskripsi' => 'Juara 1 Turnamen Silat Pelajar',
-  //         'tanggal' => '2023-05-05'
-  //       ],
-  //       [
-  //         'foto' => 'sample_image/Silat_achievement.jpg',
-  //         'judul' => 'Kejuaraan Silat Nasional',
-  //         'deskripsi' => 'Juara 2 Kejuaraan Silat Nasional',
-  //         'tanggal' => '2023-04-10'
-  //       ]
-  //     ]
-  //   ];
-  //   return view('kesiswaan/ekstrakurikuler', ['ekstrakurikuler' => $ekstrakurikuler]);
-  // }
+public function show_beasiswa($slug){
+    $beasiswas       = Beasiswa::where('slug', $slug)->firstOrFail();
+    $other_beasiswas = Beasiswa::select('title','slug')->where('status', 'PUBLISH')->orderBy('created_at','desc')->limit(5)->get();
 
-  // public function ekstrakurikuler_olimpiade()
-  // {
-  //   $ekstrakurikuler = [
-  //     'name' => 'Olimpiade',
-  //     'description' => 'Olimpiade adalah kegiatan ekstrakurikuler yang bertujuan untuk mengembangkan kemampuan akademik siswa melalui berbagai kompetisi.',
-  //     'foto_kegiatan' => 'sample_image/Olimpiade.jpg',
-  //     'achievements' => [
-  //       [
-  //         'foto' => 'sample_image/Olimpiade_achievement.jpg',
-  //         'judul' => 'Olimpiade Sains Nasional',
-  //         'deskripsi' => 'Juara Harapan 1 Olimpiade Sains Nasional',
-  //         'tanggal' => '2023-04-15'
-  //       ],
-  //       [
-  //         'foto' => 'sample_image/Olimpiade_achievement.jpg',
-  //         'judul' => 'Olimpiade Matematika',
-  //         'deskripsi' => 'Juara 1 Olimpiade Matematika',
-  //         'tanggal' => '2023-03-20'
-  //       ]
-  //     ]
-  //   ];
-  //   return view('kesiswaan/ekstrakurikuler', ['ekstrakurikuler' => $ekstrakurikuler]);
-  // }
+    $data = [
+        'beasiswas'  => $beasiswas,
+        'other'         => $other_beasiswas
+    ];
+    $media = MediaSosial::all();
+    $tautan = Tautan::all();
+    $ekstrakurikuler_all = Ekstrakurikuler::where('e_status', 'PUBLISH')->get();
+    return view('user/beasiswa', $data, ['ekstrakurikuler_all' => $ekstrakurikuler_all, 'media' => $media, 'tautan' => $tautan]);
+    
+}
 
-  // public function ekstrakurikuler_paskibra()
-  // {
-  //   $ekstrakurikuler = [
-  //     'name' => 'Paskibra',
-  //     'description' => 'Paskibra adalah kegiatan ekstrakurikuler yang bertujuan untuk melatih kedisiplinan dan keterampilan baris-berbaris siswa.',
-  //     'foto_kegiatan' => 'sample_image/Paskibra.jpg',
-  //     'achievements' => [
-  //       [
-  //         'foto' => 'sample_image/Paskibra_achievement.jpg',
-  //         'judul' => 'Lomba Paskibra Tingkat Kota',
-  //         'deskripsi' => 'Juara 2 Lomba Paskibra Tingkat Kota',
-  //         'tanggal' => '2023-03-10'
-  //       ],
-  //       [
-  //         'foto' => 'sample_image/Paskibra_achievement.jpg',
-  //         'judul' => 'Lomba Paskibra Tingkat Provinsi',
-  //         'deskripsi' => 'Juara 1 Lomba Paskibra Tingkat Provinsi',
-  //         'tanggal' => '2023-02-15'
-  //       ]
-  //     ]
-  //   ];
-  //   return view('kesiswaan/ekstrakurikuler', ['ekstrakurikuler' => $ekstrakurikuler]);
-  // }
+public function informasi()
+  {
+    $data = [
 
-  // public function ekstrakurikuler_hoki()
-  // {
-  //   $ekstrakurikuler = [
-  //     'name' => 'Hoki',
-  //     'description' => 'Hoki adalah kegiatan ekstrakurikuler yang bertujuan untuk mengembangkan keterampilan olahraga hoki siswa.',
-  //     'foto_kegiatan' => 'sample_image/Hoki.jpg',
-  //     'achievements' => [
-  //       [
-  //         'foto' => 'sample_image/Hoki_achievement.jpg',
-  //         'judul' => 'Kejuaraan Hoki Antar Sekolah',
-  //         'deskripsi' => 'Juara 1 Kejuaraan Hoki Antar Sekolah',
-  //         'tanggal' => '2023-02-20'
-  //       ],
-  //       [
-  //         'foto' => 'sample_image/Hoki_achievement.jpg',
-  //         'judul' => 'Turnamen Hoki Regional',
-  //         'deskripsi' => 'Juara 2 Turnamen Hoki Regional',
-  //         'tanggal' => '2023-01-15'
-  //       ]
-  //     ]
-  //   ];
-  //   return view('kesiswaan/ekstrakurikuler', ['ekstrakurikuler' => $ekstrakurikuler]);
-  // }
+      'beasiswas'     => beasiswa::where('status','PUBLISH')->get(),
+      'gurus'         => guru::all(),
+      'pendaftarans'  => Pendaftaran::all()
 
-  // public function ekstrakurikuler_pmr()
-  // {
-  //   $ekstrakurikuler = [
-  //     'name' => 'PMR',
-  //     'description' => 'PMR adalah kegiatan ekstrakurikuler yang bertujuan untuk melatih keterampilan pertolongan pertama dan kesehatan siswa.',
-  //     'foto_kegiatan' => 'sample_image/PMR.jpg',
-  //     'achievements' => [
-  //       [
-  //         'foto' => 'sample_image/PMR_achievement.jpg',
-  //         'judul' => 'Lomba PMR Tingkat Provinsi',
-  //         'deskripsi' => 'Juara 3 Lomba PMR Tingkat Provinsi',
-  //         'tanggal' => '2023-01-15'
-  //       ],
-  //       [
-  //         'foto' => 'sample_image/PMR_achievement.jpg',
-  //         'judul' => 'Lomba PMR Tingkat Nasional',
-  //         'deskripsi' => 'Juara 2 Lomba PMR Tingkat Nasional',
-  //         'tanggal' => '2022-12-10'
-  //       ]
-  //     ]
-  //   ];
-  //   return view('kesiswaan/ekstrakurikuler', ['ekstrakurikuler' => $ekstrakurikuler]);
-  // }
-
-  // public function ekstrakurikuler_renang()
-  // {
-  //   $ekstrakurikuler = [
-  //     'name' => 'Renang',
-  //     'description' => 'Renang adalah kegiatan ekstrakurikuler yang bertujuan untuk mengembangkan keterampilan berenang dan kesehatan siswa.',
-  //     'foto_kegiatan' => 'sample_image/Renang.jpg',
-  //     'achievements' => [
-  //       [
-  //         'foto' => 'sample_image/Renang_achievement.jpg',
-  //         'judul' => 'Kejuaraan Renang Antar Sekolah',
-  //         'deskripsi' => 'Juara 1 Kejuaraan Renang Antar Sekolah',
-  //         'tanggal' => '2022-12-10'
-  //       ],
-  //       [
-  //         'foto' => 'sample_image/Renang_achievement.jpg',
-  //         'judul' => 'Lomba Renang Regional',
-  //         'deskripsi' => 'Juara 2 Lomba Renang Regional',
-  //         'tanggal' => '2022-11-05'
-  //       ]
-  //     ]
-  //   ];
-  //   return view('kesiswaan/ekstrakurikuler', ['ekstrakurikuler' => $ekstrakurikuler]);
-  // }
+    ];
+    $media = MediaSosial::all();
+    $tautan = Tautan::all();
+    $ekstrakurikuler_all = Ekstrakurikuler::where('e_status', 'PUBLISH')->get();
+    return view('user/informasi', $data, ['ekstrakurikuler_all' => $ekstrakurikuler_all, 'media' => $media, 'tautan' => $tautan]);
+  }
+  public function beritadetail($id)
+  {
+    $media = MediaSosial::all();
+    $tautan = Tautan::all();
+    $ekstrakurikuler_all = Ekstrakurikuler::where('e_status', 'PUBLISH')->get();
+    $beritadetail = Berita::where('b_id', $id)->where('b_status', 'PUBLISH')->firstOrFail();
+    $menu = 'Berita';
+    $kesiswaan = Kesiswaan::where('k_nama_menu', $menu)->where('k_status', 'PUBLISH')->first();
+    return view('berita/berita_detail', ['beritadetail' => $beritadetail, 'kesiswaan' => $kesiswaan, 'ekstrakurikuler_all' => $ekstrakurikuler_all, 'media' => $media, 'tautan' => $tautan, 'menu' => $menu]);
+  }
 }

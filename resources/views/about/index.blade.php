@@ -53,7 +53,7 @@
                         <div class="col-sm-5">
                             <form action="{{route('admin.'. strtolower($menu) .'.index')}}">
                                 <div class="input-group">
-                                    <input name="k_keyword" type="text" value="{{Request::get('k_keyword')}}" class="form-control" placeholder="Filter by judul">
+                                    <input name="k_keyword" type="text" value="{{Request::get('k_keyword')}}" class="form-control" placeholder="Filter by judul" oninput="filterTable()">
                                     <div class="input-group-append">
                                         <input type="submit" value="Filter" class="btn btn-info">
                                     </div>
@@ -86,21 +86,14 @@
                     </div>
                     @endif
 
-                    
                     {{-- table --}}
-                    <table class="table">
+                    <table class="table" id="dataTable">
                         <thead class="text-light" style="background-color:#33b751 !important">
                             <tr>
                                 <th width="12px">No</th>
-                                <th class="text-center">
-                                    <a href="{{ route('admin.'. strtolower($menu) .'.index', array_merge(request()->all(), ['sort' => 'k_judul_slide', 'direction' => request('direction') == 'asc' ? 'desc' : 'asc'])) }}" class="text-light">Judul Slide</a>
-                                </th>
-                                <th class="text-center">
-                                    <a href="{{ route('admin.'. strtolower($menu) .'.index', array_merge(request()->all(), ['sort' => 'k_deskripsi_slide', 'direction' => request('direction') == 'asc' ? 'desc' : 'asc'])) }}" class="text-light">Deskripsi Slide</a>
-                                </th>
-                                <th class="text-center">
-                                    <a href="{{ route('admin.'. strtolower($menu) .'.index', array_merge(request()->all(), ['sort' => 'k_judul_isi_content', 'direction' => request('direction') == 'asc' ? 'desc' : 'asc'])) }}" class="text-light">Judul Isi Content</a>
-                                </th>
+                                <th class="text-center">Judul Slide</th>
+                                <th class="text-center">Deskripsi Slide</th>
+                                <th class="text-center">Judul Isi Content</th>
                                 <th class="text-center">Foto Slide 1</th>
                                 <th class="text-center">Foto Slide 2</th>
                                 <th class="text-center">Foto Slide 3</th>
@@ -115,9 +108,9 @@
                                 @endif
                                 <tr>
                                     <td>{{$index+1}}</td>
-                                    <td>{{$item->k_judul_slide}}</td>
-                                    <td>{{$item->k_deskripsi_slide}}</td>
-                                    <td>{{$item->k_judul_isi_content}}</td>
+                                    <td class="filterable">{{$item->k_judul_slide}}</td>
+                                    <td class="filterable">{{$item->k_deskripsi_slide}}</td>
+                                    <td class="filterable">{{$item->k_judul_isi_content}}</td>
                                     <td>
                                         @if($item->k_foto_slide1)
                                             <img src="{{ asset('kesiswaan_image/slide_image/' . $item->k_foto_slide1) }}" alt="Foto Slide 1" width="50">
@@ -174,6 +167,20 @@
                             {{$kesiswaan->appends(Request::all())->links()}}
                         </tfoot>
                     </table>
+
+                    <script>
+                        function filterTable() {
+                            const input = document.querySelector('input[name="k_keyword"]');
+                            const filter = input.value.toLowerCase();
+                            const rows = document.querySelectorAll('#dataTable tbody tr');
+
+                            rows.forEach(row => {
+                                const cells = row.querySelectorAll('.filterable');
+                                const match = Array.from(cells).some(cell => cell.textContent.toLowerCase().includes(filter));
+                                row.style.display = match ? '' : 'none';
+                            });
+                        }
+                    </script>
                 </div>  
             </div>
         </div>
@@ -211,15 +218,12 @@
                                 <li class="nav-item">
                                     <a class="nav-link p-2 px-3 {{Request::get('-isi-content-status') == 'hapus' ?'active' : '' }}" href="{{route('admin.'. strtolower($menu) .'.index', ['-isi-content-status' =>'hapus'])}}">Delete</a>
                                 </li>
-                                <li class="nav-item">
-                                    <a class="nav-link p-2 px-3 {{Request::get('-isi-content-status') == 'tidak' ?'active' : '' }}" href="{{route('admin.'. strtolower($menu) .'.index', ['-isi-content-status' =>'tidak'])}}">Tidak Disetujui</a>
-                                </li>
                             </ul>
                         </div>
                         <div class="col-sm-5">
                             <form action="{{route('admin.'. strtolower($menu) .'.index')}}">
                                 <div class="input-group">
-                                    <input name="p_keyword" type="text" value="{{Request::get('p_keyword')}}" class="form-control" placeholder="Filter by title">
+                                    <input name="p_keyword" type="text" value="{{Request::get('p_keyword')}}" class="form-control" placeholder="Filter by title" oninput="filterAboutTable()">
                                     <div class="input-group-append">
                                         <input type="submit" value="Filter" class="btn btn-info">
                                     </div>
@@ -244,16 +248,15 @@
                                 </ul>
                             </div>
                     @endif
-                    {{-- Modal Error
-                    
-                    
+
                     {{-- table --}}
-                    <table class="table">
+                    <table class="table" id="aboutTable">
                         <thead class="text-light" style="background-color:#33b751 !important">
                             <tr>
                                 <th width="12px">No</th>
                                 <th class="text-center">Visi</th>
                                 <th class="text-center">Misi</th>
+                                <th class="text-center">Sejarah</th>
                                 <th class="text-center">Status</th>
                                 <th width="88px">Action</th>
                             </tr>
@@ -265,8 +268,15 @@
                                 @endif
                                 <tr>
                                     <td>{{$index+1}}</td>
-                                    <td>{{$item->a_visi}}</td>
-                                    <td>{{$item->a_misi}}</td>
+                                    <td class="filterable">{{$item->a_visi}}</td>
+                                    <td class="filterable">{{$item->a_misi}}</td>
+                                    <td class="filterable">
+                                        @foreach ($aboutSejarah_all as $sejarah)
+                                            @if ($sejarah->as_id == $item->as_id)
+                                                {{$sejarah->as_sejarah}}
+                                            @endif
+                                        @endforeach
+                                    </td>
                                     <td>{{$item->a_status}}</td>
                                     <td>
                                         @if ($item->a_status == 'HAPUS')
@@ -297,6 +307,20 @@
                             {{$about->appends(Request::all())->links()}}
                         </tfoot>
                     </table>
+
+                    <script>
+                        function filterAboutTable() {
+                            const input = document.querySelector('input[name="p_keyword"]');
+                            const filter = input.value.toLowerCase();
+                            const rows = document.querySelectorAll('#aboutTable tbody tr');
+
+                            rows.forEach(row => {
+                                const cells = row.querySelectorAll('.filterable');
+                                const match = Array.from(cells).some(cell => cell.textContent.toLowerCase().includes(filter));
+                                row.style.display = match ? '' : 'none';
+                            });
+                        }
+                    </script>
                 </div>
             </div>
         </div>

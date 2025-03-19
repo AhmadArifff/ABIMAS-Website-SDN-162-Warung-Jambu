@@ -8,6 +8,8 @@ use App\Kesiswaan;
 use App\Ekstrakurikuler;
 use App\Penghargaan;
 use App\Tatatertib;
+use App\Berita;
+use App\Beasiswa;
 use App\User;
 use Illuminate\Support\Facades\File;
 
@@ -65,8 +67,10 @@ class PembiasaanController extends Controller
         $kesiswaan->where('k_nama_menu', $menu);
         $pembiasaan = $pembiasaan->paginate(10);
         $kesiswaan = $kesiswaan->paginate(10);
+        $berita_all = Berita::where('b_status', 'DRAFT')->get();
+        $beasiswa_all = Beasiswa::where('status', 'DRAFT')->get();
     
-        return view('kesiswaan.admin.index', compact('pembiasaan', 'kesiswaan', 'menu', 'kesiswaa_all', 'ekstrakurikuler_all', 'penghargaan_all', 'tatatertib_all', 'user_all', 'pembiasaan_all','publishedEkstrakurikulerNames'));
+        return view('kesiswaan.admin.index', compact('pembiasaan', 'kesiswaan', 'menu', 'kesiswaa_all', 'ekstrakurikuler_all', 'penghargaan_all', 'tatatertib_all', 'user_all', 'pembiasaan_all','publishedEkstrakurikulerNames', 'berita_all', 'beasiswa_all'));
     }
 
     public function create(Request $request)
@@ -85,6 +89,8 @@ class PembiasaanController extends Controller
         $penghargaan_all=Penghargaan::where('ph_status', 'DRAFT')->get();
         $tatatertib_all=Tatatertib::where('t_status', 'DRAFT')->get();
         $user_all=User::all();
+        $berita_all = Berita::where('b_status', 'DRAFT')->get();
+        $beasiswa_all = Beasiswa::where('status', 'DRAFT')->get();
 
         $menu = $request->query('menu');
         // $kesiswaan = Kesiswaan::where('k_status', 'PUBLISH')->first();
@@ -92,7 +98,7 @@ class PembiasaanController extends Controller
         if (!$kesiswaan) {
             return redirect()->back()->withErrors(['error' => 'Data Manage Content Slide Pembiasaan Tidak Terpublish! Tolong Publish Terlebih Dahulu!']);
         }
-        return view('kesiswaan/admin.create', compact('kesiswaan', 'menu', 'kesiswaa_all', 'ekstrakurikuler_all', 'penghargaan_all', 'tatatertib_all', 'user_all', 'pembiasaan_all','publishedEkstrakurikulerNames'));
+        return view('kesiswaan/admin.create', compact('kesiswaan', 'menu', 'kesiswaa_all', 'ekstrakurikuler_all', 'penghargaan_all', 'tatatertib_all', 'user_all', 'pembiasaan_all','publishedEkstrakurikulerNames', 'berita_all', 'beasiswa_all'));
     }
 
     public function store(Request $request)
@@ -141,6 +147,8 @@ class PembiasaanController extends Controller
         $penghargaan_all=Penghargaan::where('ph_status', 'DRAFT')->get();
         $tatatertib_all=Tatatertib::where('t_status', 'DRAFT')->get();
         $user_all=User::all();
+        $berita_all = Berita::where('b_status', 'DRAFT')->get();
+        $beasiswa_all = Beasiswa::where('status', 'DRAFT')->get();
 
         $menu = 'Pembiasaan';
         $pembiasaan = Pembiasaan::findOrFail($id);
@@ -152,7 +160,7 @@ class PembiasaanController extends Controller
         }
         
         // $menu = $kesiswaan->k_nama_menu;
-        return view('kesiswaan/admin.edit', ['pembiasaan' => $pembiasaan, 'kesiswaan' => $kesiswaan, 'menu' => $menu, 'kesiswaa_all' => $kesiswaa_all, 'ekstrakurikuler_all' => $ekstrakurikuler_all, 'penghargaan_all' => $penghargaan_all, 'tatatertib_all' => $tatatertib_all, 'user_all' => $user_all, 'pembiasaan_all' => $pembiasaan_all]);
+        return view('kesiswaan/admin.edit', ['pembiasaan' => $pembiasaan, 'kesiswaan' => $kesiswaan, 'menu' => $menu, 'kesiswaa_all' => $kesiswaa_all, 'ekstrakurikuler_all' => $ekstrakurikuler_all, 'penghargaan_all' => $penghargaan_all, 'tatatertib_all' => $tatatertib_all, 'user_all' => $user_all, 'pembiasaan_all' => $pembiasaan_all, 'publishedEkstrakurikulerNames' => $publishedEkstrakurikulerNames, 'berita_all' => $berita_all, 'beasiswa_all' => $beasiswa_all]);
     }
 
     public function update(Request $request, $id)
