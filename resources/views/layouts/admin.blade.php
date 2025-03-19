@@ -7,7 +7,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     
-    <title> @yield('title') - Company Profile</title>
+    <title> @yield('title') - SDN 162 Warung Jambu Kiaracondong</title> @yield('title') - SDN 162 Warung Jambu Kiaracondong</title>
 
     <meta name="description" content="Ela Admin - HTML5 Admin Template">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -189,40 +189,42 @@
             <div id="main-menu" class="main-menu collapse navbar-collapse">
                 <ul class="nav navbar-nav">
                     <li class="{{$url=='dashboard'?'active':''}}">
-                    <a href="{{url('admin/dashboard')}}"><i class="menu-icon fa fa-laptop"></i>Dashboard </a>
+                        <a href="{{url('admin/dashboard')}}"><i class="menu-icon fa fa-tachometer"></i>Dashboard </a>
                     </li>
-                    {{-- <li class="{{$url=='categories'?'active':''}}">
-                        <a href="{{url('admin/categories')}}"><i class="menu-icon fa fa-list-ul"></i>Categories </a>
+                    <li class="{{$url=='beasiswas'?'active':''}}">
+                        <a href="{{url('admin/beasiswas')}}"><i class="menu-icon fa fa-graduation-cap"></i>Beasiswa </a>
                     </li>
-                    <li class="{{$url=='articles'?'active':''}}">
-                        <a href="{{url('admin/articles')}}"> <i class="menu-icon fa fa-newspaper-o"></i> Articles</a>
-                    </li>
-                    <li class="{{$url=='destinations'?'active':''}}">
-                        <a href="{{url('admin/destinations')}}"><i class="menu-icon fa fa-paper-plane-o"></i>Destinations </a>
-                    </li> --}}
                     @if(auth()->user()->role == 'admin')
-                        <li class="{{$url=='about'?'active':''}}">
-                            <a href="{{url('admin/about')}}"><i class="menu-icon fa fa-user"></i>About </a>
-                        </li>
-                        <li class="{{$url=='users'?'active':''}}">
-                            <a href="{{url('admin/users')}}"><i class="menu-icon fa fa-users"></i>User </a>
-                        </li>
-                        <li class="{{$url=='informasi-media'?'active':''}}">
-                            <a href="{{url('admin/informasi-media')}}"><i class="menu-icon fa fa-info-circle"></i>Informasi & Media Sosial </a>
-                        </li>
+                    <li class="{{$url=='about'?'active':''}}">
+                        <a href="{{url('admin/about')}}"><i class="menu-icon fa fa-info-circle"></i>About </a>
+                    </li>
+                    <li class="{{$url=='users'?'active':''}}">
+                        <a href="{{url('admin/users')}}"><i class="menu-icon fa fa-users"></i>User </a>
+                    </li>
+                    <li class="{{$url=='informasi-media'?'active':''}}">
+                        <a href="{{url('admin/informasi-media')}}"><i class="menu-icon fa fa-bullhorn"></i>Informasi & Media Sosial </a>
+                    </li>
+                    <li class="{{$url=='pendaftarans'?'active':''}}">
+                        <a href="{{url('admin/pendaftarans')}}"><i class="menu-icon fa fa-address-card"></i>Pendaftaran </a>
+                    </li>
+                    <li class="{{$url=='guru'?'active':''}}">
+                        <a href="{{url('admin/guru')}}"><i class="menu-icon fa fa-user"></i>Guru </a>
+                    </li>
                     @endif
                     <li class="{{$url=='berita'?'active':''}}">
-                        <a href="{{url('admin/berita')}}"><i class="menu-icon fa fa-user"></i>Berita </a>
+                        <a href="{{url('admin/berita')}}"><i class="menu-icon fa fa-newspaper-o"></i>Berita </a>
                     </li>
                     <li class="menu-item-has-children dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <i class="menu-icon fa fa-graduation-cap"></i>Kesiswaan</a>
+                            <i class="menu-icon fa fa-child"></i>Kegiatan Kesiswaan</a>
                         <ul class="sub-menu children dropdown-menu">
                             {{-- <li><i class="fa fa-sitemap"></i><a href="{{url('admin/kesiswaan/strukturorganisasi')}}">Struktur Organisasi</a></li> --}}
+                            @if(auth()->user()->role == 'admin')
                             <li><i class="fa fa-futbol-o"></i><a href="{{ url('admin/kesiswaan/ekstrakurikuler') }}">Ekstrakurikuler</a></li>
+                            <li><i class="fa fa-gavel"></i><a href="{{url('admin/kesiswaan/tatatertib')}}">Tatatertib</a></li>
+                            @endif
                             <li><i class="fa fa-trophy"></i><a href="{{url('admin/kesiswaan/penghargaan')}}">Penghargaan</a></li>
                             <li><i class="fa fa-clock-o"></i><a href="{{url('admin/kesiswaan/pembiasaan')}}">Pembiasaan</a></li>
-                            <li><i class="fa fa-gavel"></i><a href="{{url('admin/kesiswaan/tatatertib')}}">Tatatertib</a></li>
                         </ul>
                     </li>
                 </ul>
@@ -244,6 +246,7 @@
                         <a id="menuToggle" class="menutoggle"><i class="fa fa-bars"></i></a>
                     </div>
                 </div>
+                @if(auth()->user()->role == 'admin'||auth()->user()->role == 'guru')
                 <div class="top-right">
                     <div class="header-menu">
                         <div class="header-left">
@@ -258,11 +261,13 @@
                                                 return !$published_item && $same_menu_items->where('k_status', 'DRAFT')->count() > 1 || $same_menu_items->where('k_status', 'DRAFT')->count() == 1;
                                             })->count();
                                         @endphp
-                                        <span class="count bg-danger">{{ $kesiswaan_count + $ekstrakurikuler_all->count() + $penghargaan_all->count() + $tatatertib_all->count() + $pembiasaan_all->count() }}</span>
+                                        <span class="count bg-danger">{{ $kesiswaan_count + $ekstrakurikuler_all->count() + $penghargaan_all->count() + $tatatertib_all->count() + $pembiasaan_all->count() +$berita_all->count() +$beasiswa_all->count()}}</span>
                                     </button>
                                     <div class="dropdown-menu shadow" aria-labelledby="notification" style="width: 400px; max-height: 400px; overflow-y: auto;">
-                                        <p class="red text-dark">You have {{ $kesiswaa_all->count() + $ekstrakurikuler_all->count() + $penghargaan_all->count() + $tatatertib_all->count() + $pembiasaan_all->count() }} Notifications</p>
-                                        @if ($menu == 'Pembiasaan' || $menu == 'Penghargaan' || $menu == 'Ekstrakurikuler' || $menu == 'Tatatertib')
+                                        <p class="red text-dark">You have {{ $kesiswaa_all->count() + $ekstrakurikuler_all->count() + $penghargaan_all->count() + $tatatertib_all->count() + $pembiasaan_all->count() + $berita_all->count() +$beasiswa_all->count()}} Notifications</p>
+                                        @if ($menu == 'Pembiasaan' || $menu == 'Penghargaan' || $menu == 'Ekstrakurikuler' || $menu == 'Tatatertib'|| $menu == 'Berita' || $menu == 'About' || $menu == 'Users' || $menu == 'Informasi Media' || $menu == 'Pendaftaran' || $menu == 'Beasiswa' || $menu == 'Guru')
+                                            <a class="dropdown-item media bg-flat-color-1 text-dark" href="#">
+                                                <div class="media-body
                                         @php
                                             // Ambil semua k_nama_menu yang memiliki status PUBLISH
                                             $publishedMenus = $kesiswaa_all->where('k_status', 'PUBLISH')->pluck('k_nama_menu')->unique();
@@ -389,18 +394,56 @@
                                                     </div>
                                                 </a>
                                             @endforeach
+                                            @foreach($berita_all as $item)
+                                                <a class="dropdown-item media bg-flat-color-5 text-dark" href="#">
+                                                    <img src="{{ $item->b_foto ? asset('berita_image/' . $item->b_foto) : asset('sample_image/Gambar.png') }}" alt="content image" class="mr-3" style="width: 50px; height: 50px;">
+                                                    <div class="media-body">
+                                                        <p class="text-dark">{{ $item->b_nama_berita }}</p>
+                                                        <p>{{ Str::limit($item->b_deskripsi_berita, 30, '...') }}</p>
+                                                        @foreach($user_all as $itemuser)
+                                                            @if($item->b_create_id == $itemuser->id)
+                                                                <p>{{ \Carbon\Carbon::parse($item->b_create_at)->format('d M Y') }} by {{ $itemuser->name ?? 'Unknown' }}</p>
+                                                            @endif
+                                                        @endforeach
+                                                        <form action="{{ route('publish.berita', $item->b_id) }}" method="POST" class="text-right">
+                                                            @csrf
+                                                            <button type="submit" name="status" value="publish" class="btn btn-md btn-success">Publish</button>
+                                                            <button type="submit" name="status" value="tidak" class="btn btn-md btn-danger">Tidak Disetujui</button>
+                                                        </form>
+                                                    </div>
+                                                </a>
+                                            @endforeach
+                                            @foreach($beasiswa_all as $item)
+                                                <a class="dropdown-item media bg-flat-color-6 text-dark" href="#">
+                                                    <img src="{{ $item->image ? asset('beasiswas_image/' . $item->image) : asset('sample_image/Gambar.png') }}" alt="content image" class="mr-3" style="width: 50px; height: 50px;">
+                                                    <div class="media-body">
+                                                        <p class="text-dark">{{ $item->title }}</p>
+                                                        <p>{{ Str::limit($item->content, 30, '...') }}</p>
+                                                        @foreach($user_all as $itemuser)
+                                                            @if($item->create_by == $itemuser->id)
+                                                                <p>{{ \Carbon\Carbon::parse($item->created_at)->format('d M Y') }} by {{ $itemuser->name ?? 'Unknown' }}</p>
+                                                            @endif
+                                                        @endforeach
+                                                        <form action="{{ route('publish.beasiswa', $item->id) }}" method="POST" class="text-right">
+                                                            @csrf
+                                                            <button type="submit" name="status" value="publish" class="btn btn-md btn-success">Publish</button>
+                                                            <button type="submit" name="status" value="tidak" class="btn btn-md btn-danger">Tidak Disetujui</button>
+                                                        </form>
+                                                    </div>
+                                                </a>
+                                            @endforeach
                                         @endif
                                     </div>
                                 </div>
                             @endif
                         </div>
-                        <div class="user-area dropdown float-right">
+                        <div class="user-area dropdown float-right" id="userDropdown">
                             <a href="#" class="dropdown-toggle active" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <img class="user-avatar rounded-circle" src="{{asset('ElaAdmin/images/admin.jpg')}}" alt="User Avatar">
+                                <img class="user-avatar rounded-circle" src="{{ auth()->user()->foto ? asset('users_foto/' . auth()->user()->foto) : asset('ElaAdmin/images/admin.jpg') }}" alt="User Avatar">
                             </a>
 
-                            <div class="user-menu dropdown-menu">
-                                <a class="nav-link" href="#"><i class="fa fa-cog"></i>Ganti Password</a>
+                            <div class="user-menu dropdown-menu" aria-labelledby="userDropdown">
+                                {{-- <a class="nav-link" href="#"><i class="fa fa-cog"></i>Ganti Password</a> --}}
                                 <div class="nav-link" style="cursor:pointer" onclick="logout()" data-target="#modalLogout" data-toggle="modal"> 
                                     <i class="fa fa-power-off"></i> Logout
                                 </div>
@@ -408,6 +451,7 @@
                         </div>
                     </div>
                 </div>
+                @endif
             </header>
         <!-- /#header -->
         
@@ -452,10 +496,10 @@
             <div class="footer-inner bg-white">
                 <div class="row">
                     <div class="col-sm-6">
-                        Copyright &copy; 2018 Ela Admin
+                        Copyright &copy; SDN 162 Warung Jambu
                     </div>
                     <div class="col-sm-6 text-right">
-                        Designed by <a href="https://colorlib.com">Colorlib</a>
+                        Designed by Abdimas
                     </div>
                 </div>
             </div>

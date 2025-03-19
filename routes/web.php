@@ -3,24 +3,25 @@
 use Illuminate\Support\Facades\Route;
 // use App\Http\Middleware\TrackVisitor;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\GuruController;
 
 Route::get('/', function(){ return redirect('/home'); });
 
 // Route::middleware(['trackvisitor'])->group(function () {
   Route::get('/home', 'UserController@home')->name('home');
-  Route::get('/blog', 'UserController@blog')->name('blog');
-  Route::get('/blog/{slug}', 'UserController@show_article')->name('blog.show');
-  Route::get('/destination', 'UserController@destination')->name('destination');
-  Route::get('/destination/{slug}', 'UserController@show_destination')->name('destination.show');
   Route::get('/contact', 'UserController@contact')->name('contact');
   Route::get('/berita', 'UserController@berita')->name('berita');
   Route::get('/tatatertib', 'UserController@tatatertib')->name('tatatertib');
   Route::get('/pembiasaan', 'UserController@pembiasaan')->name('pembiasaan');
+  Route::get('/daftar-guru', [GuruController::class, 'userView'])->name('guru.userView');
+  Route::get('/informasi', 'UserController@informasi')->name('informasi');
   Route::get('/penghargaan', 'UserController@penghargaan')->name('penghargaan');
   Route::get('/ekstrakurikuler/{nama}', 'UserController@show')->name('ekstrakurikuler.show');
   Route::get('/strukturorganisasi', 'UserController@strukturorganisasi')->name('strukturorganisasi');
   Route::get('/pembiasaan/detail/{id}', 'UserController@pembiasaandetail')->name('pembiasaan.detail');
   Route::get('/penghargaan/detail/{id}', 'UserController@penghargaandetail')->name('penghargaan.detail');
+  Route::get('/tentang_kami', 'UserController@tentang_kami')->name('tentang_kami');
+  Route::get('/berita/detail/{id}', 'UserController@beritadetail')->name('berita.detail');
 // });
 
 Route::prefix('admin')->group(function(){
@@ -39,20 +40,6 @@ Route::prefix('admin')->group(function(){
   Auth::routes();
   // Route Dashboard
   Route::get('/dashboard', 'DashboardController@index')->name('dashboard')->middleware('auth');
-  
-  // route categories
-  Route::get('/categories/{category}/restore', 'CategoryController@restore')->name('categories.restore');
-  Route::delete('/categories/{category}/delete-permanent', 'CategoryController@deletePermanent')->name('categories.delete-permanent');
-  Route::get('/ajax/categories/search', 'CategoryController@ajaxSearch');
-  Route::resource('categories', 'CategoryController')->middleware('auth');
-  
-  // route article
-  Route::post('/articles/upload', 'ArticleController@upload')->name('articles.upload')->middleware('auth');
-  Route::resource('/articles', 'ArticleController')->middleware('auth');
-  
-  // route destination
-  Route::resource('/destinations', 'DestinationController')->middleware('auth');
-  
   // Route abouts
   Route::get('/abouts', 'AboutProfileController@index')->name('abouts.index')->middleware('auth');
   Route::get('/abouts/create', 'AboutProfileController@create')->name('abouts.create')->middleware('auth');
@@ -160,10 +147,31 @@ Route::prefix('admin')->group(function(){
   Route::get('/informasi-media', 'InformasiMediaController@index')->name('admin.informasi-media.index')->middleware('auth');
   Route::get('/informasi-media/create', 'InformasiMediaController@create')->name('admin.informasi-media.create')->middleware('auth');
   Route::post('/informasi-media', 'InformasiMediaController@store')->name('admin.informasi-media.store')->middleware('auth');
-  Route::get('/informasi-media/{informasiMedia}/edit', 'InformasiMediaController@edit')->name('admin.informasi-media.edit')->middleware('auth');
-  Route::put('/informasi-media/{informasiMedia}', 'InformasiMediaController@update')->name('admin.informasi-media.update')->middleware('auth');
-  Route::delete('/informasi-media/{informasiMedia}/destroyrecycle', 'InformasiMediaController@destroyrecycle')->name('admin.informasi-media.destroyrecycle')->middleware('auth');
-  Route::delete('/informasi-media/{informasiMedia}', 'InformasiMediaController@destroy')->name('admin.informasi-media.destroy')->middleware('auth');
-  Route::post('/informasi-media/{informasiMedia}/restore', 'InformasiMediaController@restore')->name('admin.informasi-media.restore')->middleware('auth');
-  Route::post('/informasi-media/{informasiMedia}/publish', 'InformasiMediaController@publish')->name('publish.informasi-media')->middleware('auth');
+  Route::get('/informasi-media/{id}/edit', 'InformasiMediaController@edit')->name('admin.informasi-media.edit')->middleware('auth');
+  Route::put('/informasi-media/{id}', 'InformasiMediaController@update')->name('admin.informasi-media.update')->middleware('auth');
+  Route::delete('/informasi-media/{id}/destroyrecycle', 'InformasiMediaController@destroyrecycle')->name('admin.informasi-media.destroyrecycle')->middleware('auth');
+  Route::delete('/informasi-media/{id}', 'InformasiMediaController@destroy')->name('admin.informasi-media.destroy')->middleware('auth');
+  Route::post('/informasi-media/{id}/restore', 'InformasiMediaController@restore')->name('admin.informasi-media.restore')->middleware('auth');
+  Route::post('/informasi-media/{id}/publish', 'InformasiMediaController@publish')->name('publish.informasi-media')->middleware('auth');
+  
+  // route guru
+  Route::resource('guru', 'GuruController')->middleware('auth');
+  Route::get('/guru-user', [GuruController::class, 'userIndex'])->name('user.guru.index');
+  Route::get('/guru-user/{id}', [GuruController::class, 'userShow'])->name('user.guru.show');
+  Route::get('/daftar-guru', [GuruController::class, 'userView'])->name('guru.userView');
+  Route::get('/user-guru', 'UserController@show')->name('guru');
+  
+  
+  Route::get('/beasiswa/{slug}', 'UserController@show_beasiswa')->name('beasiswa.show');
+  Route::resource('/beasiswas', 'BeasiswaController')->middleware('auth');
+  Route::post('/beasiswas/{id}/publish', 'BeasiswaController@publish')->name('publish.beasiswa')->middleware('auth');
+  
+  
+  // Route pendaftaran
+  Route::get('/pendaftarans', 'PendaftaranController@index')->name('pendaftarans.index')->middleware('auth');
+  Route::get('/pendaftarans/{pendaftaran}/edit', 'PendaftaranController@edit')->name('pendaftarans.edit')->middleware('auth');
+  Route::put('/pendaftarans/{pendaftaran}', 'PendaftaranController@update')->name('pendaftarans.update')->middleware('auth');
+  // route article
+  Route::post('/articles/upload', 'ArticleController@upload')->name('articles.upload')->middleware('auth');
+  Route::resource('/articles', 'ArticleController')->middleware('auth');
 });

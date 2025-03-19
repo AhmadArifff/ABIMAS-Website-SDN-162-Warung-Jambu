@@ -16,66 +16,146 @@
 
 @section('content')
         <!-- Widgets  -->
-            <div class="row">
-                <div class="col-lg-4 col-md-12">
-                    <a href="{{route('articles.index', ['status' => 'publish'])}}">
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="stat-widget-five">
-                                    <div class="stat-icon dib flat-color-1">
-                                        <i class="fa fa-file-o"></i>
-                                    </div>
-                                    <div class="stat-content">
-                                        <div class="text-left dib">
-                                            <div class="stat-text"><span class="count">{{$data ["publish"]}}</span></div>
-                                            <div class="stat-heading">Article Publish</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-
-                <div class="col-lg-4 col-md-12">
-                    <a href="{{route('articles.index', ['status'=>'draft'])}}">
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="stat-widget-five">
-                                    <div class="stat-icon dib flat-color-2">
-                                        <i class="fa fa-clipboard"></i>
-                                    </div>
-                                    <div class="stat-content">
-                                        <div class="text-left dib">
-                                            <div class="stat-text"><span class="count">{{$data ["draft"]}}</span></div>
-                                            <div class="stat-heading">Article Draf</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-                <div class="col-lg-4 col-md-12">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="stat-widget-five">
-                                <div class="stat-icon dib flat-color-4">
-                                    <i class="fa fa-users"></i>
-                                </div>
-                                <div class="stat-content">
-                                    <div class="text-left dib">
-                                        <div class="stat-text"><span class="count">298</span></div>
-                                        <div class="stat-heading">Visitor</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+        <div class="row">
+            <div class="col-lg-3 col-md-6">
+            <div class="card">
+                <div class="card-body">
+                <div class="stat-widget-five">
+                    <div class="stat-icon dib flat-color-1">
+                    <i class="fa fa-child"></i>
+                    </div>
+                    <div class="stat-content">
+                    <div class="text-left dib">
+                        <div class="stat-text"><span class="count">{{ $pembiasaan->count() }}</span></div>
+                        <div class="stat-heading">Pembiasaan</div>
+                    </div>
                     </div>
                 </div>
+                </div>
             </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+            <div class="card">
+                <div class="card-body">
+                <div class="stat-widget-five">
+                    <div class="stat-icon dib flat-color-2">
+                    <i class="fa fa-futbol-o"></i>
+                    </div>
+                    <div class="stat-content">
+                    <div class="text-left dib">
+                        <div class="stat-text"><span class="count">{{ $ekstrakurikuler->count() }}</span></div>
+                        <div class="stat-heading">Ekstrakurikuler</div>
+                    </div>
+                    </div>
+                </div>
+                </div>
+            </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+            <div class="card">
+                <div class="card-body">
+                <div class="stat-widget-five">
+                    <div class="stat-icon dib flat-color-3">
+                    <i class="fa fa-trophy"></i>
+                    </div>
+                    <div class="stat-content">
+                    <div class="text-left dib">
+                        <div class="stat-text"><span class="count">{{ $penghargaan->count() }}</span></div>
+                        <div class="stat-heading">Penghargaan</div>
+                    </div>
+                    </div>
+                </div>
+                </div>
+            </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+            <div class="card">
+                <div class="card-body">
+                <div class="stat-widget-five">
+                    <div class="stat-icon dib flat-color-4">
+                    <i class="fa fa-gavel"></i>
+                    </div>
+                    <div class="stat-content">
+                    <div class="text-left dib">
+                        <div class="stat-text"><span class="count">{{ $tatatertib->count() }}</span></div>
+                        <div class="stat-heading">Tata Tertib</div>
+                    </div>
+                    </div>
+                </div>
+                </div>
+            </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+            <div class="card">
+                <div class="card-body">
+                <div class="stat-widget-five">
+                    <div class="stat-icon dib flat-color-5">
+                    <i class="fa fa-users"></i>
+                    </div>
+                    <div class="stat-content">
+                    <div class="text-left dib">
+                        <div class="stat-text"><span class="count">{{ $user->count() }}</span></div>
+                        <div class="stat-heading">User</div>
+                    </div>
+                    </div>
+                </div>
+                </div>
+            </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+            <div class="card">
+                <div class="card-body">
+                <div class="stat-widget-five">
+                    <div class="stat-icon dib flat-color-6">
+                    <i class="fa fa-newspaper-o"></i>
+                    </div>
+                    <div class="stat-content">
+                    <div class="text-left dib">
+                        <div class="stat-text"><span class="count">{{ $berita->count() }}</span></div>
+                        <div class="stat-heading">Berita</div>
+                    </div>
+                    </div>
+                </div>
+                </div>
+            </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+            <div class="card">
+                <div class="card-body">
+                <div class="stat-widget-five">
+                    <div class="stat-icon dib flat-color-7">
+                    <i class="fa fa-graduation-cap"></i>
+                    </div>
+                    <div class="stat-content">
+                    <div class="text-left dib">
+                        <div class="stat-text"><span class="count">{{ $beasiswa->count() }}</span></div>
+                        <div class="stat-heading">Beasiswa</div>
+                    </div>
+                    </div>
+                </div>
+                </div>
+            </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+            <div class="card">
+                <div class="card-body">
+                <div class="stat-widget-five">
+                    <div class="stat-icon dib flat-color-8">
+                    <i class="fa fa-user"></i>
+                    </div>
+                    <div class="stat-content">
+                    <div class="text-left dib">
+                        <div class="stat-text"><span class="count">{{ $guru->count() }}</span></div>
+                        <div class="stat-heading">Guru</div>
+                    </div>
+                    </div>
+                </div>
+                </div>
+            </div>
+            </div>
+        </div>
         <!-- /Widgets -->
-        <!--  Traffic  -->
+        {{-- <!--  Traffic  -->
             <div class="row">
                 <div class="col-lg-12">
                     <div class="card">
@@ -94,7 +174,7 @@
                     </div>
                 </div><!-- /# column -->
             </div>
-        <!--  /Traffic -->
+        <!--  /Traffic --> --}}
 @endsection
 
 @section('script')

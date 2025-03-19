@@ -13,6 +13,7 @@
 @endsection
 
 @section('content')
+@if (auth()->user()->role == 'admin')
     <div class="row">
         <div class="col-md-12">
             <div class="card">
@@ -53,7 +54,7 @@
                         <div class="col-sm-5">
                             <form action="{{route('admin.'. strtolower($menu) .'.index')}}">
                                 <div class="input-group">
-                                    <input name="k_keyword" type="text" value="{{Request::get('k_keyword')}}" class="form-control" placeholder="Filter by judul">
+                                    <input name="k_keyword" type="text" value="{{Request::get('k_keyword')}}" class="form-control" placeholder="Filter by judul" oninput="filterSlideTable(this.value)">
                                     <div class="input-group-append">
                                         <input type="submit" value="Filter" class="btn btn-info">
                                     </div>
@@ -88,7 +89,7 @@
 
                     
                     {{-- table --}}
-                    <table class="table">
+                    <table class="table" id="slideTable">
                         <thead class="text-light" style="background-color:#33b751 !important">
                             <tr>
                                 <th width="12px">No</th>
@@ -174,10 +175,21 @@
                             {{$kesiswaan->appends(Request::all())->links()}}
                         </tfoot>
                     </table>
+
+                    <script>
+                        function filterSlideTable(keyword) {
+                            const rows = document.querySelectorAll('#slideTable tbody tr');
+                            rows.forEach(row => {
+                                const text = row.innerText.toLowerCase();
+                                row.style.display = text.includes(keyword.toLowerCase()) ? '' : 'none';
+                            });
+                        }
+                    </script>
                 </div>  
             </div>
         </div>
     </div>
+@endif
 
     <div class="row">
         <div class="col-md-12">
@@ -219,7 +231,7 @@
                         <div class="col-sm-5">
                             <form action="{{route('admin.'. strtolower($menu) .'.index')}}">
                                 <div class="input-group">
-                                    <input name="p_keyword" type="text" value="{{Request::get('p_keyword')}}" class="form-control" placeholder="Filter by title">
+                                    <input name="p_keyword" type="text" value="{{Request::get('p_keyword')}}" class="form-control" placeholder="Filter by title" oninput="filterTable(this.value)">
                                     <div class="input-group-append">
                                         <input type="submit" value="Filter" class="btn btn-info">
                                     </div>
@@ -244,67 +256,77 @@
                                 </ul>
                             </div>
                     @endif
-                    {{-- Modal Error
-                    
                     
                     {{-- table --}}
-                    <table class="table">
+                    <table class="table" id="dataTable">
                         <thead class="text-light" style="background-color:#33b751 !important">
                             <tr>
                                 <th width="12px">No</th>
-                                <th class="text-center">Nama Kegiatan</th>
-                                <th class="text-center">Deskripsi</th>
-                                <th class="text-center">Foto</th>
+                                <th class="text-center">Nama Berita</th>
+                                <th class="text-center">Deskripsi Berita</th>
+                                <th class="text-center">Foto Berita</th>
                                 <th class="text-center">Status</th>
                                 <th width="88px">Action</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach ($berita as $index => $item)
-                                @if (Request::get('-isi-content-status') != 'hapus' && $item->b_foto == 'HAPUS')
+                            @if (Request::get('-isi-content-status') != 'hapus' && $item->b_status == 'HAPUS')
+                            @continue
+                            @endif
+                            @if (auth()->user()->role == 'guru' && $item->b_create_id != auth()->user()->id)
                                     @continue
                                 @endif
-                                <tr>
-                                    <td>{{$index+1}}</td>
-                                    <td>{{$item->b_nama_kegiatan}}</td>
-                                    <td>{{$item->b_deskripsi}}</td>
-                                    <td>
-                                        @if($item->b_foto)
-                                            <img src="{{ asset('berita_image/' . $item->b_foto) }}" alt="Foto" width="50">
-                                        @else
-                                            No Image
-                                        @endif
-                                    </td>
-                                    <td>{{$item->b_foto}}</td>
-                                    <td>
-                                        @if ($item->b_status == 'HAPUS')
-                                            <form class="d-inline" method="POST" action="{{route('admin.berita.restore', [$item->b_id])}}">
-                                                @csrf   
-                                                <button type="button" class="btn btn-sm btn-success btn-restore" title="Restore" data-toggle="modal" data-target="#restoreModal"><i class="fa fa-undo"></i></button>
-                                            </form>
-                                            <form class="d-inline" method="POST" action="{{route('admin.berita.destroy', [$item->b_id])}}" >
-                                                @method('delete')
-                                                @csrf   
-                                                <button type="button" class="btn btn-sm btn-danger btn-delete-permanent" title="Delete" data-toggle="modal" data-target="#deletePermanentModal"><i class="fa fa-trash"></i></button>
-                                            </form>
-                                        @else
-                                            <form action="{{ route('admin.berita.edit', [$item->b_id]) }}" method="GET" class="d-inline">
-                                                <button type="submit" class="btn btn-sm btn-warning text-light" title="Edit"><i class="fa fa-pencil"></i></button>
-                                            </form>
-                                            <form class="d-inline" method="POST" action="{{route('admin.berita.destroyrecycle', [$item->b_id])}}" >
-                                                @method('delete')
-                                                @csrf   
-                                                <button type="button" class="btn btn-sm btn-danger btn-delete-recycle" title="Delete" data-toggle="modal" data-target="#deleteRecycleModal"><i class="fa fa-trash"></i></button>
-                                            </form>
-                                        @endif
-                                    </td>
-                                </tr>
+                            <tr>
+                                <td class="text-center">{{$index+1}}</td>
+                                <td class="text-center">{{$item->b_nama_berita}}</td>
+                                <td class="text-center">{{ Str::limit($item->b_deskripsi_berita, 500) }}</td>
+                                <td class="text-center">
+                                    @if($item->b_foto_berita)
+                                    <img src="{{ asset('berita_image/' . $item->b_foto_berita) }}" alt="Foto" width="50">
+                                    @else
+                                    No Image
+                                    @endif
+                                </td>
+                                <td class="text-center">{{$item->b_status}}</td>
+                                <td>
+                                    @if ($item->b_status == 'HAPUS')
+                                    <form class="d-inline" method="POST" action="{{route('admin.berita.restore', [$item->b_id])}}">
+                                        @csrf
+                                        <button type="button" class="btn btn-sm btn-success btn-restore" title="Restore" data-toggle="modal" data-target="#restoreModal"><i class="fa fa-undo"></i></button>
+                                    </form>
+                                    <form class="d-inline" method="POST" action="{{route('admin.berita.destroy', [$item->b_id])}}">
+                                        @method('delete')
+                                        @csrf
+                                        <button type="button" class="btn btn-sm btn-danger btn-delete-permanent" title="Delete" data-toggle="modal" data-target="#deletePermanentModal"><i class="fa fa-trash"></i></button>
+                                    </form>
+                                    @else
+                                    <a href="{{ route('admin.berita.edit', [$item->b_id])}}" class="btn btn-sm btn-warning text-light" title="Edit"><i class="fa fa-pencil"></i></a>
+                                    <form class="d-inline" method="POST" action="{{route('admin.berita.destroyrecycle', [$item->b_id])}}">
+                                        @method('delete')
+                                        @csrf
+                                        <button type="button" class="btn btn-sm btn-danger btn-delete-recycle" title="Delete" data-toggle="modal" data-target="#deleteRecycleModal"><i class="fa fa-trash"></i></button>
+                                    </form>
+                                    @endif
+    
+                                </td>
+                            </tr>
                             @endforeach
                         </tbody>
                         <tfoot>
                             {{$berita->appends(Request::all())->links()}}
                         </tfoot>
                     </table>
+
+                    <script>
+                        function filterTable(keyword) {
+                            const rows = document.querySelectorAll('#dataTable tbody tr');
+                            rows.forEach(row => {
+                                const text = row.innerText.toLowerCase();
+                                row.style.display = text.includes(keyword.toLowerCase()) ? '' : 'none';
+                            });
+                        }
+                    </script>
                 </div>
             </div>
         </div>

@@ -9,6 +9,7 @@ use App\Ekstrakurikuler;
 use App\Penghargaan;
 use App\Pembiasaan;
 use App\Tatatertib;
+use App\Beasiswa;
 use App\Tautan;
 use App\MediaSosial;
 use App\User;
@@ -38,7 +39,7 @@ class InformasiMediaController extends Controller
         $mediasosial = MediaSosial::query();
         $user = User::query();
 
-        $berita_all = Berita::where('b_foto', 'DRAFT')->get();
+        $berita_all = Berita::where('b_status', 'DRAFT')->get();
         $publishedMenus = Kesiswaan::where('k_status', 'PUBLISH')->pluck('k_nama_menu')->toArray();
 
         $kesiswaa_all = Kesiswaan::where('k_status', 'DRAFT')
@@ -58,13 +59,14 @@ class InformasiMediaController extends Controller
         $tautan = $tautan->paginate(10);
         $mediasosial = $mediasosial->paginate(10);
         $user_all = User::where('role', 'guru')->get();
+        $beasiswa_all = Beasiswa::where('status', 'DRAFT')->get();
     
-        return view('informasi-media.index', compact('menu', 'berita', 'kesiswaan', 'ekstrakurikuler', 'penghargaan', 'tatatertib', 'tautan', 'mediasosial', 'user', 'kesiswaa_all', 'ekstrakurikuler_all', 'penghargaan_all', 'tatatertib_all', 'user_all', 'berita_all', 'pembiasaan_all'));
+        return view('informasi-media.index', compact('menu', 'berita', 'kesiswaan', 'ekstrakurikuler', 'penghargaan', 'tatatertib', 'tautan', 'mediasosial', 'user', 'kesiswaa_all', 'ekstrakurikuler_all', 'penghargaan_all', 'tatatertib_all', 'user_all', 'berita_all', 'pembiasaan_all', 'beasiswa_all'));
     }
 
     public function create(Request $request)
     {
-        $berita_all = Berita::where('b_foto', 'DRAFT')->get();
+        $berita_all = Berita::where('b_status', 'DRAFT')->get();
         $publishedMenus = Kesiswaan::where('k_status', 'PUBLISH')->pluck('k_nama_menu')->toArray();
 
         $kesiswaa_all = Kesiswaan::where('k_status', 'DRAFT')
@@ -80,16 +82,17 @@ class InformasiMediaController extends Controller
         $pembiasaan_all= Pembiasaan::where('p_status', 'DRAFT')->get();
         $user_all = User::all();
         $mediasosial = MediaSosial::all();
+        $beasiswa_all = Beasiswa::where('status', 'DRAFT')->get();
         
         $menu = $request->query('menu');
-        return view('informasi-media.create', compact('menu', 'kesiswaa_all', 'ekstrakurikuler_all', 'penghargaan_all', 'tatatertib_all', 'user_all', 'berita_all', 'pembiasaan_all', 'mediasosial'));
+        return view('informasi-media.create', compact('menu', 'kesiswaa_all', 'ekstrakurikuler_all', 'penghargaan_all', 'tatatertib_all', 'user_all', 'berita_all', 'pembiasaan_all', 'mediasosial', 'beasiswa_all'));
     }
 
     public function store(Request $request)
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'url' => 'required|string|max:255',
+            'url' => 'required|string',
             'menu' => 'required|string|in:Tautan,Media',
         ]);
 
@@ -114,7 +117,7 @@ class InformasiMediaController extends Controller
     
     public function edit(Request $request,$id)
     {
-        $berita_all = Berita::where('b_foto', 'DRAFT')->get();
+        $berita_all = Berita::where('b_status', 'DRAFT')->get();
         $publishedMenus = Kesiswaan::where('k_status', 'PUBLISH')->pluck('k_nama_menu')->toArray();
         
         $kesiswaa_all = Kesiswaan::where('k_status', 'DRAFT')
@@ -130,11 +133,19 @@ class InformasiMediaController extends Controller
         $pembiasaan_all= Pembiasaan::where('p_status', 'DRAFT')->get();
         $user_all = User::all();
         $mediasosial = MediaSosial::all();
+        $beasiswa_all = Beasiswa::where('status', 'DRAFT')->get();
 
         $menu = $request->menu;
         $tautan = Tautan::findOrFail($id);
         $media = MediaSosial::findOrFail($id);
-        $item = $menu == 'Media' ? $media : $tautan;
+        // $item = $menu == 'Media' ? $media : $tautan;
+        if ($menu == 'Media') {
+            $item = MediaSosial::findOrFail($id);
+        } elseif ($menu == 'Tautan') {
+            $item = Tautan::findOrFail($id);
+        } else {
+            abort(404, 'Menu not found');
+        }
         
         return view('informasi-media.edit', [
             'menu' => $menu,
@@ -148,7 +159,8 @@ class InformasiMediaController extends Controller
             'media' => $media,
             'tautan' => $tautan,
             'mediasosial' => $mediasosial,
-            'item' => $item
+            'item' => $item,
+            'beasiswa_all' => $beasiswa_all
         ]);
     }
 
@@ -156,7 +168,7 @@ class InformasiMediaController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'url' => 'required|string|max:255',
+            'url' => 'required|string',
             'menu' => 'required|string|in:Tautan,Media',
         ]);
 

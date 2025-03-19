@@ -30,9 +30,9 @@ class Berita extends Model
         'b_create_id',
         'b_update_id',
         'b_delete_id',
-        'b_nama_kegiatan',
-        'b_deskripsi',
-        'b_foto',
+        'b_nama_berita',
+        'b_deskripsi_berita',
+        'b_foto_berita',
         'b_create_at',
         'b_update_at',
         'b_delete_at'

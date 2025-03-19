@@ -55,7 +55,7 @@
                         <div class="col-sm-5">
                             <form action="{{route('admin.kesiswaan.'. strtolower($menu) .'.index')}}">
                                 <div class="input-group">
-                                    <input name="k_keyword" type="text" value="{{Request::get('k_keyword')}}" class="form-control" placeholder="Filter by judul">
+                                    <input name="k_keyword" type="text" value="{{Request::get('k_keyword')}}" class="form-control" placeholder="Filter by judul" oninput="filterKesiswaanTable()">
                                     <div class="input-group-append">
                                         <input type="submit" value="Filter" class="btn btn-info">
                                     </div>
@@ -90,19 +90,13 @@
 
                     
                     {{-- table --}}
-                    <table class="table">
+                    <table class="table" id="kesiswaanTable">
                         <thead class="text-light" style="background-color:#33b751 !important">
                             <tr>
                                 <th width="12px">No</th>
-                                <th class="text-center">
-                                    <a href="{{ route('admin.kesiswaan.'. strtolower($menu) .'.index', array_merge(request()->all(), ['sort' => 'k_judul_slide', 'direction' => request('direction') == 'asc' ? 'desc' : 'asc'])) }}" class="text-light">Judul Slide</a>
-                                </th>
-                                <th class="text-center">
-                                    <a href="{{ route('admin.kesiswaan.'. strtolower($menu) .'.index', array_merge(request()->all(), ['sort' => 'k_deskripsi_slide', 'direction' => request('direction') == 'asc' ? 'desc' : 'asc'])) }}" class="text-light">Deskripsi Slide</a>
-                                </th>
-                                <th class="text-center">
-                                    <a href="{{ route('admin.kesiswaan.'. strtolower($menu) .'.index', array_merge(request()->all(), ['sort' => 'k_judul_isi_content', 'direction' => request('direction') == 'asc' ? 'desc' : 'asc'])) }}" class="text-light">Judul Isi Content</a>
-                                </th>
+                                <th class="text-center">Judul Slide</th>
+                                <th class="text-center">Deskripsi Slide</th>
+                                <th class="text-center">Judul Isi Content</th>
                                 <th class="text-center">Foto Slide 1</th>
                                 <th class="text-center">Foto Slide 2</th>
                                 <th class="text-center">Foto Slide 3</th>
@@ -117,9 +111,9 @@
                                 @endif
                                 <tr>
                                     <td>{{$index+1}}</td>
-                                    <td>{{$item->k_judul_slide}}</td>
-                                    <td>{{$item->k_deskripsi_slide}}</td>
-                                    <td>{{$item->k_judul_isi_content}}</td>
+                                    <td class="filterable">{{$item->k_judul_slide}}</td>
+                                    <td class="filterable">{{$item->k_deskripsi_slide}}</td>
+                                    <td class="filterable">{{$item->k_judul_isi_content}}</td>
                                     <td>
                                         @if($item->k_foto_slide1)
                                             <img src="{{ asset('kesiswaan_image/slide_image/' . $item->k_foto_slide1) }}" alt="Foto Slide 1" width="50">
@@ -176,6 +170,20 @@
                             {{$kesiswaan->appends(Request::all())->links()}}
                         </tfoot>
                     </table>
+
+                    <script>
+                        function filterKesiswaanTable() {
+                            const input = document.querySelector('input[name="k_keyword"]');
+                            const filter = input.value.toLowerCase();
+                            const rows = document.querySelectorAll('#kesiswaanTable tbody tr');
+
+                            rows.forEach(row => {
+                                const cells = row.querySelectorAll('.filterable');
+                                const match = Array.from(cells).some(cell => cell.textContent.toLowerCase().includes(filter));
+                                row.style.display = match ? '' : 'none';
+                            });
+                        }
+                    </script>
                 </div>    
                 @endif
             </div>
@@ -223,7 +231,7 @@
                         <div class="col-sm-5">
                             <form action="{{route('admin.kesiswaan.'. strtolower($menu) .'.index')}}">
                                 <div class="input-group">
-                                    <input name="p_keyword" type="text" value="{{Request::get('p_keyword')}}" class="form-control" placeholder="Filter by title">
+                                    <input name="keyword" type="text" value="{{ Request::get('keyword') }}" class="form-control" placeholder="Filter by title" oninput="filterMediaTable()">
                                     <div class="input-group-append">
                                         <input type="submit" value="Filter" class="btn btn-info">
                                     </div>
@@ -252,7 +260,7 @@
                     
                     
                     {{-- table --}}
-                    <table class="table">
+                    <table class="table" id="mediaTable">
                         <thead class="text-light" style="background-color:#33b751 !important">
                             <tr>
                                 <th width="12px">No</th>
@@ -299,8 +307,8 @@
                                 @endif
                                 <tr>
                                     <td>{{$index+1}}</td>
-                                    <td>{{$item->p_nama_kegiatan}}</td>
-                                    <td>{{$item->p_deskripsi}}</td>
+                                    <td class="filterable">{{$item->p_nama_kegiatan}}</td>
+                                    <td class="filterable">{{$item->p_deskripsi}}</td>
                                     <td>
                                         @if($item->p_foto)
                                             <img src="{{ asset('kesiswaan_image/pembiasaan_image/' . $item->p_foto) }}" alt="Foto" width="50">
@@ -350,14 +358,14 @@
                                 @endif
                                 <tr>
                                     <td>{{$index+1}}</td>
-                                    <td>{{$item->ph_nama_kegiatan}}</td>
+                                    <td class="filterable">{{$item->ph_nama_kegiatan}}</td>
                                     <td>
                                         @php
                                             $ekskul = $ekstrakurikuler->firstWhere('e_id', $item->e_id);
                                         @endphp
                                         {{$ekskul ? $ekskul->e_nama_ekstrakurikuler : 'No Ekstrakurikuler'}}
                                     </td>
-                                    <td>{{$item->ph_deskripsi}}</td>
+                                    <td class="filterable">{{$item->ph_deskripsi}}</td>
                                     <td>
                                         @if($item->ph_foto)
                                         <img src="{{ asset('kesiswaan_image/'. strtolower($menu) .'_image/' . $item->ph_foto) }}" alt="Foto" width="50">
@@ -407,8 +415,8 @@
                                 @endif
                                 <tr>
                                     <td>{{$index+1}}</td>
-                                    <td>{{$item->e_judul_slide}}</td>
-                                    <td>{{$item->e_deskripsi_slide}}</td>
+                                    <td class="filterable">{{$item->e_judul_slide}}</td>
+                                    <td class="filterable">{{$item->e_deskripsi_slide}}</td>
                                     <td>
                                         @if($item->e_foto_slide1)
                                             <img src="{{ asset('kesiswaan_image/slide_image/' . $item->e_foto_slide1) }}" alt="Foto Slide 1" width="50">
@@ -481,8 +489,8 @@
                                 @endif
                                 <tr>
                                     <td>{{$index+1}}</td>
-                                    <td>{{$item->t_nama_peraturan}}</td>
-                                    <td>{{$item->t_deskripsi}}</td>
+                                    <td class="filterable">{{$item->t_nama_peraturan}}</td>
+                                    <td class="filterable">{{$item->t_deskripsi}}</td>
                                     @if ($item->t_status == 'TIDAK')
                                         <td>{{$item->t_status}} Disetujui</td>
                                     @else
@@ -516,6 +524,19 @@
                         </tfoot>
                         @endif
                     </table>
+                    <script>
+                        function filterMediaTable() {
+                            const input = document.querySelector('input[name="keyword"]');
+                            const filter = input.value.toLowerCase();
+                            const rows = document.querySelectorAll('#mediaTable tbody tr');
+
+                            rows.forEach(row => {
+                                const cells = row.querySelectorAll('.filterable');
+                                const match = Array.from(cells).some(cell => cell.textContent.toLowerCase().includes(filter));
+                                row.style.display = match ? '' : 'none';
+                            });
+                        }
+                    </script>
                 </div>
             </div>
         </div>

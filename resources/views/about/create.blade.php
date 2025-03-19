@@ -87,20 +87,33 @@
                                         right: 10px;
                                     }
                                 </style>
-                            <div class="col-12">
-                                <div class="mb-3 row shadow card p-3">
-                                    <div class="col-12" style="border: 1px solid #ddd; padding: 10px;">
-                                        <div class="row">
-                                            <div class="col-12">
-                                                <label for="sejarah" class="font-weight-bold">Sejarah SDN 162 Warung Jambu Kiara Condong</label>
-                                                <textarea name="sejarah" id="sejarah" placeholder="Sejarah..." class="form-control {{$errors->first('sejarah') ? "is-invalid" : ""}}" required style="width: 100%;">{{old('sejarah')}}</textarea>
-                                                <input type="text" name="k_id" id="k_id" placeholder="k_id..." class="form-control {{$errors->first('k_id') ? "is-invalid" : ""}}" value="{{ $kesiswaan->k_id }}" required oninput="updatePreview()" hidden>
+
+                                @if($aboutSejarah->isNotEmpty())
+                                    @php
+                                        $as_id = $aboutSejarah->first()->as_id;
+                                    @endphp
+                                    <input type="text" name="as_id" id="as_id" placeholder="as_id..." class="form-control {{$errors->first('k_id') ? "is-invalid" : ""}}" value="{{ $as_id }}" required oninput="updatePreview()" hidden>
+                                    <input type="text" name="k_id" id="k_id" placeholder="k_id..." class="form-control {{$errors->first('k_id') ? "is-invalid" : ""}}" value="{{ $kesiswaan->k_id }}" required oninput="updatePreview()" hidden>
+                                @else
+                                    <div class="col-12">
+                                        <div class="mb-3 row shadow card p-3">
+                                            <div class="col-12" style="border: 1px solid #ddd; padding: 10px;">
+                                                <div class="row">
+                                                    <div class="col-12">
+                                                        <label for="sejarah" class="font-weight-bold">
+                                                            Sejarah SDN 162 Warung Jambu Kiara Condong
+                                                        </label>
+                                                        <textarea name="sejarah" id="sejarah" placeholder="Sejarah..." class="form-control {{$errors->first('sejarah') ? "is-invalid" : ""}}" required style="width: 100%;">{{old('sejarah')}}</textarea>
+                                                        <input type="text" name="as_id" id="as_id" placeholder="as_id..." class="form-control {{$errors->first('k_id') ? "is-invalid" : ""}}" value="{{ $kesiswaan->k_id }}" required oninput="updatePreview()" hidden>
+                                                        <input type="text" name="k_id" id="k_id" placeholder="k_id..." class="form-control {{$errors->first('k_id') ? "is-invalid" : ""}}" value="{{ $kesiswaan->k_id }}" required oninput="updatePreview()" hidden>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                            </div>
-                            <div class="mb-3 mt-4">
+                                @endif
+
+                                <div class="mb-3 mt-4">
                                 <a href="{{route('admin.'.strtolower($menu) .'.index')}}" class="btn btn-md btn-secondary">Back</a>
                                 <button type="submit" name="status" value="draft" class="btn btn-md btn-warning">Draft</button>
                                 <button type="submit" name="status" value="publish" class="btn btn-md btn-success">Publish</button>

@@ -36,12 +36,12 @@
                             <form action="{{ route('admin.informasi-media.index') }}">
                                 <input type="hidden" name="menu" value="{{ $menu }}">
                                 <div class="input-group">
-                                    <input name="p_keyword" type="text" value="{{ Request::get('p_keyword') }}" class="form-control" placeholder="Filter by title">
+                                    <input name="p_keyword" type="text" value="{{ Request::get('p_keyword') }}" class="form-control" placeholder="Filter by title" oninput="filterTautanTable()">
                                     <div class="input-group-append">
                                         <input type="submit" value="Filter" class="btn btn-info">
                                     </div>
                                 </div>
-                            </form>                            
+                            </form>
                         </div>
                     </div>
 
@@ -63,7 +63,7 @@
                     @endif
                     
                     {{-- table --}}
-                    <table class="table">
+                    <table class="table" id="tautanTable">
                         <thead class="text-light" style="background-color:#33b751 !important">
                             <tr>
                                 <th width="12px">No</th>
@@ -76,8 +76,8 @@
                             @foreach ($tautan as $item)
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
-                                    <td class="text-center">{{ $item->tt_nama_tautan }}</td>
-                                    <td class="text-center">{{ $item->tt_url }}</td>
+                                    <td class="filterable">{{ $item->tt_nama_tautan }}</td>
+                                    <td class="filterable">{{ $item->tt_url }}</td>
                                     <td class="text-center">
                                         <form action="{{ route('admin.informasi-media.edit', $item->tt_id) }}" method="GET" class="d-inline">
                                             <input type="text" name="menu" id="menu" placeholder="Nama Menu..." class="form-control {{$errors->first('menu') ? "is-invalid" : ""}}" value="Tautan" required hidden>
@@ -94,6 +94,20 @@
                             @endforeach
                         </tbody>
                     </table>
+
+                    <script>
+                        function filterTautanTable() {
+                            const input = document.querySelector('input[name="p_keyword"]');
+                            const filter = input.value.toLowerCase();
+                            const rows = document.querySelectorAll('#tautanTable tbody tr');
+
+                            rows.forEach(row => {
+                                const cells = row.querySelectorAll('.filterable');
+                                const match = Array.from(cells).some(cell => cell.textContent.toLowerCase().includes(filter));
+                                row.style.display = match ? '' : 'none';
+                            });
+                        }
+                    </script>
                 </div>
             </div>
         </div>
@@ -122,12 +136,12 @@
                             <form action="{{ route('admin.informasi-media.index') }}">
                                 <input type="hidden" name="menu" value="{{ $menu }}">
                                 <div class="input-group">
-                                    <input name="p_keyword" type="text" value="{{ Request::get('p_keyword') }}" class="form-control" placeholder="Filter by title">
+                                    <input name="p_keyword" type="text" value="{{ Request::get('p_keyword') }}" class="form-control" placeholder="Filter by title" oninput="filterMediaTable()">
                                     <div class="input-group-append">
                                         <input type="submit" value="Filter" class="btn btn-info">
                                     </div>
                                 </div>
-                            </form>                            
+                            </form>
                         </div>
                     </div>
 
@@ -149,7 +163,7 @@
                     @endif
                     
                     {{-- table --}}
-                    <table class="table">
+                    <table class="table" id="mediaTable">
                         <thead class="text-light" style="background-color:#33b751 !important">
                             <tr>
                                 <th width="12px">No</th>
@@ -162,8 +176,8 @@
                             @foreach ($mediasosial as $item)
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
-                                    <td class="text-center">{{ $item->ms_nama_media }}</td>
-                                    <td class="text-center">{{ $item->ms_url }}</td>
+                                    <td class="filterable">{{ $item->ms_nama_media }}</td>
+                                    <td class="filterable">{{ $item->ms_url }}</td>
                                     <td class="text-center">
                                         <form action="{{ route('admin.informasi-media.edit', $item->ms_id) }}" method="GET" class="d-inline">
                                             <input type="text" name="menu" id="menu" placeholder="Nama Menu..." class="form-control {{$errors->first('menu') ? "is-invalid" : ""}}" value="Media" required hidden>
@@ -180,6 +194,20 @@
                             @endforeach
                         </tbody>
                     </table>
+
+                    <script>
+                        function filterMediaTable() {
+                            const input = document.querySelector('input[name="p_keyword"]');
+                            const filter = input.value.toLowerCase();
+                            const rows = document.querySelectorAll('#mediaTable tbody tr');
+
+                            rows.forEach(row => {
+                                const cells = row.querySelectorAll('.filterable');
+                                const match = Array.from(cells).some(cell => cell.textContent.toLowerCase().includes(filter));
+                                row.style.display = match ? '' : 'none';
+                            });
+                        }
+                    </script>
                 </div>
             </div>
         </div>

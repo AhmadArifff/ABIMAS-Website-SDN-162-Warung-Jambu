@@ -133,49 +133,17 @@
                             <div class="row" id="activity-cards">
                                 @foreach($berita as $index => $activity)
                                     @if($activity->b_status == 'PUBLISH')
-                                        @if($index < 6)
-                                            <div class="col-md-6 col-lg-6 mb-4 activity-card" data-page="1" style="transition: transform 0.3s, opacity 0.3s;">
-                                                <div class="card" style="transition: transform 0.3s;" data-toggle="modal" data-target="#activityModal{{ $index + 1 }}">
-                                                    <img src="{{ asset('kesiswaan_image/berita_image/'.$activity->b_foto) }}" class="card-img-top" alt="{{ $activity->b_nama_kegiatan }}" style="height: 150px; object-fit: cover; width: 100%; image-rendering: optimizeSpeed;">
-                                                    <div class="card-body">
-                                                        <h5 class="card-title">{{ $activity->b_nama_kegiatan }}</h5>
-                                                        <p class="card-text">{{ $activity->b_deskripsi }}</p>
-                                                        <p class="card-text text-right"><small class="text-muted">{{ \Carbon\Carbon::parse($activity->b_create_at)->format('d-m-Y') }}</small></p>
-                                                    </div>
+                                        <div class="col-md-12 mb-4 activity-card" data-page="{{ ceil(($index + 1) / 6) }}" style="display: {{ $index < 6 ? 'block' : 'none' }}; transition: transform 0.3s, opacity 0.3s;">
+                                            <div class="card d-flex flex-row align-items-center" style="transition: transform 0.3s;">
+                                                <img src="{{ asset('berita_image/'.$activity->b_foto_berita) }}" class="card-img-top" alt="{{ $activity->b_nama_berita }}" style="height: 250px; object-fit: cover; width: 40%; image-rendering: optimizeSpeed;">
+                                                <div class="card-body">
+                                                    <h5 class="card-title">{{ $activity->b_nama_berita }}</h5>
+                                                    <p class="card-text">{{ Str::limit($activity->b_deskripsi_berita, 500) }}</p>
+                                                    <a href="{{ route('berita.detail', ['id' => $activity->b_id]) }}" class="btn btn-primary">Selengkapnya</a>
+                                                    <p class="card-text text-right"><small class="text-muted">{{ \Carbon\Carbon::parse($activity->b_create_at)->format('d-m-Y') }}</small></p>
                                                 </div>
                                             </div>
-                                            <!-- Modal -->
-                                            <div class="modal fade" id="activityModal{{ $index + 1 }}" tabindex="-1" role="dialog" aria-labelledby="activityModalLabel{{ $index + 1 }}" aria-hidden="true">
-                                                <div class="modal-dialog modal-lg" role="document">
-                                                    <div class="modal-content">
-                                                        <div class="modal-header">
-                                                            <h5 class="modal-title" id="activityModalLabel{{ $index }}">{{ $activity->b_nama_kegiatan }}</h5>
-                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                                <span aria-hidden="true">&times;</span>
-                                                            </button>
-                                                        </div>
-                                                        <div class="modal-body">
-                                                            <img src="{{ asset('kesiswaan_image/berita_image/'.$activity->b_foto) }}" class="img-fluid mb-3" alt="{{ $activity->b_nama_kegiatan }}">
-                                                            <p>{{ $activity->b_deskripsi }}</p>
-                                                        </div>
-                                                        <div class="modal-footer">
-                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        @elseif($index < 12)
-                                            <div class="col-md-6 col-lg-6 mb-4 activity-card" data-page="2" style="display: none; transition: transform 0.3s, opacity 0.3s;">
-                                                <div class="card" style="transition: transform 0.3s;" data-toggle="modal" data-target="#activityModal{{ $index + 1 }}">
-                                                    <img src="{{ asset('kesiswaan_image/berita_image/'.$activity->b_foto) }}" class="card-img-top" alt="{{ $activity->b_nama_kegiatan }}" style="height: 150px; object-fit: cover; width: 100%; image-rendering: optimizeSpeed;">
-                                                    <div class="card-body">
-                                                        <h5 class="card-title">{{ $activity->b_nama_kegiatan }}</h5>
-                                                        <p class="card-text">{{ $activity->b_deskripsi }}</p>
-                                                        <p class="card-text text-right"><small class="text-muted">{{ \Carbon\Carbon::parse($activity->b_create_at)->format('d-m-Y') }}</small></p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        @endif
+                                        </div>
                                     @endif
                                 @endforeach
                             </div>
@@ -193,7 +161,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-3">
+                <div class="col-lg-3">
                     <!-- Search Element -->
                     <div class="mb-4">
                         <div class="input-group">
@@ -221,15 +189,15 @@
                         <div class="widget_title">Berita Terbaru</div>
                         <div class="widget_body">
                             <div class="recent-content">
-                                @foreach($recentPosts as $post)
-                                    <div class="recent-content-item card mb-3" style="cursor: pointer; transition: transform 0.2s;">
-                                        <a href="{{ $post->link }}"><img src="{{ asset($post->image) }}" alt="{{ $post->title }}" class="card-img-top"></a>
-                                        <div class="card-body">
-                                            <h5 class="card-title"><a href="{{ $post->link }}">{{ $post->title }}</a></h5>
-                                            <p class="card-text">{{ $post->description }}</p>
-                                            <p class="card-text"><small class="text-muted">{{ $post->date }}</small></p>
-                                        </div>
+                                @foreach($berita->take(5) as $post)
+                                <a href="{{ route('berita.detail', ['id' => $post->b_id]) }}" class="card mb-3" style="transition: transform 0.3s;" data-toggle="modal" data-target="#activityModal{{ $loop->index + 1 }}">
+                                    <img src="{{ asset('berita_image/'.$post->b_foto_berita) }}" class="card-img-top" alt="{{ $post->b_nama_berita }}" style="height: 150px; object-fit: cover; width: 100%; image-rendering: optimizeSpeed;">
+                                    <div class="card-body">
+                                        <h5 class="card-title">{{ $post->b_nama_berita }}</h5>
+                                        <p class="card-text">{{ Str::limit($post->b_deskripsi_berita, 100) }}</p>
+                                        <p class="card-text text-right"><small class="text-muted">{{ \Carbon\Carbon::parse($post->b_create_at)->format('d-m-Y') }}</small></p>
                                     </div>
+                                </a>
                                 @endforeach
                             </div>
                         </div>

@@ -8,6 +8,7 @@ use App\Kesiswaan;
 use App\Ekstrakurikuler;
 use App\Penghargaan;
 use App\Pembiasaan;
+use App\Beasiswa;
 use App\Tatatertib;
 use App\User;
 use Illuminate\Support\Facades\File;
@@ -58,8 +59,9 @@ class UsersController extends Controller
         $kesiswaan = $kesiswaan->paginate(10);
         $user = $user->paginate(10);
         $user_all = User::where('role', 'guru')->get();
+        $beasiswa_all = Beasiswa::where('status', 'DRAFT')->get();
     
-        return view('users.index', compact('berita', 'kesiswaan', 'ekstrakurikuler', 'penghargaan', 'tatatertib', 'user', 'menu', 'kesiswaa_all', 'ekstrakurikuler_all', 'penghargaan_all', 'tatatertib_all', 'user_all', 'berita_all', 'pembiasaan_all'));
+        return view('users.index', compact('berita', 'kesiswaan', 'ekstrakurikuler', 'penghargaan', 'tatatertib', 'user', 'menu', 'kesiswaa_all', 'ekstrakurikuler_all', 'penghargaan_all', 'tatatertib_all', 'user_all', 'berita_all', 'pembiasaan_all', 'beasiswa_all'));
     }
 
     public function create(Request $request)
@@ -78,10 +80,11 @@ class UsersController extends Controller
         $penghargaan_all = Penghargaan::where('ph_status', 'DRAFT')->get();
         $tatatertib_all = Tatatertib::where('t_status', 'DRAFT')->get();
         $pembiasaan_all= Pembiasaan::where('p_status', 'DRAFT')->get();
+        $beasiswa_all = Beasiswa::where('status', 'DRAFT')->get();
         $user_all = User::all();
         
         $menu = $request->query('menu');
-        return view('users.create', compact('menu', 'kesiswaa_all', 'ekstrakurikuler_all', 'penghargaan_all', 'tatatertib_all', 'user_all', 'berita_all', 'pembiasaan_all'));
+        return view('users.create', compact('menu', 'kesiswaa_all', 'ekstrakurikuler_all', 'penghargaan_all', 'tatatertib_all', 'user_all', 'berita_all', 'pembiasaan_all', 'beasiswa_all'));
     }
 
     public function store(Request $request)
@@ -127,6 +130,7 @@ class UsersController extends Controller
         $penghargaan_all = Penghargaan::where('ph_status', 'DRAFT')->get();
         $tatatertib_all = Tatatertib::where('t_status', 'DRAFT')->get();
         $pembiasaan_all= Pembiasaan::where('p_status', 'DRAFT')->get();
+        $beasiswa_all = Beasiswa::where('status', 'DRAFT')->get();
         $user_all = User::all();
 
         $menu = 'Users';
@@ -142,6 +146,7 @@ class UsersController extends Controller
             'user_all' => $user_all,
             'berita_all' => $berita_all,
             'pembiasaan_all' => $pembiasaan_all,
+            'beasiswa_all' => $beasiswa_all,
         ]);
     }
 

@@ -219,15 +219,15 @@
                         <div class="widget_title">Berita Terbaru</div>
                         <div class="widget_body">
                             <div class="recent-content">
-                                @foreach($recentPosts as $post)
-                                    <div class="recent-content-item card mb-3" style="cursor: pointer; transition: transform 0.2s;">
-                                        <a href="{{ $post->link }}"><img src="{{ asset($post->image) }}" alt="{{ $post->title }}" class="card-img-top"></a>
-                                        <div class="card-body">
-                                            <h5 class="card-title"><a href="{{ $post->link }}">{{ $post->title }}</a></h5>
-                                            <p class="card-text">{{ $post->description }}</p>
-                                            <p class="card-text"><small class="text-muted">{{ $post->date }}</small></p>
-                                        </div>
+                                @foreach($berita->take(5) as $post)
+                                <a href="{{ route('berita.detail', ['id' => $post->b_id]) }}" class="card mb-3" style="transition: transform 0.3s;" data-toggle="modal" data-target="#activityModal{{ $loop->index + 1 }}">
+                                    <img src="{{ asset('berita_image/'.$post->b_foto_berita) }}" class="card-img-top" alt="{{ $post->b_nama_berita }}" style="height: 150px; object-fit: cover; width: 100%; image-rendering: optimizeSpeed;">
+                                    <div class="card-body">
+                                        <h5 class="card-title">{{ $post->b_nama_berita }}</h5>
+                                        <p class="card-text">{{ Str::limit($post->b_deskripsi_berita, 100) }}</p>
+                                        <p class="card-text text-right"><small class="text-muted">{{ \Carbon\Carbon::parse($post->b_create_at)->format('d-m-Y') }}</small></p>
                                     </div>
+                                </a>
                                 @endforeach
                             </div>
                         </div>

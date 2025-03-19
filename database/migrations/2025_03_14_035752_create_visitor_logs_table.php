@@ -13,14 +13,14 @@ class CreateVisitorLogsTable extends Migration
      */
     public function up()
     {
-        Schema::create('visitor_logs', function (Blueprint $table) {
-            $table->bigIncrements('v_id');
-            $table->string('v_ip_address');
-            $table->string('v_user_agent');
-            $table->string('v_referer')->nullable();
-            $table->string('v_url');
-            $table->timestamp('v_visited_at')->useCurrent();
-        });
+        // Schema::create('visitor_logs', function (Blueprint $table) {
+        //     $table->bigIncrements('v_id');
+        //     $table->string('v_ip_address');
+        //     $table->string('v_user_agent');
+        //     $table->string('v_referer')->nullable();
+        //     $table->string('v_url');
+        //     $table->timestamp('v_visited_at')->useCurrent();
+        // });
     }
 
     /**
@@ -30,6 +30,6 @@ class CreateVisitorLogsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('visitor_logs');
+        // Schema::dropIfExists('visitor_logs');
     }
 }

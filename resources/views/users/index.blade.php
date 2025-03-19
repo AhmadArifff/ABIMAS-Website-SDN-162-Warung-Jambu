@@ -47,7 +47,7 @@
                         <div class="col-sm-5">
                             <form action="{{route('admin.'. strtolower($menu) .'.index')}}">
                                 <div class="input-group">
-                                    <input name="p_keyword" type="text" value="{{Request::get('p_keyword')}}" class="form-control" placeholder="Filter by title">
+                                    <input name="p_keyword" type="text" value="{{Request::get('p_keyword')}}" class="form-control" placeholder="Filter by title" oninput="filterUserTable()">
                                     <div class="input-group-append">
                                         <input type="submit" value="Filter" class="btn btn-info">
                                     </div>
@@ -72,11 +72,9 @@
                                 </ul>
                             </div>
                     @endif
-                    {{-- Modal Error
-                    
-                    
+
                     {{-- table --}}
-                    <table class="table">
+                    <table class="table" id="userTable">
                         <thead class="text-light" style="background-color:#33b751 !important">
                             <tr>
                                 <th width="12px">No</th>
@@ -91,9 +89,9 @@
                             @foreach ($user as $item)
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
-                                    <td class="text-center">{{ $item->name }}</td>
-                                    <td class="text-center">{{ ucfirst($item->role) }}</td>
-                                    <td class="text-center">{{ $item->email }}</td>
+                                    <td class="filterable">{{ $item->name }}</td>
+                                    <td class="filterable">{{ ucfirst($item->role) }}</td>
+                                    <td class="filterable">{{ $item->email }}</td>
                                     <td class="text-center">
                                         @if ($item->foto)
                                             <img src="{{ asset('users_foto/' . $item->foto) }}" alt="Foto" width="50" class="rounded-circle">
@@ -116,6 +114,20 @@
                             @endforeach
                         </tbody>
                     </table>
+
+                    <script>
+                        function filterUserTable() {
+                            const input = document.querySelector('input[name="p_keyword"]');
+                            const filter = input.value.toLowerCase();
+                            const rows = document.querySelectorAll('#userTable tbody tr');
+
+                            rows.forEach(row => {
+                                const cells = row.querySelectorAll('.filterable');
+                                const match = Array.from(cells).some(cell => cell.textContent.toLowerCase().includes(filter));
+                                row.style.display = match ? '' : 'none';
+                            });
+                        }
+                    </script>
                 </div>
             </div>
         </div>

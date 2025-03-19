@@ -98,13 +98,18 @@
                         <img src="{{ asset($strukturorganisasi['foto']) }}" alt="Struktur Organisasi" style="width: 100%; height: auto; margin-bottom: 20px;">
                         <p>{{ $strukturorganisasi['deskripsi'] }}</p>
                         <div class="row">
-                            @foreach($strukturorganisasi['jabatan'] as $jabatan)
+                            @foreach($guru as $g)
                                 <div class="col-md-6 mb-4">
                                     <div class="card">
-                                        <div class="card-body">
-                                            <h5 class="card-title">{{ $jabatan['nama_jabatan'] }}</h5>
-                                            <p class="card-text">{{ $jabatan['nama'] }}</p>
-                                            <p class="card-text"><small class="text-muted">{{ $jabatan['masa_jabatan'] }}</small></p>
+                                        <div class="card-body d-flex align-items-center">
+                                            <div style="flex: 1;">
+                                                <h5 class="card-title">{{ $g->jabatan }}</h5>
+                                                <p class="card-text">{{ $g->nama }}, {{ $g->gelar }}</p>
+                                                <p class="card-text"><small class="text-muted">{{ $g->masa_kerja }} - Sekarang</small></p>
+                                            </div>
+                                            @if($g->foto)
+                                                <img src="{{ asset('guru_image/' .$g->foto) }}" alt="{{ $g->nama }}" class="rounded" style="width: 100px; height: 100px; object-fit: cover; margin-left: 10px;">
+                                            @endif
                                         </div>
                                     </div>
                                 </div>
@@ -140,54 +145,15 @@
                         <div class="widget_title">Berita Terbaru</div>
                         <div class="widget_body">
                             <div class="recent-content">
-                                @php
-                                    $recentPosts = [
-                                        (object)[
-                                            'link' => '#',
-                                            'image' => 'sample_image/Gambar.png',
-                                            'title' => 'Judul Artikel 1',
-                                            'description' => 'Deskripsi singkat artikel 1.',
-                                            'date' => 'Tanggal 01-01-2024'
-                                        ],
-                                        (object)[
-                                            'link' => '#',
-                                            'image' => 'sample_image/Gambar.png',
-                                            'title' => 'Judul Artikel 2',
-                                            'description' => 'Deskripsi singkat artikel 2.',
-                                            'date' => 'Tanggal 02-02-2024'
-                                        ],
-                                        (object)[
-                                            'link' => '#',
-                                            'image' => 'sample_image/Gambar.png',
-                                            'title' => 'Judul Artikel 3',
-                                            'description' => 'Deskripsi singkat artikel 3.',
-                                            'date' => 'Tanggal 03-03-2024'
-                                        ],
-                                        (object)[
-                                            'link' => '#',
-                                            'image' => 'sample_image/Gambar.png',
-                                            'title' => 'Judul Artikel 4',
-                                            'description' => 'Deskripsi singkat artikel 4.',
-                                            'date' => 'Tanggal 04-04-2024'
-                                        ],
-                                        (object)[
-                                            'link' => '#',
-                                            'image' => 'sample_image/Gambar.png',
-                                            'title' => 'Judul Artikel 5',
-                                            'description' => 'Deskripsi singkat artikel 5.',
-                                            'date' => 'Tanggal 05-05-2024'
-                                        ]
-                                    ];
-                                @endphp
-                                @foreach($recentPosts as $post)
-                                    <div class="recent-content-item card mb-3" style="cursor: pointer; transition: transform 0.2s;">
-                                        <a href="{{ $post->link }}"><img src="{{ asset($post->image) }}" alt="{{ $post->title }}" class="card-img-top"></a>
-                                        <div class="card-body">
-                                            <h5 class="card-title"><a href="{{ $post->link }}">{{ $post->title }}</a></h5>
-                                            <p class="card-text">{{ $post->description }}</p>
-                                            <p class="card-text"><small class="text-muted">{{ $post->date }}</small></p>
-                                        </div>
+                                @foreach($berita->take(5) as $post)
+                                <a href="{{ route('berita.detail', ['id' => $post->b_id]) }}" class="card mb-3" style="transition: transform 0.3s;" data-toggle="modal" data-target="#activityModal{{ $loop->index + 1 }}">
+                                    <img src="{{ asset('berita_image/'.$post->b_foto_berita) }}" class="card-img-top" alt="{{ $post->b_nama_berita }}" style="height: 150px; object-fit: cover; width: 100%; image-rendering: optimizeSpeed;">
+                                    <div class="card-body">
+                                        <h5 class="card-title">{{ $post->b_nama_berita }}</h5>
+                                        <p class="card-text">{{ Str::limit($post->b_deskripsi_berita, 100) }}</p>
+                                        <p class="card-text text-right"><small class="text-muted">{{ \Carbon\Carbon::parse($post->b_create_at)->format('d-m-Y') }}</small></p>
                                     </div>
+                                </a>
                                 @endforeach
                             </div>
                         </div>

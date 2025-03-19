@@ -7,7 +7,9 @@ use App\Pembiasaan;
 use App\Kesiswaan;
 use App\Ekstrakurikuler;
 use App\Penghargaan;
+use App\Beasiswa;
 use App\Tatatertib;
+use App\Berita;
 use App\User;
 use Illuminate\Support\Facades\File;
 
@@ -16,7 +18,7 @@ class EkstrakurikulerController extends Controller
     public function __construct()
     {
         $this->middleware(function ($request, $next) {
-            if (auth()->user()->role !== 'admin' && auth()->user()->role !== 'guru') {
+            if (auth()->user()->role !== 'admin') {
                 return redirect()->route('dashboard')->withErrors(['error' => 'Anda tidak memiliki akses ke halaman ini']);
             }
             return $next($request);
@@ -62,8 +64,10 @@ class EkstrakurikulerController extends Controller
         $kesiswaan->where('k_nama_menu', $menu);
         $ekstrakurikuler = $ekstrakurikuler->paginate(10);
         $kesiswaan = $kesiswaan->paginate(10);
+        $berita_all = Berita::where('b_status', 'DRAFT')->get();
+        $beasiswa_all = Beasiswa::where('status', 'DRAFT')->get();
     
-        return view('kesiswaan.admin.index', compact('ekstrakurikuler', 'kesiswaan', 'menu', 'pembiasaan_all', 'kesiswaa_all', 'ekstrakurikuler_all', 'penghargaan_all', 'tatatertib_all', 'user_all'));
+        return view('kesiswaan.admin.index', compact('ekstrakurikuler', 'kesiswaan', 'menu', 'pembiasaan_all', 'kesiswaa_all', 'ekstrakurikuler_all', 'penghargaan_all', 'tatatertib_all', 'user_all', 'berita_all', 'beasiswa_all'));
     }
 
     public function create(Request $request)
@@ -88,6 +92,8 @@ class EkstrakurikulerController extends Controller
         // if (!$kesiswaan) {
         //     return redirect()->back()->withErrors(['error' => 'Data Manage Content Slide Ekstrakurikuler Tidak Terpublish! Tolong Publish Terlebih Dahulu!']);
         // }
+        $berita_all = Berita::where('b_status', 'DRAFT')->get();
+        $beasiswa_all = Beasiswa::where('status', 'DRAFT')->get();
         $ekstrakurikuler = [
             'achievements' => [
             [
@@ -104,7 +110,7 @@ class EkstrakurikulerController extends Controller
             ]
             ]
         ];
-        return view('kesiswaan/admin.create', compact( 'menu','ekstrakurikuler', 'pembiasaan_all', 'kesiswaa_all', 'ekstrakurikuler_all', 'penghargaan_all', 'tatatertib_all', 'user_all', 'publishedEkstrakurikulerNames'));
+        return view('kesiswaan/admin.create', compact( 'menu','ekstrakurikuler', 'pembiasaan_all', 'kesiswaa_all', 'ekstrakurikuler_all', 'penghargaan_all', 'tatatertib_all', 'user_all', 'publishedEkstrakurikulerNames', 'berita_all', 'beasiswa_all'));
     }
 
     public function store(Request $request)
@@ -178,6 +184,8 @@ class EkstrakurikulerController extends Controller
         $penghargaan_all=Penghargaan::where('ph_status', 'DRAFT')->get();
         $tatatertib_all=Tatatertib::where('t_status', 'DRAFT')->get();
         $user_all=User::all();
+        $berita_all = Berita::where('b_status', 'DRAFT')->get();
+        $beasiswa_all = Beasiswa::where('status', 'DRAFT')->get();
 
         
         $ekstrakurikuler_preview = [
@@ -208,7 +216,7 @@ class EkstrakurikulerController extends Controller
         //     return redirect()->back()->withErrors(['error' => 'Data Slide Harus Ada Status Publish!']);
         // }
         
-        return view('kesiswaan/admin.edit', ['ekstrakurikuler' => $ekstrakurikuler, 'menu' => $menu, 'ekstrakurikuler_preview' => $ekstrakurikuler_preview, 'pembiasaan_all' => $pembiasaan_all, 'kesiswaa_all' => $kesiswaa_all, 'ekstrakurikuler_all' => $ekstrakurikuler_all, 'penghargaan_all' => $penghargaan_all, 'tatatertib_all' => $tatatertib_all, 'user_all' => $user_all, 'publishedEkstrakurikulerNames' => $publishedEkstrakurikulerNames, 'SetNames' => $SetNames]);
+        return view('kesiswaan/admin.edit', ['ekstrakurikuler' => $ekstrakurikuler, 'menu' => $menu, 'ekstrakurikuler_preview' => $ekstrakurikuler_preview, 'pembiasaan_all' => $pembiasaan_all, 'kesiswaa_all' => $kesiswaa_all, 'ekstrakurikuler_all' => $ekstrakurikuler_all, 'penghargaan_all' => $penghargaan_all, 'tatatertib_all' => $tatatertib_all, 'user_all' => $user_all, 'publishedEkstrakurikulerNames' => $publishedEkstrakurikulerNames, 'SetNames' => $SetNames, 'berita_all' => $berita_all, 'beasiswa_all' => $beasiswa_all]);
     }
 
     public function update(Request $request, $id)
