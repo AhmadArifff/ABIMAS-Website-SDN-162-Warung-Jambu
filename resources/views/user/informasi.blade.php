@@ -33,7 +33,6 @@
       <div class="container wow fadeIn">
           <div class="section-header">
             <h3 class="section-title">Informasi Bantuan Dana</h3>
-            <p class="section-description">Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque</p>
           </div>
           <div class="row justify-content-center">
     @foreach ($beasiswas->sortByDesc('created_at')->take(3) as $beasiswa)
@@ -71,8 +70,7 @@
       <section id="services">
         <div class="container wow fadeIn">
           <div class="section-header">
-            <h3 class="section-title">Mengapa Memilih Kami?</h3>
-            <p class="section-description">Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque</p>
+            <h3 class="section-title">Daftar Guru SDN 162 Warung Jambu Kiaracondong</h3>
           </div>
           <div class="row">
         @foreach($gurus ->take(4) as $guru)
@@ -103,7 +101,6 @@
       <section id="call-to-action">
       <div class="section-header">
             <h3 class="section-title">INFORMASI PENDAFTARAN</h3>
-            <p class="section-description">Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque</p>
           </div>
     <div class="container mt-5">
         <div class="row justify-content-center">
@@ -142,10 +139,41 @@
                             <textarea id="alamat" class="form-control form-control-sm" placeholder="Alamat lengkap" rows="2" required></textarea>
                         </div>
 
-                        <div class="mb-2">
-                            <label class="form-label">📞 No. HP Orangtua</label>
-                            <input type="tel" id="nomor_hp" class="form-control form-control-sm" placeholder="Nomor WhatsApp" required>
+                        <div class="mb-3">
+                            <label for="nomor_hp" id="nomor-hp-label" class="font-weight-bold">📞 No. HP Orangtua</label>
+                            <div class="input-group">
+                                <input type="tel" id="nomor_hp" name="nomor_hp" placeholder="Nomor WhatsApp..." 
+                                class="form-control {{$errors->first('nomor_hp') ? 'is-invalid' : ''}}" 
+                                value="{{ old('nomor_hp') }}" maxlength="15" required>
+                            </div>
                         </div>
+        
+                        <script>
+                            document.addEventListener('DOMContentLoaded', function() {
+                            const nomorHpInput = document.getElementById('nomor_hp');
+                            if (nomorHpInput) {
+                            nomorHpInput.oninput = function() {
+                            // Remove non-numeric characters except the leading '+'
+                            this.value = this.value.replace(/[^\d+]/g, '');
+            
+                            // Ensure the input starts with '+62' only once
+                            if (!this.value.startsWith('+62')) {
+                            this.value = '+62' + this.value.replace(/^(\+62|0)+/, '');
+                            }
+            
+                            // Remove leading '00' if present
+                            if (this.value.startsWith('+6200')) {
+                            this.value = '+62' + this.value.slice(4);
+                            }
+            
+                            // Limit the input to a maximum of 15 characters
+                            if (this.value.length > 15) {
+                            this.value = this.value.slice(0, 15);
+                            }
+                            };
+                            }
+                            });
+                        </script>
 
                         <div class="text-center mt-3">
                             <button type="button" class="btn btn-success btn-sm" onclick="kirimWhatsApp()">
@@ -165,24 +193,29 @@
         var tanggal_lahir = document.getElementById("tanggal_lahir").value;
         var alamat = document.getElementById("alamat").value;
         var nomor_hp = document.getElementById("nomor_hp").value;
-
+  
         if (nama_anak === "" || tanggal_lahir === "" || alamat === "" || nomor_hp === "") {
             alert("Harap lengkapi semua data sebelum mengirim.");
             return;
         }
-
-        var nomorAdmin = "+6285723034244"; // Ganti dengan nomor WhatsApp admin sekolah
+  
+        var nomorAdmin = "{{ $media->where('ms_nama_media', 'whatsApp')->first()->ms_url ?? '' }}"; // Ambil nomor WhatsApp dari database
+        if (!nomorAdmin) {
+            alert("Nomor WhatsApp admin tidak tersedia.");
+            return;
+        }
+  
         var pesan = "Halo, saya ingin mendaftarkan anak saya ke SD. Berikut data anak saya:%0A%0A" +
                     "👦 Nama Anak: " + nama_anak + "%0A" +
                     "📅 Tanggal Lahir: " + tanggal_lahir + "%0A" +
                     "🏡 Alamat: " + alamat + "%0A" +
-                    "📞 Nomor HP Orangtua: " + nomor_hp + "%0A%0A" +
+                    "📞 Nomor HP Orangtua: +" + nomor_hp + "%0A%0A" +
                     "Mohon informasi lebih lanjut. Terima kasih.";
-
+  
         var url = "https://wa.me/" + nomorAdmin + "?text=" + pesan;
         window.open(url, "_blank");
     }
-</script>
+  </script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
 

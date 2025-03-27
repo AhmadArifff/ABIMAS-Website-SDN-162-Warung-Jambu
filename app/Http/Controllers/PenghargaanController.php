@@ -8,6 +8,7 @@ use App\Kesiswaan;
 use App\Ekstrakurikuler;
 use App\Penghargaan;
 use App\Tatatertib;
+use App\Strukturorganisasi;
 use App\Berita;
 use App\Beasiswa;
 use App\User;
@@ -65,9 +66,9 @@ class PenghargaanController extends Controller
 
         $kesiswaan->where('k_nama_menu', $menu);
     
-        $penghargaan = $penghargaan->paginate(10);
-        $kesiswaan = $kesiswaan->paginate(10);
-        $ekstrakurikuler = $ekstrakurikuler->paginate(10);
+        $penghargaan = $penghargaan->get();
+        $kesiswaan = $kesiswaan->get();
+        $ekstrakurikuler = $ekstrakurikuler->get();
         $beasiswa_all = Beasiswa::where('status', 'DRAFT')->get();
     
         return view('kesiswaan.admin.index', compact('penghargaan', 'kesiswaan', 'menu','ekstrakurikuler', 'pembiasaan_all', 'kesiswaa_all', 'ekstrakurikuler_all', 'penghargaan_all', 'tatatertib_all', 'user_all', 'berita_all', 'beasiswa_all'));
@@ -91,6 +92,8 @@ class PenghargaanController extends Controller
         $user_all=User::all();
         $berita_all = Berita::where('b_status', 'DRAFT')->get();
         $beasiswa_all = Beasiswa::where('status', 'DRAFT')->get();
+        $getisPublished = Strukturorganisasi::where('so_status', 'PUBLISH')->count();
+        $publishDisabled = $getisPublished >= 1; // Disable button if there is at least one published data
 
         $menu = $request->query('menu');
         $kesiswaan = Kesiswaan::where('k_nama_menu', $menu)->where('k_status', 'PUBLISH')->first();
@@ -101,7 +104,7 @@ class PenghargaanController extends Controller
         if (!$ekstrakurikuler) {
             return redirect()->back()->withErrors(['error' => 'Data Ekstrakurikuler Tidak Terpublish! Tolong Publish Terlebih Dahulu!']);
         }
-        return view('kesiswaan/admin.create', compact('kesiswaan', 'menu', 'ekstrakurikuler', 'pembiasaan_all', 'kesiswaa_all', 'ekstrakurikuler_all', 'penghargaan_all', 'tatatertib_all', 'user_all', 'publishedEkstrakurikulerNames', 'berita_all', 'beasiswa_all'));
+        return view('kesiswaan/admin.create', compact('kesiswaan', 'menu', 'ekstrakurikuler', 'pembiasaan_all', 'kesiswaa_all', 'ekstrakurikuler_all', 'penghargaan_all', 'tatatertib_all', 'user_all', 'publishedEkstrakurikulerNames', 'berita_all', 'beasiswa_all', 'publishDisabled', 'getisPublished'));
     }
 
     public function store(Request $request)

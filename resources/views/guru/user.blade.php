@@ -2,33 +2,31 @@
 
 @section('header')
     <style>
-        #hero{
-            background: url('{{asset('user/images/destination.png')}}') top center;
-            background-repeat: no-repeat;
-            width:100%;
-            background-size:cover;
-            margin:5px;
-        }
         .full-img {
             background-position: center;
             background-repeat: no-repeat;
             background-size: cover;
             height: 180px;
         }
-        .content{
-          line-height: 1.6;
-          font-size: 15px;
+        #hero{
+            background: url('{{asset('user/images/hero-bg.jpg')}}') top center;
+        }
+        .image-center{
+          display: block;
+          margin-left: 6.5px;
+          margin-right: 6.5px;
+          width: 100%;
         } 
     </style>    
 @endsection
 
 @section('hero')
-    <h1>Destinasi Jogja-Travel</h1>
-    <h2>Cek semua destinasi-destinasi yang dapat anda kunjungi untuk liburan anda</h2>
+    <h1>DAFTAR GURU</h1>
+    
 @endsection
 @section('content')
 <div class="container">
-    <h1 class="text-center mb-4">Daftar Guru</h1>
+    <h1 class="text-center mb-4 mt-4">Daftar Guru</h1>
     <div class="row">
         @foreach($gurus as $guru)
         <div class="col-md-6 mb-4">
@@ -39,7 +37,7 @@
                     <p class="mb-0 text-dark"><strong>{{ $guru->gelar }}</strong></p>
                 </div>
                 @if($guru->foto)
-                    <img src="{{ asset('storage/' . $guru->foto) }}" class="rounded-circle border border-primary p-1" width="70" height="70" alt="{{ $guru->nama }}">
+                    <img src="{{ asset('guru_image/' . $guru->foto) }}" class="rounded-circle border border-primary p-1" width="70" height="70" alt="{{ $guru->nama }}">
                 @endif
             </div>
         </div>

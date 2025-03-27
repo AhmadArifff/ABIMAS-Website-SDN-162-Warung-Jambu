@@ -56,8 +56,8 @@ class InformasiMediaController extends Controller
         $pembiasaan_all= Pembiasaan::where('p_status', 'DRAFT')->get();
         $user_all = User::all();
         $kesiswaan->where('k_nama_menu', $menu);
-        $tautan = $tautan->paginate(10);
-        $mediasosial = $mediasosial->paginate(10);
+        $tautan = $tautan->get();
+        $mediasosial = $mediasosial->get();
         $user_all = User::where('role', 'guru')->get();
         $beasiswa_all = Beasiswa::where('status', 'DRAFT')->get();
     
@@ -92,7 +92,7 @@ class InformasiMediaController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'url' => 'required|string',
+            'url' => 'required',
             'menu' => 'required|string|in:Tautan,Media',
         ]);
 
@@ -136,32 +136,60 @@ class InformasiMediaController extends Controller
         $beasiswa_all = Beasiswa::where('status', 'DRAFT')->get();
 
         $menu = $request->menu;
-        $tautan = Tautan::findOrFail($id);
-        $media = MediaSosial::findOrFail($id);
+
+        if (!in_array($menu, ['Media', 'Tautan'])) {
+            return abort(404, 'Menu not found');
+        }
+
+        $tautan = Tautan::find($id);
+        $media = MediaSosial::find($id);
+
+        if (!$tautan && !$media) {
+            return abort(404, 'Item not found');
+        }
         // $item = $menu == 'Media' ? $media : $tautan;
-        if ($menu == 'Media') {
+        // if ($menu == 'Media' || $menu == 'Tautan') {
+        //     $menuoutput = $menu;
+        // }
+        if ($request->menu == 'Media') {
             $item = MediaSosial::findOrFail($id);
-        } elseif ($menu == 'Tautan') {
+            return view('informasi-media.edit', [
+                'menu' => $menu,
+                'kesiswaa_all' => $kesiswaa_all,
+                'ekstrakurikuler_all' => $ekstrakurikuler_all,
+                'penghargaan_all' => $penghargaan_all,
+                'tatatertib_all' => $tatatertib_all,
+                'user_all' => $user_all,
+                'berita_all' => $berita_all,
+                'pembiasaan_all' => $pembiasaan_all,
+                'media' => $media,
+                'tautan' => $tautan,
+                'mediasosial' => $mediasosial,
+                'item' => $item,
+                'beasiswa_all' => $beasiswa_all
+            ]);
+        } elseif ($request->menu == 'Tautan') {
             $item = Tautan::findOrFail($id);
+            return view('informasi-media.edit', [
+                'menu' => $menu,
+                'kesiswaa_all' => $kesiswaa_all,
+                'ekstrakurikuler_all' => $ekstrakurikuler_all,
+                'penghargaan_all' => $penghargaan_all,
+                'tatatertib_all' => $tatatertib_all,
+                'user_all' => $user_all,
+                'berita_all' => $berita_all,
+                'pembiasaan_all' => $pembiasaan_all,
+                'media' => $media,
+                'tautan' => $tautan,
+                'mediasosial' => $mediasosial,
+                'item' => $item,
+                'beasiswa_all' => $beasiswa_all
+            ]);
         } else {
             abort(404, 'Menu not found');
         }
         
-        return view('informasi-media.edit', [
-            'menu' => $menu,
-            'kesiswaa_all' => $kesiswaa_all,
-            'ekstrakurikuler_all' => $ekstrakurikuler_all,
-            'penghargaan_all' => $penghargaan_all,
-            'tatatertib_all' => $tatatertib_all,
-            'user_all' => $user_all,
-            'berita_all' => $berita_all,
-            'pembiasaan_all' => $pembiasaan_all,
-            'media' => $media,
-            'tautan' => $tautan,
-            'mediasosial' => $mediasosial,
-            'item' => $item,
-            'beasiswa_all' => $beasiswa_all
-        ]);
+        
     }
 
     public function update(Request $request, $id)

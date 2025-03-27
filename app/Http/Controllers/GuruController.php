@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
 use App\Ekstrakurikuler;
 use App\Tautan;
+use App\Modul;
 use App\Kesiswaan;
 use App\MediaSosial;
 use App\Pembiasaan;
@@ -21,11 +22,13 @@ class GuruController extends Controller
     public function userIndex()
 {
     $gurus = Guru::all();
+    $gurus = Guru::paginate(10);
     $media = MediaSosial::all();
    $tautan = Tautan::all();
     $ekstrakurikuler_all = Ekstrakurikuler::where('e_status', 'PUBLISH')->get();
+    $modul_all = Modul::where('m_status', 'PUBLISH')->select('m_modul_kelas')->distinct()->orderBy('m_modul_kelas', 'ASC')->get();
     
-    return view('guru.user', compact('gurus', 'media', 'tautan', 'ekstrakurikuler_all'));
+    return view('guru.user', compact('gurus', 'media', 'tautan', 'ekstrakurikuler_all', 'modul_all'));
 }
 
 public function userShow($id)
@@ -95,7 +98,8 @@ public function userShow($id)
         ]);
 
         if ($request->hasFile('foto')) {
-            $nama_file = "Guru_" . time() . "_" . $request->file('foto')->getClientOriginalName();
+            $extension = $request->file('foto')->getClientOriginalExtension();
+            $nama_file = $request->nama . ", " . $request->gelar . "_" . time() . "." . $extension;
             $request->file('foto')->move('guru_image', $nama_file);
             $fotoPath = $nama_file;
         } else {
@@ -166,7 +170,8 @@ public function userShow($id)
             if ($guru->foto) {
                 File::delete('guru_image/' . $guru->foto);
             }
-            $nama_file = "Guru_" . time() . "_" . $request->file('foto')->getClientOriginalName();
+            $extension = $request->file('foto')->getClientOriginalExtension();
+            $nama_file = $request->nama . ", " . $request->gelar . "_" . time() . "." . $extension;
             $request->file('foto')->move('guru_image', $nama_file);
             $guru->foto = $nama_file;
         }
@@ -195,8 +200,9 @@ public function userShow($id)
     $media = MediaSosial::all();
     $tautan = Tautan::all();
     $ekstrakurikuler_all = Ekstrakurikuler::where('e_status', 'PUBLISH')->get();
+    $modul_all = Modul::where('m_status', 'PUBLISH')->select('m_modul_kelas')->distinct()->orderBy('m_modul_kelas', 'ASC')->get();
     
-    return view('guru.user', compact('gurus', 'media', 'tautan', 'ekstrakurikuler_all'));
+    return view('guru.user', compact('gurus', 'media', 'tautan', 'ekstrakurikuler_all', 'modul_all'));
     
 
 }

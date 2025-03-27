@@ -81,9 +81,9 @@
 @section('hero')
     <div id="hero">
         <div class="hero-slide active">
-            <img src="{{ asset('sample_image/sekolah.jpg') }}" alt="Sekolah">
-            <h1>Struktur Organisasi</h1>
-            <h2>{{ $strukturorganisasi['deskripsi'] }}</h2>
+            <img src="{{ asset('strukturorganisasi_image/slide_image/' . $strukturorganisasi['so_foto_slide']) }}" alt="Struktur Organisasi">
+            <h1>{{ $strukturorganisasi['so_judul_slide'] }}</h1>
+            <h2>{{ $strukturorganisasi['so_deskripsi_slide'] }}</h2>
         </div>
     </div>
 @endsection
@@ -94,9 +94,13 @@
             <div class="row">
                 <div class="col-lg-9">
                     <div class="article">
-                        <h1>Struktur Organisasi Sekolah SDN 163 Warung Jambu Kiaracondong</h1>
-                        <img src="{{ asset($strukturorganisasi['foto']) }}" alt="Struktur Organisasi" style="width: 100%; height: auto; margin-bottom: 20px;">
-                        <p>{{ $strukturorganisasi['deskripsi'] }}</p>
+                        <h1>{{ $strukturorganisasi['so_judul_content'] }}</h1>
+                        @if(pathinfo($strukturorganisasi['so_foto_atau_pdf'], PATHINFO_EXTENSION) === 'pdf')
+                            <embed src="{{ asset('strukturorganisasi_image/pdf_image/' . $strukturorganisasi['so_foto_atau_pdf']) }}" type="application/pdf" width="100%" height="600px" />
+                        @else
+                            <img src="{{ asset('strukturorganisasi_image/foto_image/' . $strukturorganisasi['so_foto_atau_pdf']) }}" alt="Struktur Organisasi" style="width: 100%; height: auto; margin-bottom: 20px;">
+                        @endif
+                        <p>{{ $strukturorganisasi['so_deskripsi'] }}</p>
                         <div class="row">
                             @foreach($guru as $g)
                                 <div class="col-md-6 mb-4">

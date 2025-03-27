@@ -37,8 +37,8 @@
                                     @if ($menu == 'Media')
                                     <div class="mb-3">
                                         <label for="media_sosial" class="font-weight-bold">Media Sosial</label>
-                                        <select name="name" id="media_sosial" class="form-control {{$errors->first('media_sosial') ? "is-invalid" : ""}}" required>
-                                            @foreach(['facebook', 'twitter', 'instagram', 'youtube'] as $media)
+                                        <select name="name" id="media_sosial" class="form-control {{$errors->first('media_sosial') ? "is-invalid" : ""}}" required onchange="updateLabelAndInput()">
+                                            @foreach(['facebook', 'twitter', 'instagram', 'youtube', 'whatsApp', 'tiktok'] as $media)
                                                 @if(!$mediasosial->contains('ms_nama_media', $media))
                                                     <option value="{{ $media }}" {{ old('media_sosial') == $media ? 'selected' : '' }}>{{ ucfirst($media) }}</option>
                                                 @endif
@@ -48,9 +48,59 @@
                                     @endif
                                 <div class="mb-3">
                                     <input type="text" name="menu" id="menu" placeholder="Name..." value= "{{$menu}}" class="form-control {{$errors->first('name') ? "is-invalid" : ""}}" value="{{old('name')}}" required hidden>
-                                    <label for="email" class="font-weight-bold">URL {{$menu}}</label>
-                                    <input type="text" name="url" id="url" placeholder="https://example.com..." class="form-control {{$errors->first('url') ? "is-invalid" : ""}}" value="{{old('url')}}" required>
+                                    <label for="url" id="url-label" class="font-weight-bold">URL {{$menu}}</label>
+                                    <div class="input-group">
+                                        <input type="text" name="url" id="url" placeholder="Nomor Admin..." class="form-control {{$errors->first('url') ? "is-invalid" : ""}}" value="{{old('url')}}" required>
+                                    </div>
                                 </div>
+
+                                <script>
+                                    function updateLabelAndInput() {
+                                        const mediaSelect = document.getElementById('media_sosial');
+                                        const urlLabel = document.getElementById('url-label');
+                                        const urlInput = document.getElementById('url');
+                                        const countryCode = document.getElementById('country-code');
+
+                                        if (mediaSelect.value === 'whatsApp') {
+                                            urlLabel.textContent = 'Nomor Admin';
+                                            urlInput.placeholder = 'Nomor Admin...';
+                                            urlInput.type = 'tel';
+                                            urlInput.pattern = '\\+62[0-9]+';
+                                            urlInput.maxLength = 15;
+                                            urlInput.oninput = function() {
+                                                // Remove non-numeric characters except the leading '+'
+                                                this.value = this.value.replace(/[^\d+]/g, '');
+                                            
+                                                // Ensure the input starts with '+62' only once
+                                                if (!this.value.startsWith('+62')) {
+                                                    this.value = '+62' + this.value.replace(/^(\+62|0)+/, '');
+                                                }
+                                            };
+                                            countryCode.style.display = 'inline-block';
+                                        } else {
+                                            urlLabel.textContent = 'URL {{$menu}}';
+                                            urlInput.placeholder = 'https://example.com...';
+                                            urlInput.type = 'text';
+                                            urlInput.removeAttribute('pattern');
+                                            urlInput.removeAttribute('maxlength');
+                                            urlInput.oninput = null;
+                                            countryCode.style.display = 'none';
+                                        }
+                                    }
+
+                                    document.addEventListener('DOMContentLoaded', function() {
+                                        updateLabelAndInput();
+
+                                        const urlInput = document.getElementById('url');
+                                        if (urlInput) {
+                                            Inputmask({
+                                                mask: '+62 999-9999-9999',
+                                                placeholder: '',
+                                                clearIncomplete: true
+                                            }).mask(urlInput);
+                                        }
+                                    });
+                                </script>
                             <div class="mb-3 mt-4">
                                 <a href="{{route('admin.informasi-media.index')}}" class="btn btn-md btn-secondary">Back</a>
                                 <button type="submit" class="btn btn-md btn-warning">Submit</button>

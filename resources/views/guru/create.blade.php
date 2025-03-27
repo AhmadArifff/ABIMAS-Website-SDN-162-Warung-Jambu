@@ -1,74 +1,87 @@
 @extends('layouts.admin')
+
+@section('title', 'Create Guru')
+
+@section('breadcrumbs', 'Guru')
+
+@section('second-breadcrumb')
+    <li>Create</li>
+@endsection
+
+@section('css')
+    <script src="/templateEditor/ckeditor/ckeditor.js"></script>
+@endsection
+
 @section('content')
-<div class="container">
-    <h1>Tambah Guru</h1>
-
-    @if ($errors->any())
-        <div class="alert alert-danger">
-            <ul>
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
-
-    <form action="{{ route('guru.store') }}" method="POST" enctype="multipart/form-data">
-        @csrf
-        <div class="form-group">
-            <label for="nama">Nama:</label>
-            <input type="text" name="nama" class="form-control" placeholder="Masukkan nama lengkap" required>
-        </div>
-
-        <div class="form-group">
-            <label for="jabatan">Jabatan:</label>
-            <input type="text" name="jabatan" id="jabatan" class="form-control @error('jabatan') is-invalid @enderror" placeholder="Masukkan jabatan" required>
-            <div id="jabatan-warning" class="text-danger" style="display: none;">
-            Jabatan ini sudah ada, silakan masukkan jabatan yang berbeda.
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-body">
+                    <form action="{{ route('guru.store') }}" method="POST" enctype="multipart/form-data">
+                        @csrf
+                        <div class="col-10">
+                            <div class="mb-4">
+                                <label for="nama" class="font-weight-bold">Nama</label>
+                                <input type="text" name="nama" placeholder="Masukkan nama lengkap" class="form-control {{ $errors->first('nama') ? 'is-invalid' : '' }}" value="{{ old('nama') }}" required>
+                                <div class="invalid-feedback">{{ $errors->first('nama') }}</div>
+                            </div>
+                            <div class="mb-4">
+                                <label for="jabatan" class="font-weight-bold">Jabatan</label>
+                                <input type="text" name="jabatan" id="jabatan" class="form-control @error('jabatan') is-invalid @enderror" placeholder="Masukkan jabatan" required value="{{ old('jabatan', $currentJabatan ?? '') }}">
+                                <div id="jabatan-warning" class="text-danger" style="display: none;">
+                                    Jabatan ini sudah ada, silakan masukkan jabatan yang berbeda.
+                                </div>
+                                @error('jabatan')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
+                            </div>
+                            <div class="mb-4">
+                                <label for="gelar" class="font-weight-bold">Gelar</label>
+                                <input type="text" name="gelar" placeholder="Masukkan gelar akademik" class="form-control {{ $errors->first('gelar') ? 'is-invalid' : '' }}" value="{{ old('gelar') }}" required>
+                                <div class="invalid-feedback">{{ $errors->first('gelar') }}</div>
+                            </div>
+                            <div class="mb-4">
+                                <label for="masa_kerja" class="font-weight-bold">Mulai Menjadi Guru (dalam tahun)</label>
+                                <input type="number" name="masa_kerja" placeholder="Masukkan tahun mulai menjadi guru" class="form-control {{ $errors->first('masa_kerja') ? 'is-invalid' : '' }}" value="{{ old('masa_kerja') }}" required min="0" oninput="this.value = this.value.slice(0, 4)">
+                                <div class="invalid-feedback">{{ $errors->first('masa_kerja') }}</div>
+                            </div>
+                            <div class="mb-4">
+                                <label for="foto" class="font-weight-bold">Foto</label>
+                                <input type="file" name="foto" class="form-control {{ $errors->first('foto') ? 'is-invalid' : '' }}" accept="image/*" required>
+                                <div class="invalid-feedback">{{ $errors->first('foto') }}</div>
+                            </div>
+                            <div class="mb-3 mt-4">
+                                <a href="{{ route('guru.index') }}" class="btn btn-md btn-secondary">Back</a>
+                                <button type="submit" class="btn btn-md btn-primary">Simpan</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
             </div>
-            @error('jabatan')
-            <div class="invalid-feedback">
-            {{ $message }}
-            </div>
-            @enderror
         </div>
+    </div>
+@endsection
 
-        <script>
-            document.addEventListener('DOMContentLoaded', function () {
+@section('script')
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
             const jabatanInput = document.getElementById('jabatan');
             const warningDiv = document.getElementById('jabatan-warning');
+            const currentJabatan = "{{ strtolower($currentJabatan ?? '') }}";
             const existingJabatan = @json($gurus->pluck('jabatan')->map(function($jabatan) {
                 return strtolower($jabatan);
             })->toArray());
 
             jabatanInput.addEventListener('input', function () {
                 const inputValue = jabatanInput.value.toLowerCase();
-                if (existingJabatan.includes(inputValue)) {
-                warningDiv.style.display = 'block';
+                if (existingJabatan.includes(inputValue) && inputValue !== currentJabatan) {
+                    warningDiv.style.display = 'block';
                 } else {
-                warningDiv.style.display = 'none';
+                    warningDiv.style.display = 'none';
                 }
             });
-            });
-        </script>
-
-        <div class="form-group">
-            <label for="gelar">Gelar:</label>
-            <input type="text" name="gelar" class="form-control" placeholder="Masukkan gelar akademik" required>
-        </div>
-        
-        <div class="form-group">
-            <label for="masa_kerja">Mulai Menjadi Guru (dalam tahun):</label>
-            <input type="number" name="masa_kerja" class="form-control" placeholder="Masukkan tahun mulai menjadi guru" required min="0" oninput="this.value = this.value.slice(0, 4)">
-        </div>
-
-        <div class="form-group">
-            <label for="foto">Foto:</label>
-            <input type="file" name="foto" class="form-control-file" accept="image/*" required>
-        </div>
-
-        <a href="{{ route('guru.index') }}" class="btn btn-secondary">Kembali</a>
-        <button type="submit" class="btn btn-primary">Simpan</button>
-    </form>
-</div>
+        });
+    </script>
 @endsection

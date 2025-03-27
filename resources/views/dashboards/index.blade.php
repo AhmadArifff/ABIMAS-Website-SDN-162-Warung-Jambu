@@ -34,6 +34,7 @@
                 </div>
             </div>
             </div>
+            @if (auth()->user()->role == 'admin')
             <div class="col-lg-3 col-md-6">
             <div class="card">
                 <div class="card-body">
@@ -51,6 +52,7 @@
                 </div>
             </div>
             </div>
+            @endif
             <div class="col-lg-3 col-md-6">
             <div class="card">
                 <div class="card-body">
@@ -68,6 +70,44 @@
                 </div>
             </div>
             </div>
+            @if (auth()->user()->role == 'admin')
+            <div class="col-lg-3 col-md-6">
+            <div class="card">
+                <div class="card-body">
+                <div class="stat-widget-five">
+                    <div class="stat-icon dib flat-color-9">
+                    <i class="fa fa-book"></i>
+                    </div>
+                    <div class="stat-content">
+                    <div class="text-left dib">
+                        <div class="stat-text"><span class="count">{{ $modul->count() }}</span></div>
+                        <div class="stat-heading">Modul Pelajaran</div>
+                    </div>
+                    </div>
+                </div>
+                </div>
+            </div>
+            </div>
+            @elseif (auth()->user()->role == 'guru')
+            <div class="col-lg-3 col-md-6">
+            <div class="card">
+                <div class="card-body">
+                <div class="stat-widget-five">
+                    <div class="stat-icon dib flat-color-9">
+                    <i class="fa fa-book"></i>
+                    </div>
+                    <div class="stat-content">
+                    <div class="text-left dib">
+                        <div class="stat-text"><span class="count">{{ $modul->where('m_create_id', auth()->user()->id)->count() }}</span></div>
+                        <div class="stat-heading">Modul Pelajaran</div>
+                    </div>
+                    </div>
+                </div>
+                </div>
+            </div>
+            </div>
+            @endif
+            @if (auth()->user()->role == 'admin')
             <div class="col-lg-3 col-md-6">
             <div class="card">
                 <div class="card-body">
@@ -102,6 +142,7 @@
                 </div>
             </div>
             </div>
+            @endif
             <div class="col-lg-3 col-md-6">
             <div class="card">
                 <div class="card-body">
@@ -136,6 +177,7 @@
                 </div>
             </div>
             </div>
+            @if (auth()->user()->role == 'admin')
             <div class="col-lg-3 col-md-6">
             <div class="card">
                 <div class="card-body">
@@ -153,6 +195,7 @@
                 </div>
             </div>
             </div>
+            @endif
         </div>
         <!-- /Widgets -->
         {{-- <!--  Traffic  -->

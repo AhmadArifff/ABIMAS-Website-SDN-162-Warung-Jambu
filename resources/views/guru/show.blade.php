@@ -9,7 +9,7 @@
         <div class="col-md-4 mb-4">
             <div class="card shadow-sm">
                 @if($guru->foto)
-                    <img src="{{ asset('storage/' . $guru->foto) }}" class="card-img-top" alt="{{ $guru->nama }}">
+                    <img src="{{ asset('guru_image/' . $guru->foto) }}" class="card-img-top" alt="{{ $guru->nama }}">
                 @endif
                 <div class="card-body text-center">
                     <h5 class="card-title">{{ $guru->nama }}</h5>

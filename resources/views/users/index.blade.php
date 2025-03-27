@@ -74,6 +74,16 @@
                     @endif
 
                     {{-- table --}}
+                    <div class="d-flex justify-content-end mb-3">
+                        <select id="rowsPerPage" class="form-control form-control-sm" style="width: auto; display: inline-block;">
+                            <option value="5">5</option>
+                            <option value="10" selected>10</option>
+                            <option value="25">25</option>
+                            <option value="50">50</option>
+                            <option value="all">All</option>
+                        </select>
+                        <span class="ml-2">Rows per page</span>
+                    </div>
                     <table class="table" id="userTable">
                         <thead class="text-light" style="background-color:#33b751 !important">
                             <tr>
@@ -85,7 +95,7 @@
                                 <th width="88px">Action</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="tableBody">
                             @foreach ($user as $item)
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
@@ -115,7 +125,85 @@
                         </tbody>
                     </table>
 
+                    {{-- Pagination --}}
+                    <div class="mt-3 d-flex justify-content-between align-items-center">
+                        <div>
+                            <p>Total Data: <span id="totalData">{{ $user->count() }}</span></p>
+                        </div>
+                        <div id="paginationControls" class="pagination d-flex align-items-center">
+                            <button id="prevPage" class="btn btn-sm btn-light mr-2">Previous</button>
+                            <div id="pageNumbers" class="d-flex"></div>
+                            <button id="nextPage" class="btn btn-sm btn-light ml-2">Next</button>
+                        </div>
+                    </div>
+
                     <script>
+                        document.addEventListener('DOMContentLoaded', function () {
+                            const tableBody = document.getElementById('tableBody');
+                            const rowsPerPageSelect = document.getElementById('rowsPerPage');
+                            const paginationControls = document.getElementById('paginationControls');
+                            const totalData = document.getElementById('totalData').textContent;
+                            const rows = Array.from(tableBody.querySelectorAll('tr'));
+                            let rowsPerPage = parseInt(rowsPerPageSelect.value);
+                            let currentPage = 1;
+
+                            function renderTable() {
+                                const start = (currentPage - 1) * rowsPerPage;
+                                const end = rowsPerPage === 'all' ? rows.length : start + rowsPerPage;
+
+                                rows.forEach((row, index) => {
+                                    row.style.display = index >= start && index < end ? '' : 'none';
+                                });
+
+                                renderPagination();
+                            }
+
+                            function renderPagination() {
+                                const totalPages = rowsPerPage === 'all' ? 1 : Math.ceil(rows.length / rowsPerPage);
+                                const prevButton = document.getElementById('prevPage');
+                                const nextButton = document.getElementById('nextPage');
+                                const pageNumbersContainer = document.getElementById('pageNumbers');
+
+                                pageNumbersContainer.innerHTML = '';
+
+                                for (let i = 1; i <= totalPages; i++) {
+                                    const button = document.createElement('button');
+                                    button.textContent = i;
+                                    button.className = 'btn btn-sm ' + (i === currentPage ? 'btn-primary' : 'btn-light');
+                                    button.addEventListener('click', () => {
+                                        currentPage = i;
+                                        renderTable();
+                                    });
+                                    pageNumbersContainer.appendChild(button);
+                                }
+
+                                prevButton.disabled = currentPage === 1;
+                                nextButton.disabled = currentPage === totalPages;
+
+                                prevButton.addEventListener('click', () => {
+                                    if (currentPage > 1) {
+                                        currentPage--;
+                                        renderTable();
+                                    }
+                                });
+
+                                nextButton.addEventListener('click', () => {
+                                    if (currentPage < totalPages) {
+                                        currentPage++;
+                                        renderTable();
+                                    }
+                                });
+                            }
+
+                            rowsPerPageSelect.addEventListener('change', function () {
+                                rowsPerPage = this.value === 'all' ? rows.length : parseInt(this.value);
+                                currentPage = 1;
+                                renderTable();
+                            });
+
+                            renderTable();
+                        });
+
                         function filterUserTable() {
                             const input = document.querySelector('input[name="p_keyword"]');
                             const filter = input.value.toLowerCase();

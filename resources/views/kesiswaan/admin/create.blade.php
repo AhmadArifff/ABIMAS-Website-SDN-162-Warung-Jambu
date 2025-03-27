@@ -7,7 +7,7 @@
 @section('second-breadcrumb')
     <li>Create</li>
 @endsection
-@if ($menu == 'Pembiasaan' || $menu == 'Penghargaan' || $menu == 'Ekstrakurikuler' || $menu == 'Tatatertib')
+@if ($menu == 'Pembiasaan' || $menu == 'Penghargaan' || $menu == 'Ekstrakurikuler' || $menu == 'Tatatertib' || $menu == 'Strukturorganisasi')
 @section('content')
     <div class="row">
         <div class="col-md-12">
@@ -27,7 +27,7 @@
                                 </div>
                             @endif
                         @csrf
-                        @if ($menu == 'Pembiasaan' || $menu == 'Penghargaan' || $menu == 'Ekstrakurikuler')
+                        @if ($menu == 'Pembiasaan' || $menu == 'Penghargaan' || $menu == 'Ekstrakurikuler' || $menu == 'Strukturorganisasi')
                         <div class="col-10">
                         @endif
                             @if ($menu == 'Tatatertib')
@@ -93,7 +93,7 @@
                                     }
                                 </style>
                             @endif
-                            @if ($menu == 'Pembiasaan' || $menu == 'Penghargaan' || $menu == 'Ekstrakurikuler')
+                            @if ($menu == 'Pembiasaan' || $menu == 'Penghargaan' || $menu == 'Ekstrakurikuler' || $menu == 'Strukturorganisasi')
                                 @if ($menu == 'Ekstrakurikuler')
                                     <div class="mb-3">
                                         <label for="e_judul_slide" class="font-weight-bold">Judul Slide</label>
@@ -121,6 +121,23 @@
                                         <div class="invalid-feedback"> {{$errors->first('e_foto_slide3')}}</div>
                                     </div>
                                 @endif
+                                @if ($menu == 'Strukturorganisasi')
+                                    <div class="mb-3">
+                                        <label for="so_judul_slide" class="font-weight-bold">Judul Slide</label>
+                                        <input type="text" name="so_judul_slide" id="so_judul_slide" placeholder="Judul Slide..." class="form-control {{$errors->first('k_judul_slide') ? "is-invalid" : ""}}" value="{{old('k_judul_slide')}}" required oninput="updatePreview()">
+                                        <div class="invalid-feedback"> {{$errors->first('so_judul_slide')}}</div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="so_deskripsi_slide" class="font-weight-bold">Deskripsi Slide</label>
+                                        <textarea name="so_deskripsi_slide" id="so_deskripsi_slide" placeholder="Deskripsi Slide..." class="form-control {{$errors->first('e_deskripsi_slide') ? "is-invalid" : ""}}" required oninput="updatePreview()">{{old('e_deskripsi_slide')}}</textarea>
+                                        <div class="invalid-feedback"> {{$errors->first('so_deskripsi_slide')}}</div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="so_foto_slide" class="font-weight-bold">Foto Slide</label>
+                                        <input type="file" name="so_foto_slide" id="e_foto_slide" class="form-control {{$errors->first('e_foto_slide1') ? "is-invalid" : ""}}" accept="image/*" onchange="updatePreview()">
+                                        <div class="invalid-feedback"> {{$errors->first('so_foto_slide')}}</div>
+                                    </div>
+                                @endif
                                 <div class="mb-3">
                                     <label for="p_nama_kegiatan" class="font-weight-bold">Nama 
                                         @if ($menu == 'Pembiasaan')
@@ -129,6 +146,8 @@
                                             Penghargaan
                                         @elseif ($menu == 'Ekstrakurikuler')
                                             Ekstrakurikuler
+                                        @elseif ($menu == 'Strukturorganisasi')
+                                            Strukturorganisasi
                                         @endif
                                     </label>
                                     @if ($menu == 'Pembiasaan' || $menu == 'Penghargaan')
@@ -151,17 +170,28 @@
                                     <label for="p_deskripsi" class="font-weight-bold">Deskripsi</label>
                                     <textarea name="deskripsi" id="deskripsi" placeholder="Deskripsi..." class="form-control {{$errors->first('deskripsi') ? "is-invalid" : ""}}" required oninput="updatePreview()"></textarea>
                                 </div>
+                                @if ($menu == 'Pembiasaan' || $menu == 'Penghargaan' || $menu == 'Ekstrakurikuler' || $menu == 'Tatatertib')
                                 <div class="mb-3">
                                     <label for="p_foto" class="font-weight-bold">Foto</label>
                                     <input type="file" name="foto" id="foto" class="form-control {{$errors->first('foto') ? "is-invalid" : ""}}" accept="image/*" onchange="updatePreview()">
                                 </div>
+                                @endif
+                                @if ($menu == 'Strukturorganisasi')
+                                <div class="mb-3">
+                                    <label for="p_foto" class="font-weight-bold">Foto Atau PDF</label>
+                                    <input type="file" name="so_foto_atau_pdf" id="foto" class="form-control {{$errors->first('foto') ? "is-invalid" : ""}}" accept="image/*,application/pdf" onchange="updatePreview()">
+                                    <div class="invalid-feedback"> {{$errors->first('foto')}}</div>
+                                </div>
+                                @endif
                             @endif
                             <div class="mb-3 mt-4">
                                 <a href="{{route(strtolower($menu) .'.index')}}" class="btn btn-md btn-secondary">Back</a>
                                 <button type="submit" name="status" value="draft" class="btn btn-md btn-warning">Draft</button>
                                 @if(auth()->user()->role == 'admin')
                                     @if ($menu == 'Ekstrakurikuler')
-                                        <button type="submit" name="status" value="publish" class="btn btn-md btn-success" id="publish-button">Publish</button>
+                                        <button type="submit" name="status" value="publish" class="btn btn-md btn-success" id="publish-button-ekstrakurikuler">Publish</button>
+                                    @elseif ($menu == 'Strukturorganisasi')
+                                        <button type="submit" name="status" value="publish" class="btn btn-md btn-success" id="publish-button-strukturorganisasi" {{ $publishDisabled ? 'disabled' : '' }}>Publish</button>
                                     @else
                                         <button type="submit" name="status" value="publish" class="btn btn-md btn-success">Publish</button>
                                     @endif
@@ -170,13 +200,21 @@
                             <script>
                                 const publishedEkstrakurikulerNames = @json($publishedEkstrakurikulerNames);
                                 document.getElementById('nama_kegiatan').addEventListener('input', function() {
-                                    const publishButton = document.getElementById('publish-button');
+                                    const publishButtonEkstrakurikuler = document.getElementById('publish-button-ekstrakurikuler');
                                     if (publishedEkstrakurikulerNames.includes(this.value)) {
-                                        publishButton.disabled = true;
+                                        publishButtonEkstrakurikuler.disabled = true;
                                     } else {
-                                        publishButton.disabled = false;
+                                        publishButtonEkstrakurikuler.disabled = false;
                                     }
                                 });
+
+                                const publishButtonStrukturorganisasi = document.getElementById('publish-button-strukturorganisasi');
+                                if (publishButtonStrukturorganisasi) {
+                                    const isPublishDisabled = @json($publishDisabled);
+                                    if (isPublishDisabled) {
+                                        publishButtonStrukturorganisasi.disabled = true;
+                                    }
+                                }
                             </script>
                         </div>
                     </form>
@@ -184,7 +222,7 @@
             </div>
         </div>
     </div>
-
+    @if ($menu == 'Pembiasaan' || $menu == 'Penghargaan' || $menu == 'Ekstrakurikuler' || $menu == 'Tatatertib')
     <div class="card mt-4 shadow">
         <div class="card-body">
             <div class="d-flex align-items-end mt-2 mb-2 p-2">
@@ -391,6 +429,7 @@
             </section>
         </div>
     </div>
+    @endif
 
     <script>
         function updatePreview() {

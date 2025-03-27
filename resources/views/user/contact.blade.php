@@ -267,7 +267,7 @@
           <div class="widget_title">Berita Terbaru</div>
           <div class="widget_body">
               <div class="recent-content">
-                  @foreach($berita->take(5) as $post)
+                  @foreach($berita->take(3) as $post)
                   <a href="{{ route('berita.detail', ['id' => $post->b_id]) }}" class="card mb-3" style="transition: transform 0.3s;" data-toggle="modal" data-target="#activityModal{{ $loop->index + 1 }}">
                     <img src="{{ asset('berita_image/'.$post->b_foto_berita) }}" class="card-img-top" alt="{{ $post->b_nama_berita }}" style="height: 150px; object-fit: cover; width: 100%; image-rendering: optimizeSpeed;">
                     <div class="card-body">

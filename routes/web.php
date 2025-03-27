@@ -15,6 +15,7 @@ Route::get('/', function(){ return redirect('/home'); });
   Route::get('/pembiasaan', 'UserController@pembiasaan')->name('pembiasaan');
   Route::get('/daftar-guru', [GuruController::class, 'userView'])->name('guru.userView');
   Route::get('/informasi', 'UserController@informasi')->name('informasi');
+  Route::get('/beasiswa', 'UserController@beasiswa')->name('beasiswa');
   Route::get('/penghargaan', 'UserController@penghargaan')->name('penghargaan');
   Route::get('/ekstrakurikuler/{nama}', 'UserController@show')->name('ekstrakurikuler.show');
   Route::get('/strukturorganisasi', 'UserController@strukturorganisasi')->name('strukturorganisasi');
@@ -22,6 +23,8 @@ Route::get('/', function(){ return redirect('/home'); });
   Route::get('/penghargaan/detail/{id}', 'UserController@penghargaandetail')->name('penghargaan.detail');
   Route::get('/tentang_kami', 'UserController@tentang_kami')->name('tentang_kami');
   Route::get('/berita/detail/{id}', 'UserController@beritadetail')->name('berita.detail');
+  Route::get('/modulpelajaran/detail/{id}', 'UserController@moduldetail')->name('modul.detail');
+  Route::get('/modulpelajaran/{m_modul_kelas}', 'UserController@showByClass')->name('modul.showByClass');
 // });
 
 Route::prefix('admin')->group(function(){
@@ -149,10 +152,10 @@ Route::prefix('admin')->group(function(){
   Route::post('/informasi-media', 'InformasiMediaController@store')->name('admin.informasi-media.store')->middleware('auth');
   Route::get('/informasi-media/{id}/edit', 'InformasiMediaController@edit')->name('admin.informasi-media.edit')->middleware('auth');
   Route::put('/informasi-media/{id}', 'InformasiMediaController@update')->name('admin.informasi-media.update')->middleware('auth');
-  Route::delete('/informasi-media/{id}/destroyrecycle', 'InformasiMediaController@destroyrecycle')->name('admin.informasi-media.destroyrecycle')->middleware('auth');
   Route::delete('/informasi-media/{id}', 'InformasiMediaController@destroy')->name('admin.informasi-media.destroy')->middleware('auth');
-  Route::post('/informasi-media/{id}/restore', 'InformasiMediaController@restore')->name('admin.informasi-media.restore')->middleware('auth');
-  Route::post('/informasi-media/{id}/publish', 'InformasiMediaController@publish')->name('publish.informasi-media')->middleware('auth');
+  // Route::delete('/informasi-media/{id}/destroyrecycle', 'InformasiMediaController@destroyrecycle')->name('admin.informasi-media.destroyrecycle')->middleware('auth');
+  // Route::post('/informasi-media/{id}/restore', 'InformasiMediaController@restore')->name('admin.informasi-media.restore')->middleware('auth');
+  // Route::post('/informasi-media/{id}/publish', 'InformasiMediaController@publish')->name('publish.informasi-media')->middleware('auth');
   
   // route guru
   Route::resource('guru', 'GuruController')->middleware('auth');
@@ -174,4 +177,31 @@ Route::prefix('admin')->group(function(){
   // route article
   Route::post('/articles/upload', 'ArticleController@upload')->name('articles.upload')->middleware('auth');
   Route::resource('/articles', 'ArticleController')->middleware('auth');
+
+  // Route strukturorganisasi
+  Route::resource('strukturorganisasi', 'StrukturOrganisasiController')->except(['show']);
+  Route::get('/kesiswaan/strukturorganisasi', 'StrukturOrganisasiController@index')->name('admin.kesiswaan.strukturorganisasi.index')->middleware('auth');
+  Route::get('/kesiswaan/strukturorganisasi/create', 'StrukturOrganisasiController@create')->name('admin.kesiswaan.strukturorganisasi.create')->middleware('auth');
+  Route::post('/kesiswaan/strukturorganisasi', 'StrukturOrganisasiController@store')->name('admin.kesiswaan.strukturorganisasi.store')->middleware('auth');
+  Route::get('/kesiswaan/strukturorganisasi/{strukturorganisasi}/edit', 'StrukturOrganisasiController@edit')->name('admin.kesiswaan.strukturorganisasi.edit')->middleware('auth');
+  Route::put('/kesiswaan/strukturorganisasi/{strukturorganisasi}', 'StrukturOrganisasiController@update')->name('admin.kesiswaan.strukturorganisasi.update')->middleware('auth');
+  Route::delete('/kesiswaan/strukturorganisasi/{strukturorganisasi}/destroyrecycle', 'StrukturOrganisasiController@destroyrecycle')->name('admin.kesiswaan.strukturorganisasi.destroyrecycle')->middleware('auth');
+  Route::delete('/kesiswaan/strukturorganisasi/{strukturorganisasi}', 'StrukturOrganisasiController@destroy')->name('admin.kesiswaan.strukturorganisasi.destroy')->middleware('auth');
+  Route::post('/kesiswaan/strukturorganisasi/{strukturorganisasi}/restore', 'StrukturOrganisasiController@restore')->name('admin.kesiswaan.strukturorganisasi.restore')->middleware('auth');
+  Route::post('/kesiswaan/strukturorganisasi/{strukturorganisasi}/publish', 'StrukturOrganisasiController@publish')->name('publish.kesiswaan.strukturorganisasi')->middleware('auth');
+  Route::get('/strukturorganisasi/file/{filename}', 'StrukturOrganisasiController@viewFile')->name('strukturorganisasi.file')->middleware('auth');
+  Route::post('/strukturorganisasi/storeFile', 'StrukturOrganisasiController@storeFile')->name('strukturorganisasi.storeFile')->middleware('auth');
+  
+  // Route modul pelajaran
+  Route::resource('modulpelajaran', 'ModulController')->except(['show']);
+  Route::get('/modulpelajaran', 'ModulController@index')->name('admin.modul.index')->middleware('auth');
+  Route::get('/modulpelajaran/create', 'ModulController@create')->name('admin.modul.create')->middleware('auth');
+  Route::post('/modulpelajaran', 'ModulController@store')->name('admin.modul.store')->middleware('auth');
+  Route::get('/modulpelajaran/{modulpelajaran}/edit', 'ModulController@edit')->name('admin.modul.edit')->middleware('auth');
+  Route::put('/modulpelajaran/{modulpelajaran}', 'ModulController@update')->name('admin.modul.update')->middleware('auth');
+  Route::delete('/modulpelajaran/{modulpelajaran}/destroyrecycle', 'ModulController@destroyrecycle')->name('admin.modul.destroyrecycle')->middleware('auth');
+  Route::delete('/modulpelajaran/{modulpelajaran}', 'ModulController@destroy')->name('admin.modul.destroy')->middleware('auth');
+  Route::post('/modulpelajaran/{modulpelajaran}/restore', 'ModulController@restore')->name('admin.modul.restore')->middleware('auth');
+  Route::post('/modulpelajaran/{modulpelajaran}/publish', 'ModulController@publish')->name('publish.modul')->middleware('auth');
+  Route::get('/modulpelajaran/file/{filename}', 'ModulController@viewFile')->name('modul.file')->middleware('auth');
 });

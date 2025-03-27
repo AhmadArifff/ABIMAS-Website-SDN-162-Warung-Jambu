@@ -62,11 +62,11 @@ class BeasiswaController extends Controller
             $beasiswas = Beasiswa::where('status', strtoupper($status))
                 ->where('title', 'LIKE', "%$keyword%")
                 ->orderBy('created_at', 'desc')
-                ->paginate(10);
+                ->get();
         } else {
             $beasiswas = Beasiswa::where('title', 'LIKE', "%$keyword%")
                 ->orderBy('created_at', 'desc')
-                ->paginate(10);
+                ->get();
         }
         $berita_all = Berita::where('b_status', 'DRAFT')->get();
 

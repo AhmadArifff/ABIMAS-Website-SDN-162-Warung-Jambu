@@ -6,14 +6,17 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- Favicons -->
+    <link href="{{asset('sample_image/logo_.png')}}" rel="icon">
+    {{-- <link href="{{asset('user/images/apple-touch-icon.png')}}" rel="apple-touch-icon"> --}}
     
     <title> @yield('title') - SDN 162 Warung Jambu Kiaracondong</title> @yield('title') - SDN 162 Warung Jambu Kiaracondong</title>
 
     <meta name="description" content="Ela Admin - HTML5 Admin Template">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <link rel="apple-touch-icon" href="https://i.imgur.com/QRAUqs9.png">
-    <link rel="shortcut icon" href="https://i.imgur.com/QRAUqs9.png">
+    {{-- <link rel="apple-touch-icon" href="https://i.imgur.com/QRAUqs9.png">
+    <link rel="shortcut icon" href="https://i.imgur.com/QRAUqs9.png"> --}}
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/normalize.css@8.0.0/normalize.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/css/bootstrap.min.css">
@@ -22,8 +25,8 @@
     <link rel="stylesheet" href="{{asset('ElaAdmin/css/cs-skin-elastic.css')}}">
     <link rel="stylesheet" href="{{asset('ElaAdmin/css/style.css')}}">
     <!-- Favicons -->
-    <link href="{{asset('user/images/favicon.png')}}" rel="icon">
-    <link href="{{asset('user/images/apple-touch-icon.png')}}" rel="apple-touch-icon">
+    {{-- <link href="{{asset('user/images/favicon.png')}}" rel="icon">
+    <link href="{{asset('user/images/apple-touch-icon.png')}}" rel="apple-touch-icon"> --}}
 
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,700,700i|Poppins:300,400,500,700" rel="stylesheet">
@@ -214,13 +217,16 @@
                     <li class="{{$url=='berita'?'active':''}}">
                         <a href="{{url('admin/berita')}}"><i class="menu-icon fa fa-newspaper-o"></i>Berita </a>
                     </li>
+                    <li class="{{$url=='modulpelajaran'?'active':''}}">
+                        <a href="{{url('admin/modulpelajaran')}}"><i class="menu-icon fa fa-book"></i>Modul Pelajaran </a>
+                    </li>
                     <li class="menu-item-has-children dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <i class="menu-icon fa fa-child"></i>Kegiatan Kesiswaan</a>
                         <ul class="sub-menu children dropdown-menu">
-                            {{-- <li><i class="fa fa-sitemap"></i><a href="{{url('admin/kesiswaan/strukturorganisasi')}}">Struktur Organisasi</a></li> --}}
                             @if(auth()->user()->role == 'admin')
                             <li><i class="fa fa-futbol-o"></i><a href="{{ url('admin/kesiswaan/ekstrakurikuler') }}">Ekstrakurikuler</a></li>
+                            <li><i class="fa fa-sitemap"></i><a href="{{url('admin/kesiswaan/strukturorganisasi')}}">Struktur Organisasi</a></li>
                             <li><i class="fa fa-gavel"></i><a href="{{url('admin/kesiswaan/tatatertib')}}">Tatatertib</a></li>
                             @endif
                             <li><i class="fa fa-trophy"></i><a href="{{url('admin/kesiswaan/penghargaan')}}">Penghargaan</a></li>
@@ -240,35 +246,33 @@
             <header id="header" class="header">
                 <div class="top-left">
                     <div class="navbar-header">
-                        {{-- <a class="navbar-brand" href="{{url('/')}}"><img src="{{asset('ElaAdmin/images/logo.png')}}" alt="Logo"></a> --}}
-                        <a class="navbar-brand text-success" href="{{url('admin/dashboard')}}" > <i class="fa fa-user-circle-o" style="font-size:34px"></i>  <span class="font-weight-bold " style="font-size:26px">Administrator</span></a>
-                        <a class="navbar-brand hidden " href="{{url('/')}}"><img src="{{asset('ElaAdmin/images/logo2.png')}}" alt="Logo"></a>
+                        <a class="navbar-brand text-success" href="{{url('admin/dashboard')}}">
+                            <i class="fa fa-user-circle-o" style="font-size:34px"></i>
+                            <span class="font-weight-bold" style="font-size:26px">Administrator</span>
+                        </a>
                         <a id="menuToggle" class="menutoggle"><i class="fa fa-bars"></i></a>
                     </div>
                 </div>
-                @if(auth()->user()->role == 'admin'||auth()->user()->role == 'guru')
+                @if(auth()->user()->role == 'admin' || auth()->user()->role == 'guru')
                 <div class="top-right">
                     <div class="header-menu">
                         <div class="header-left">
                             @if(auth()->user()->role == 'admin')
-                                <div class="dropdown for-notification">
-                                    <button class="btn btn-secondary dropdown-toggle" type="button" id="notification" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        <i class="fa fa-bell"></i>
-                                        @php
-                                            $kesiswaan_count = $kesiswaa_all->filter(function($item) use ($kesiswaa_all) {
-                                                $same_menu_items = $kesiswaa_all->where('k_nama_menu', $item->k_nama_menu);
-                                                $published_item = $same_menu_items->where('k_status', 'PUBLISH')->first();
-                                                return !$published_item && $same_menu_items->where('k_status', 'DRAFT')->count() > 1 || $same_menu_items->where('k_status', 'DRAFT')->count() == 1;
-                                            })->count();
-                                        @endphp
-                                        <span class="count bg-danger">{{ $kesiswaan_count + $ekstrakurikuler_all->count() + $penghargaan_all->count() + $tatatertib_all->count() + $pembiasaan_all->count() +$berita_all->count() +$beasiswa_all->count()}}</span>
-                                    </button>
-                                    <div class="dropdown-menu shadow" aria-labelledby="notification" style="width: 400px; max-height: 400px; overflow-y: auto;">
-                                        <p class="red text-dark">You have {{ $kesiswaa_all->count() + $ekstrakurikuler_all->count() + $penghargaan_all->count() + $tatatertib_all->count() + $pembiasaan_all->count() + $berita_all->count() +$beasiswa_all->count()}} Notifications</p>
-                                        @if ($menu == 'Pembiasaan' || $menu == 'Penghargaan' || $menu == 'Ekstrakurikuler' || $menu == 'Tatatertib'|| $menu == 'Berita' || $menu == 'About' || $menu == 'Users' || $menu == 'Informasi Media' || $menu == 'Pendaftaran' || $menu == 'Beasiswa' || $menu == 'Guru')
-                                            <a class="dropdown-item media bg-flat-color-1 text-dark" href="#">
-                                                <div class="media-body
-                                        @php
+                            <div class="dropdown for-notification">
+                                <button class="btn btn-secondary dropdown-toggle" type="button" id="notification" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <i class="fa fa-bell"></i>
+                                    @php
+                                        $kesiswaan_count = $kesiswaa_all->filter(function($item) use ($kesiswaa_all) {
+                                            $same_menu_items = $kesiswaa_all->where('k_nama_menu', $item->k_nama_menu);
+                                            $published_item = $same_menu_items->where('k_status', 'PUBLISH')->first();
+                                            return !$published_item && $same_menu_items->where('k_status', 'DRAFT')->count() > 1 || $same_menu_items->where('k_status', 'DRAFT')->count() == 1;
+                                        })->count();
+                                    @endphp
+                                    <span class="count bg-danger">{{ $kesiswaan_count + $ekstrakurikuler_all->count() + $penghargaan_all->count() + $tatatertib_all->count() + $pembiasaan_all->count() + $berita_all->count() + $beasiswa_all->count() }}</span>
+                                </button>
+                                <div class="dropdown-menu shadow" aria-labelledby="notification" style="width: 400px; max-height: 400px; overflow-y: auto;">
+                                    <p class="red text-dark">You have {{ $kesiswaa_all->count() + $ekstrakurikuler_all->count() + $penghargaan_all->count() + $tatatertib_all->count() + $pembiasaan_all->count() + $berita_all->count() + $beasiswa_all->count() }} Notifications</p>
+                                    @php
                                             // Ambil semua k_nama_menu yang memiliki status PUBLISH
                                             $publishedMenus = $kesiswaa_all->where('k_status', 'PUBLISH')->pluck('k_nama_menu')->unique();
 
@@ -289,7 +293,7 @@
                                                             <img src="{{ $item->k_foto_slide3 ? asset('kesiswaan_image/slide_image/' . $item->k_foto_slide3) : asset('sample_image/Gambar.png') }}" alt="content image" style="width: 50px; height: 50px;" loading="lazy">
                                                         </div>
                                                         <div class="media-body">
-                                                            <p class="text-dark">{{ $item->k_judul_slide }}</p>
+                                                            <p class="text-dark">{{ Str::limit($item->k_judul_slide, 30, '...') }}</p>
                                                             <p>{{ Str::limit($item->k_deskripsi_slide, 30, '...') }}</p>
                                                             @foreach($user_all as $itemuser)
                                                                 @if($item->k_create_id == $itemuser->id)
@@ -322,7 +326,7 @@
                                                     <a class="dropdown-item media bg-flat-color-2 text-dark" href="#">
                                                         <img src="{{ $item->e_foto ? asset('kesiswaan_image/ekstrakurikuler_image/' . $item->e_foto) : asset('sample_image/Gambar.png') }}" alt="content image" class="mr-3" style="width: 50px; height: 50px;">
                                                         <div class="media-body">
-                                                            <p class="text-dark">{{ $item->e_nama_ekstrakurikuler }}</p>
+                                                            <p class="text-dark">{{ Str::limit($item->e_nama_ekstrakurikuler, 30, '...') }}</p>
                                                             <p>{{ Str::limit($item->e_deskripsi, 30, '...') }}</p>
                                                             @foreach($user_all as $itemuser)
                                                                 @if($item->e_create_id == $itemuser->id)
@@ -342,7 +346,7 @@
                                                 <a class="dropdown-item media bg-flat-color-3 text-dark" href="#">
                                                     <img src="{{ $item->ph_foto ? asset('kesiswaan_image/penghargaan_image/' . $item->ph_foto) : asset('sample_image/Gambar.png') }}" alt="content image" class="mr-3" style="width: 50px; height: 50px;">
                                                     <div class="media-body">
-                                                        <p class="text-dark">{{ $item->ph_nama_kegiatan }}</p>
+                                                        <p class="text-dark">{{ Str::limit($item->ph_nama_kegiatan, 30, '...') }}</p>
                                                         <p>{{ Str::limit($item->ph_deskripsi, 30, '...') }}</p>
                                                         @foreach($user_all as $itemuser)
                                                             @if($item->ph_create_id == $itemuser->id)
@@ -360,7 +364,7 @@
                                             @foreach($tatatertib_all as $item)
                                                 <a class="dropdown-item media bg-flat-color-4 text-dark" href="#">
                                                     <div class="media-body">
-                                                        <p class="text-dark">{{ $item->t_nama_peraturan }}</p>
+                                                        <p class="text-dark">{{ Str::limit($item->t_nama_peraturan, 30, '...') }}</p>
                                                         <p>{{ Str::limit($item->t_deskripsi, 30, '...') }}</p>
                                                         @foreach($user_all as $itemuser)
                                                             @if($item->t_create_id == $itemuser->id)
@@ -379,7 +383,7 @@
                                                 <a class="dropdown-item media bg-flat-color-4 text-dark" href="#">
                                                     <img src="{{ $item->p_foto ? asset('kesiswaan_image/pembiasaan_image/' . $item->p_foto) : asset('sample_image/Gambar.png') }}" alt="content image" class="mr-3" style="width: 50px; height: 50px;">
                                                     <div class="media-body">
-                                                        <p class="text-dark">{{ $item->p_nama_kegiatan }}</p>
+                                                        <p class="text-dark">{{ Str::limit($item->p_nama_kegiatan, 30, '...') }}</p>
                                                         <p>{{ Str::limit($item->p_deskripsi, 30, '...') }}</p>
                                                         @foreach($user_all as $itemuser)
                                                             @if($item->p_create_id == $itemuser->id)
@@ -398,7 +402,7 @@
                                                 <a class="dropdown-item media bg-flat-color-5 text-dark" href="#">
                                                     <img src="{{ $item->b_foto ? asset('berita_image/' . $item->b_foto) : asset('sample_image/Gambar.png') }}" alt="content image" class="mr-3" style="width: 50px; height: 50px;">
                                                     <div class="media-body">
-                                                        <p class="text-dark">{{ $item->b_nama_berita }}</p>
+                                                        <p class="text-dark">{{ Str::limit($item->b_nama_berita, 30, '...') }}</p>
                                                         <p>{{ Str::limit($item->b_deskripsi_berita, 30, '...') }}</p>
                                                         @foreach($user_all as $itemuser)
                                                             @if($item->b_create_id == $itemuser->id)
@@ -417,7 +421,7 @@
                                                 <a class="dropdown-item media bg-flat-color-6 text-dark" href="#">
                                                     <img src="{{ $item->image ? asset('beasiswas_image/' . $item->image) : asset('sample_image/Gambar.png') }}" alt="content image" class="mr-3" style="width: 50px; height: 50px;">
                                                     <div class="media-body">
-                                                        <p class="text-dark">{{ $item->title }}</p>
+                                                        <p class="text-dark">{{ Str::limit($item->title, 30, '...') }}</p>
                                                         <p>{{ Str::limit($item->content, 30, '...') }}</p>
                                                         @foreach($user_all as $itemuser)
                                                             @if($item->create_by == $itemuser->id)
@@ -432,19 +436,16 @@
                                                     </div>
                                                 </a>
                                             @endforeach
-                                        @endif
-                                    </div>
                                 </div>
+                            </div>
                             @endif
                         </div>
                         <div class="user-area dropdown float-right" id="userDropdown">
                             <a href="#" class="dropdown-toggle active" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <img class="user-avatar rounded-circle" src="{{ auth()->user()->foto ? asset('users_foto/' . auth()->user()->foto) : asset('ElaAdmin/images/admin.jpg') }}" alt="User Avatar">
                             </a>
-
                             <div class="user-menu dropdown-menu" aria-labelledby="userDropdown">
-                                {{-- <a class="nav-link" href="#"><i class="fa fa-cog"></i>Ganti Password</a> --}}
-                                <div class="nav-link" style="cursor:pointer" onclick="logout()" data-target="#modalLogout" data-toggle="modal"> 
+                                <div class="nav-link" style="cursor:pointer" onclick="logout()" data-target="#modalLogout" data-toggle="modal">
                                     <i class="fa fa-power-off"></i> Logout
                                 </div>
                             </div>

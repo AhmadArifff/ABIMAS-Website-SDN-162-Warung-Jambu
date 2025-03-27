@@ -30,7 +30,7 @@
                             </div>
                             <div class="mb-3">
                                 <label for="slug" class="font-weight-bold">Image</label>
-                                <input type="file" name="image" class="form-control {{$errors->first('image') ? "is-invalid" : ""}}" required>
+                                <input type="file" accept="image/*" name="image" class="form-control {{$errors->first('image') ? "is-invalid" : ""}}"  required>
                                 <div class="invalid-feedback"> {{$errors->first('image')}}</div>
                             </div>
                             <div class="mb-3">
@@ -40,7 +40,7 @@
                             
                             <div class="mb-3 mt-4">
                                 <a href="{{url('admin/'.strtolower($menu).'s')}}" class="btn btn-md btn-secondary">Back</a>
-                                <button type="submit" name="status" value="DRAFT" class="btn btn-md btn-warning">Draft</button>
+                                <button type="submit" name="save_action" value="DRAFT" class="btn btn-md btn-warning">Draft</button>
                                 @if(auth()->user()->role == 'admin')
                                     <button class="btn btn-success" name="save_action" value="PUBLISH">Publish</button>
                                 @endif

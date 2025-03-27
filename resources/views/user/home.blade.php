@@ -152,7 +152,7 @@
             <p class="mb-0 text-dark"><strong>{{ $guru->gelar }}</strong></p>
           </div>
           @if($guru->foto)
-          <img src="{{ asset('storage/' . $guru->foto) }}" class="rounded-circle border border-primary p-1" width="70" height="70" alt="{{ $guru->nama }}">
+          <img src="{{ asset('guru_image/' . $guru->foto) }}" class="rounded-circle border border-primary p-1" width="70" height="70" alt="{{ $guru->nama }}">
           @endif
         </div>
       </div>
@@ -274,23 +274,40 @@
     <div class="section-header">
       <h3 class="section-title">Ekstrakurikuler</h3>
     </div>
-    <div class="row">
-      <div class="article">
-        @if($ekstrakurikuler_all->count() > 0)
-        @foreach($ekstrakurikuler_all as $ekstra)
-        <div class="col-md-6 col-lg-6 mb-4 activity-card" data-page="1" style="transition: transform 0.3s, opacity 0.3s;">
-          <h1 id="preview-main-title">{{ $ekstra->e_nama_ekstrakurikuler }}</h1>
-          <img src="{{ asset("kesiswaan_image/ekstrakurikuler_image/{$ekstra->e_foto}") }}" style="width: 100%; height: auto; margin-bottom: 20px;">
-          <p>{{ $ekstra->e_deskripsi }}</p>
+    @if($ekstrakurikuler_all->count() > 0)
+      <div class="row">
+        <div class="article d-flex flex-wrap justify-content-center mx-auto" style="max-width: 1200px;">
+          @foreach($ekstrakurikuler_all->take(3) as $ekstra)
+          <div class="col-md-4 mb-4 d-flex flex-column align-items-center" style="padding: 15px; transition: transform 0.3s;">
+            <a href="{{ url('ekstrakurikuler/' . $ekstra->e_nama_ekstrakurikuler) }}" class="text-decoration-none text-dark">
+              <div style="width: 100%; height: 250px; overflow: hidden; border: 1px solid #ccc; border-radius: 5px; margin-bottom: 15px;">
+                <img src="{{ asset("kesiswaan_image/ekstrakurikuler_image/{$ekstra->e_foto}") }}" style="width: 100%; height: 100%; object-fit: cover;">
+              </div>
+              <h5 class="text-center">{{ $ekstra->e_nama_ekstrakurikuler }}</h5>
+              <p class="text-center">{{ Str::limit($ekstra->e_deskripsi, 100) }}</p>
+            </a>
+          </div>
+          @endforeach
         </div>
-        @endforeach
-        @else
-        <h1 id="preview-main-title">Data Content Judul Belum Ditambahkan!</h1>
-        @endif
       </div>
-    </div>
+    @else
+      <div class="col-12">
+        <h5 class="text-center">Data Ekstrakurikuler Belum Tersedia!</h5>
+      </div>
+    @endif
   </div>
 </section>
+
+<script>
+  document.querySelectorAll('#about .col-md-4').forEach(item => {
+    item.addEventListener('mouseover', () => {
+      item.style.transform = 'scale(1.05)';
+    });
+    item.addEventListener('mouseout', () => {
+      item.style.transform = 'scale(1)';
+    });
+  });
+</script>
 
 <!--========================== Informasi Pendaftaran Section ============================-->
 <section id="about">
@@ -334,10 +351,41 @@
               <textarea id="alamat" class="form-control form-control-sm" placeholder="Alamat lengkap" rows="2" required></textarea>
             </div>
 
-            <div class="mb-2">
-              <label class="form-label">📞 No. HP Orangtua</label>
-              <input type="tel" id="nomor_hp" class="form-control form-control-sm" placeholder="Nomor WhatsApp" required>
+            <div class="mb-3">
+              <label for="nomor_hp" id="nomor-hp-label" class="font-weight-bold">📞 No. HP Orangtua</label>
+              <div class="input-group">
+              <input type="tel" id="nomor_hp" name="nomor_hp" placeholder="Nomor WhatsApp..." 
+               class="form-control {{$errors->first('nomor_hp') ? 'is-invalid' : ''}}" 
+               value="{{ old('nomor_hp') }}" maxlength="15" required>
+              </div>
             </div>
+
+            <script>
+              document.addEventListener('DOMContentLoaded', function() {
+              const nomorHpInput = document.getElementById('nomor_hp');
+              if (nomorHpInput) {
+              nomorHpInput.oninput = function() {
+              // Remove non-numeric characters except the leading '+'
+              this.value = this.value.replace(/[^\d+]/g, '');
+
+              // Ensure the input starts with '+62' only once
+              if (!this.value.startsWith('+62')) {
+              this.value = '+62' + this.value.replace(/^(\+62|0)+/, '');
+              }
+
+              // Remove leading '00' if present
+              if (this.value.startsWith('+6200')) {
+              this.value = '+62' + this.value.slice(4);
+              }
+
+              // Limit the input to a maximum of 15 characters
+              if (this.value.length > 15) {
+              this.value = this.value.slice(0, 15);
+              }
+              };
+              }
+              });
+            </script>
 
             <div class="text-center mt-3">
               <button type="button" class="btn btn-success btn-sm" onclick="kirimWhatsApp()">
@@ -350,4 +398,34 @@
     </div>
   </div>
 </section>
+<script>
+  function kirimWhatsApp() {
+      var nama_anak = document.getElementById("nama_anak").value;
+      var tanggal_lahir = document.getElementById("tanggal_lahir").value;
+      var alamat = document.getElementById("alamat").value;
+      var nomor_hp = document.getElementById("nomor_hp").value;
+
+      if (nama_anak === "" || tanggal_lahir === "" || alamat === "" || nomor_hp === "") {
+          alert("Harap lengkapi semua data sebelum mengirim.");
+          return;
+      }
+
+      var nomorAdmin = "{{ $media->where('ms_nama_media', 'whatsApp')->first()->ms_url ?? '' }}"; // Ambil nomor WhatsApp dari database
+      if (!nomorAdmin) {
+          alert("Nomor WhatsApp admin tidak tersedia.");
+          return;
+      }
+
+      var pesan = "Halo, saya ingin mendaftarkan anak saya ke SD. Berikut data anak saya:%0A%0A" +
+                  "👦 Nama Anak: " + nama_anak + "%0A" +
+                  "📅 Tanggal Lahir: " + tanggal_lahir + "%0A" +
+                  "🏡 Alamat: " + alamat + "%0A" +
+                  "📞 Nomor HP Orangtua: +" + nomor_hp + "%0A%0A" +
+                  "Mohon informasi lebih lanjut. Terima kasih.";
+
+      var url = "https://wa.me/" + nomorAdmin + "?text=" + pesan;
+      window.open(url, "_blank");
+  }
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
 @endsection

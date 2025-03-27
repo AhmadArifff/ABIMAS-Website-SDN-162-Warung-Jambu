@@ -66,8 +66,8 @@ class BeritaController extends Controller
         $tatatertib_all = Tatatertib::where('t_status', 'DRAFT')->get();
         $user_all = User::all();
         $kesiswaan->where('k_nama_menu', $menu);
-        $berita = $berita->paginate(10);
-        $kesiswaan = $kesiswaan->paginate(10);
+        $berita = $berita->get();
+        $kesiswaan = $kesiswaan->get();
         $pembiasaan_all = Pembiasaan::where('p_status', 'DRAFT')->get();
         $beasiswa_all = Beasiswa::where('status', 'DRAFT')->get();
 

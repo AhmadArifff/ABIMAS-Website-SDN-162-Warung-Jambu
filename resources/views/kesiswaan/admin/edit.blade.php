@@ -220,12 +220,74 @@
 							</div>
 						</div>
 					</form>
+					@elseif ($menu == 'Strukturorganisasi')
+					<form action="{{route(strtolower($menu) .'.update', $strukturorganisasi->so_id)}}" method="POST" enctype="multipart/form-data">
+						@csrf
+						<input type="hidden" name="_method" value="PUT">
+						<div class="col-10">
+							<div class="mb-3">
+								<label for="so_judul_slide" class="font-weight-bold">Judul Slide</label>
+								<input type="text" name="so_judul_slide" id="so_judul_slide" placeholder="Judul Slide..." class="form-control {{$errors->first('so_judul_slide') ? "is-invalid" : ""}}" value="{{old('so_judul_slide', $strukturorganisasi->so_judul_slide)}}" required oninput="updatePreview()">
+								<div class="invalid-feedback">{{$errors->first('so_judul_slide')}}</div>
+							</div>
+							<div class="mb-3">
+								<label for="so_deskripsi_slide" class="font-weight-bold">Deskripsi Slide</label>
+								<textarea name="so_deskripsi_slide" id="so_deskripsi_slide" placeholder="Deskripsi Slide..." class="form-control {{$errors->first('so_deskripsi_slide') ? "is-invalid" : ""}}" required oninput="updatePreview()">{{old('so_deskripsi_slide', $strukturorganisasi->so_deskripsi_slide)}}</textarea>
+								<div class="invalid-feedback">{{$errors->first('so_deskripsi_slide')}}</div>
+							</div>
+							<div class="mb-3">
+								<label for="so_foto_slide" class="font-weight-bold">Foto Slide</label>
+								@if($strukturorganisasi->so_foto_slide)
+									<div class="mb-2">
+										<img src="{{ asset('strukturorganisasi_image/slide_image/'.$strukturorganisasi->so_foto_slide) }}" width="150px" alt="Foto Slide">
+									</div>
+								@endif
+								<input type="file" name="so_foto_slide" id="so_foto_slide" class="form-control {{$errors->first('so_foto_slide') ? "is-invalid" : ""}}" accept="image/*" onchange="updatePreview()">
+								<div class="invalid-feedback">{{$errors->first('so_foto_slide')}}</div>
+							</div>
+							<div class="mb-3">
+								<label for="nama_kegiatan" class="font-weight-bold">Nama Strukturorganisasi</label>
+								<input type="text" name="nama_kegiatan" id="nama_kegiatan" placeholder="Nama Kegiatan..." class="form-control {{$errors->first('nama_kegiatan') ? "is-invalid" : ""}}" value="{{old('nama_kegiatan', $strukturorganisasi->so_judul_content)}}" required oninput="updatePreview()">
+								<div class="invalid-feedback">{{$errors->first('nama_kegiatan')}}</div>
+							</div>
+							<div class="mb-3">
+								<label for="deskripsi" class="font-weight-bold">Deskripsi</label>
+								<textarea name="deskripsi" id="deskripsi" placeholder="Deskripsi..." class="form-control {{$errors->first('deskripsi') ? "is-invalid" : ""}}" required oninput="updatePreview()">{{old('deskripsi', $strukturorganisasi->so_deskripsi)}}</textarea>
+								<div class="invalid-feedback">{{$errors->first('deskripsi')}}</div>
+							</div>
+							<div class="mb-3">
+								<label for="so_foto_atau_pdf" class="font-weight-bold">Foto Atau PDF</label>
+								@if($strukturorganisasi->so_foto_atau_pdf)
+									<div class="mb-2">
+										@if(auth()->check())
+											@if(pathinfo($strukturorganisasi->so_foto_atau_pdf, PATHINFO_EXTENSION) == 'pdf')
+												<a href="{{ asset('strukturorganisasi_image/pdf_image/'.$strukturorganisasi->so_foto_atau_pdf) }}" target="_blank">Lihat PDF</a>
+											@else
+												<img src="{{ asset('strukturorganisasi_image/foto_image/'.$strukturorganisasi->so_foto_atau_pdf) }}" width="150px" alt="Foto atau PDF">
+											@endif
+										@else
+											<p class="text-danger">Hanya pengguna yang sudah login yang dapat melihat file ini.</p>
+										@endif
+									</div>
+								@endif
+								<input type="file" name="so_foto_atau_pdf" id="so_foto_atau_pdf" class="form-control {{$errors->first('so_foto_atau_pdf') ? "is-invalid" : ""}}" accept="image/*,application/pdf">
+								<div class="invalid-feedback">{{$errors->first('so_foto_atau_pdf')}}</div>
+							</div>
+							<div class="mb-3 mt-4">
+								<a href="{{route(strtolower($menu) .'.index')}}" class="btn btn-md btn-secondary">Back</a>
+								<button type="submit" name="status" value="draft" class="btn btn-md btn-warning">Draft</button>
+								@if(auth()->user()->role == 'admin')
+									<button type="submit" name="status" value="publish" class="btn btn-md btn-success" {{ $isPublished && $strukturorganisasi->so_status !== 'PUBLISH' ? 'disabled' : '' }}>Publish</button>
+								@endif
+							</div>
+						</div>
+					</form>
 					@endif
 				</div>
 			</div>
 		</div>
 	</div>
-
+	@if ($menu == 'Pembiasaan' || $menu == 'Penghargaan' || $menu == 'Ekstrakurikuler' || $menu == 'Tatatertib')
 	<div class="card mt-4 shadow">
 		<div class="card-body">
 			<section id="hero">
@@ -435,6 +497,7 @@
 			</section>
 		</div>
 	</div>
+	@endif
 
 	<script>
 		function updatePreview() {

@@ -36,7 +36,7 @@
                                 @else   
                                     No Image
                                 @endif
-                                <input type="file" name="image" class="form-control mt-2" >
+                                <input type="file" name="image" class="form-control mt-2" accept="image/*" >
                                 <small class="text-muted">Kosongkan jika tidak ingin mengubah gambar.</small>
                             </div>
                             

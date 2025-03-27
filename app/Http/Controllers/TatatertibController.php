@@ -8,6 +8,7 @@ use App\Kesiswaan;
 use App\Ekstrakurikuler;
 use App\Penghargaan;
 use App\Tatatertib;
+use App\Strukturorganisasi;
 use App\Berita;
 use App\Beasiswa;
 use App\User;
@@ -62,8 +63,8 @@ class TatatertibController extends Controller
         $berita_all = Berita::where('b_status', 'DRAFT')->get();
 
         $kesiswaan->where('k_nama_menu', $menu);
-        $tatatertib = $tatatertib->paginate(10);
-        $kesiswaan = $kesiswaan->paginate(10);
+        $tatatertib = $tatatertib->get();
+        $kesiswaan = $kesiswaan->get();
         $beasiswa_all = Beasiswa::where('status', 'DRAFT')->get();
     
         return view('kesiswaan.admin.index', compact('tatatertib', 'kesiswaan', 'menu', 'pembiasaan_all', 'kesiswaa_all', 'ekstrakurikuler_all', 'penghargaan_all', 'tatatertib_all', 'user_all', 'berita_all', 'beasiswa_all'));
@@ -86,6 +87,8 @@ class TatatertibController extends Controller
         $tatatertib_all=Tatatertib::where('t_status', 'DRAFT')->get();
         $beasiswa_all = Beasiswa::where('status', 'DRAFT')->get();
         $user_all=User::all();
+        $getisPublished = Strukturorganisasi::where('so_status', 'PUBLISH')->count();
+        $publishDisabled = $getisPublished >= 1; // Disable button if there is at least one published data
 
         $menu = $request->query('menu');
         $kesiswaan = Kesiswaan::where('k_nama_menu', $menu)->where('k_status', 'PUBLISH')->first();
@@ -109,7 +112,7 @@ class TatatertibController extends Controller
             ]
             ]
           ];
-        return view('kesiswaan/admin.create', compact('kesiswaan', 'menu','tatatertib', 'pembiasaan_all', 'kesiswaa_all', 'ekstrakurikuler_all', 'penghargaan_all', 'tatatertib_all', 'user_all','publishedEkstrakurikulerNames','publishedMenus','berita_all','beasiswa_all'));
+        return view('kesiswaan/admin.create', compact('kesiswaan', 'menu','tatatertib', 'pembiasaan_all', 'kesiswaa_all', 'ekstrakurikuler_all', 'penghargaan_all', 'tatatertib_all', 'user_all','publishedEkstrakurikulerNames','publishedMenus','berita_all','beasiswa_all','publishDisabled','getisPublished'));
     }
 
     public function store(Request $request)

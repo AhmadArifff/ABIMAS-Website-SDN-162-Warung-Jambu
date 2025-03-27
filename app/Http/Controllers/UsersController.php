@@ -55,9 +55,9 @@ class UsersController extends Controller
         $pembiasaan_all= Pembiasaan::where('p_status', 'DRAFT')->get();
         $user_all = User::all();
         $kesiswaan->where('k_nama_menu', $menu);
-        $berita = $berita->paginate(10);
-        $kesiswaan = $kesiswaan->paginate(10);
-        $user = $user->paginate(10);
+        $berita = $berita->get();
+        $kesiswaan = $kesiswaan->get();
+        $user = $user->get();
         $user_all = User::where('role', 'guru')->get();
         $beasiswa_all = Beasiswa::where('status', 'DRAFT')->get();
     

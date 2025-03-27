@@ -133,15 +133,23 @@
                             <div class="col-lg-4 col-md-5 col-sm-12 mb-3">
                                 <div id="list-example" class="list-group">
                                     @foreach($tatatertib as $item)
-                                        <a class="list-group-item list-group-item-action" href="#list-item-{{ $loop->index + 1 }}">{{ $loop->index + 1 }}. {{ $item->t_nama_peraturan }}</a>
+                                        <a class="list-group-item list-group-item-action" href="#list-item-{{ $loop->index + 1 }}">
+                                            {{ $loop->index + 1 }}. {{ Str::limit($item->t_nama_peraturan, 20, '...') }}
+                                        </a>
                                     @endforeach
                                 </div>
                             </div>
                             <div class="col-lg-8 col-md-7 col-sm-12">
                                 <div data-spy="scroll" data-target="#list-example" data-offset="0" class="scrollspy-example">
                                     @foreach($tatatertib as $item)
-                                        <h4 id="list-item-{{ $loop->index + 1 }}">{{ $loop->index + 1 }}. {{ $item->t_nama_peraturan }}</h4>
-                                        <p>{{ $item->t_deskripsi }}</p>
+                                        <div class="mb-4">
+                                            <h4 id="list-item-{{ $loop->index + 1 }}" class="text-truncate" style="max-width: 100%;">
+                                                {{ $loop->index + 1 }}. {{ $item->t_nama_peraturan }}
+                                            </h4>
+                                            <p class="text-justify" style="word-wrap: break-word;">
+                                                {{ $item->t_deskripsi }}
+                                            </p>
+                                        </div>
                                     @endforeach
                                 </div>
                             </div>

@@ -62,7 +62,17 @@
                             </div>
                     @endif
                     
-                    {{-- table --}}
+                    {{-- table --}} 
+                    <div class="d-flex justify-content-end mb-3">
+                        <select id="rowsPerPageTautan" class="form-control form-control-sm" style="width: auto; display: inline-block;">
+                            <option value="5">5</option>
+                            <option value="10" selected>10</option>
+                            <option value="25">25</option>
+                            <option value="50">50</option>
+                            <option value="all">All</option>
+                        </select>
+                        <span class="ml-2">Rows per page</span>
+                    </div>
                     <table class="table" id="tautanTable">
                         <thead class="text-light" style="background-color:#33b751 !important">
                             <tr>
@@ -72,18 +82,18 @@
                                 <th width="88px">Action</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            @foreach ($tautan as $item)
+                        <tbody id="tautanTableBody">
+                            @foreach ($tautan as $item_tautan)
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
-                                    <td class="filterable">{{ $item->tt_nama_tautan }}</td>
-                                    <td class="filterable">{{ $item->tt_url }}</td>
+                                    <td class="filterable">{{ $item_tautan->tt_nama_tautan }}</td>
+                                    <td class="filterable">{{ Str::limit($item_tautan->tt_url, 30) }}</td>
                                     <td class="text-center">
-                                        <form action="{{ route('admin.informasi-media.edit', $item->tt_id) }}" method="GET" class="d-inline">
+                                        <form action="{{ route('admin.informasi-media.edit', $item_tautan->tt_id) }}" method="GET" class="d-inline">
                                             <input type="text" name="menu" id="menu" placeholder="Nama Menu..." class="form-control {{$errors->first('menu') ? "is-invalid" : ""}}" value="Tautan" required hidden>
                                             <button type="submit" class="btn btn-sm btn-warning text-light" title="Edit"><i class="fa fa-pencil"></i></button>
                                         </form>
-                                        <form class="d-inline" method="POST" action="{{ route('admin.informasi-media.destroy', $item->tt_id) }}">
+                                        <form class="d-inline" method="POST" action="{{ route('admin.informasi-media.destroy', $item_tautan->tt_id) }}">
                                             @method('DELETE')
                                             @csrf
                                             <input type="hidden" name="menu" value="Tautan">
@@ -95,7 +105,85 @@
                         </tbody>
                     </table>
 
+                    {{-- Pagination --}}
+                    <div class="mt-3 d-flex justify-content-between align-items-center">
+                        <div>
+                            <p>Total Data: <span id="totalTautanData">{{ $tautan->count() }}</span></p>
+                        </div>
+                        <div id="paginationControlsTautan" class="pagination d-flex align-items-center">
+                            <button id="prevPageTautan" class="btn btn-sm btn-light mr-2">Previous</button>
+                            <div id="pageNumbersTautan" class="d-flex"></div>
+                            <button id="nextPageTautan" class="btn btn-sm btn-light ml-2">Next</button>
+                        </div>
+                    </div>
+
                     <script>
+                        document.addEventListener('DOMContentLoaded', function () {
+                            const tautanTableBody = document.getElementById('tautanTableBody');
+                            const rowsPerPageSelectTautan = document.getElementById('rowsPerPageTautan');
+                            const paginationControlsTautan = document.getElementById('paginationControlsTautan');
+                            const totalTautanData = document.getElementById('totalTautanData').textContent;
+                            const tautanRows = Array.from(tautanTableBody.querySelectorAll('tr'));
+                            let rowsPerPageTautan = parseInt(rowsPerPageSelectTautan.value);
+                            let currentPageTautan = 1;
+
+                            function renderTautanTable() {
+                                const start = (currentPageTautan - 1) * rowsPerPageTautan;
+                                const end = rowsPerPageTautan === 'all' ? tautanRows.length : start + rowsPerPageTautan;
+
+                                tautanRows.forEach((row, index) => {
+                                    row.style.display = index >= start && index < end ? '' : 'none';
+                                });
+
+                                renderTautanPagination();
+                            }
+
+                            function renderTautanPagination() {
+                                const totalPagesTautan = rowsPerPageTautan === 'all' ? 1 : Math.ceil(tautanRows.length / rowsPerPageTautan);
+                                const prevButtonTautan = document.getElementById('prevPageTautan');
+                                const nextButtonTautan = document.getElementById('nextPageTautan');
+                                const pageNumbersContainerTautan = document.getElementById('pageNumbersTautan');
+
+                                pageNumbersContainerTautan.innerHTML = '';
+
+                                for (let i = 1; i <= totalPagesTautan; i++) {
+                                    const button = document.createElement('button');
+                                    button.textContent = i;
+                                    button.className = 'btn btn-sm ' + (i === currentPageTautan ? 'btn-primary' : 'btn-light');
+                                    button.addEventListener('click', () => {
+                                        currentPageTautan = i;
+                                        renderTautanTable();
+                                    });
+                                    pageNumbersContainerTautan.appendChild(button);
+                                }
+
+                                prevButtonTautan.disabled = currentPageTautan === 1;
+                                nextButtonTautan.disabled = currentPageTautan === totalPagesTautan;
+
+                                prevButtonTautan.addEventListener('click', () => {
+                                    if (currentPageTautan > 1) {
+                                        currentPageTautan--;
+                                        renderTautanTable();
+                                    }
+                                });
+
+                                nextButtonTautan.addEventListener('click', () => {
+                                    if (currentPageTautan < totalPagesTautan) {
+                                        currentPageTautan++;
+                                        renderTautanTable();
+                                    }
+                                });
+                            }
+
+                            rowsPerPageSelectTautan.addEventListener('change', function () {
+                                rowsPerPageTautan = this.value === 'all' ? tautanRows.length : parseInt(this.value);
+                                currentPageTautan = 1;
+                                renderTautanTable();
+                            });
+
+                            renderTautanTable();
+                        });
+
                         function filterTautanTable() {
                             const input = document.querySelector('input[name="p_keyword"]');
                             const filter = input.value.toLowerCase();
@@ -125,7 +213,7 @@
                     <div class="mb-5 text-right">
                         <form action="{{ route('admin.informasi-media.create') }}" method="GET" class="d-inline">
                             <input type="text" name="menu" id="menu" placeholder="Nama Menu..." class="form-control {{$errors->first('menu') ? "is-invalid" : ""}}" value="Media" required hidden>
-                            <button type="submit" class="btn btn-sm btn-success mt-2" {{ $mediasosial->count() >= 4 ? 'disabled' : '' }}> <i class="fa fa-plus"></i> Create</button>
+                            <button type="submit" class="btn btn-sm btn-success mt-2" {{ $mediasosial->count() >= 6 ? 'disabled' : '' }}> <i class="fa fa-plus"></i> Create</button>
                         </form>
                     </div>
 
@@ -163,6 +251,16 @@
                     @endif
                     
                     {{-- table --}}
+                    <div class="d-flex justify-content-end mb-3">
+                        <select id="rowsPerPageMedia" class="form-control form-control-sm" style="width: auto; display: inline-block;">
+                            <option value="5">5</option>
+                            <option value="10" selected>10</option>
+                            <option value="25">25</option>
+                            <option value="50">50</option>
+                            <option value="all">All</option>
+                        </select>
+                        <span class="ml-2">Rows per page</span>
+                    </div>
                     <table class="table" id="mediaTable">
                         <thead class="text-light" style="background-color:#33b751 !important">
                             <tr>
@@ -172,18 +270,18 @@
                                 <th width="88px">Action</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            @foreach ($mediasosial as $item)
+                        <tbody id="mediaTableBody">
+                            @foreach ($mediasosial as $item_mediasosial)
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
-                                    <td class="filterable">{{ $item->ms_nama_media }}</td>
-                                    <td class="filterable">{{ $item->ms_url }}</td>
+                                    <td class="filterable">{{ ucfirst($item_mediasosial->ms_nama_media) }}</td>
+                                    <td class="filterable">{{ $item_mediasosial->ms_url }}</td>
                                     <td class="text-center">
-                                        <form action="{{ route('admin.informasi-media.edit', $item->ms_id) }}" method="GET" class="d-inline">
+                                        <form action="{{ route('admin.informasi-media.edit', $item_mediasosial->ms_id) }}" method="GET" class="d-inline">
                                             <input type="text" name="menu" id="menu" placeholder="Nama Menu..." class="form-control {{$errors->first('menu') ? "is-invalid" : ""}}" value="Media" required hidden>
                                             <button type="submit" class="btn btn-sm btn-warning text-light" title="Edit"><i class="fa fa-pencil"></i></button>
                                         </form>
-                                        <form class="d-inline" method="POST" action="{{ route('admin.informasi-media.destroy', $item->ms_id) }}">
+                                        <form class="d-inline" method="POST" action="{{ route('admin.informasi-media.destroy', $item_mediasosial->ms_id) }}">
                                             @method('DELETE')
                                             @csrf
                                             <input type="hidden" name="menu" value="Media">
@@ -195,7 +293,85 @@
                         </tbody>
                     </table>
 
+                    {{-- Pagination --}}
+                    <div class="mt-3 d-flex justify-content-between align-items-center">
+                        <div>
+                            <p>Total Data: <span id="totalMediaData">{{ $mediasosial->count() }}</span></p>
+                        </div>
+                        <div id="paginationControlsMedia" class="pagination d-flex align-items-center">
+                            <button id="prevPageMedia" class="btn btn-sm btn-light mr-2">Previous</button>
+                            <div id="pageNumbersMedia" class="d-flex"></div>
+                            <button id="nextPageMedia" class="btn btn-sm btn-light ml-2">Next</button>
+                        </div>
+                    </div>
+
                     <script>
+                        document.addEventListener('DOMContentLoaded', function () {
+                            const mediaTableBody = document.getElementById('mediaTableBody');
+                            const rowsPerPageSelectMedia = document.getElementById('rowsPerPageMedia');
+                            const paginationControlsMedia = document.getElementById('paginationControlsMedia');
+                            const totalMediaData = document.getElementById('totalMediaData').textContent;
+                            const mediaRows = Array.from(mediaTableBody.querySelectorAll('tr'));
+                            let rowsPerPageMedia = parseInt(rowsPerPageSelectMedia.value);
+                            let currentPageMedia = 1;
+
+                            function renderMediaTable() {
+                                const start = (currentPageMedia - 1) * rowsPerPageMedia;
+                                const end = rowsPerPageMedia === 'all' ? mediaRows.length : start + rowsPerPageMedia;
+
+                                mediaRows.forEach((row, index) => {
+                                    row.style.display = index >= start && index < end ? '' : 'none';
+                                });
+
+                                renderMediaPagination();
+                            }
+
+                            function renderMediaPagination() {
+                                const totalPagesMedia = rowsPerPageMedia === 'all' ? 1 : Math.ceil(mediaRows.length / rowsPerPageMedia);
+                                const prevButtonMedia = document.getElementById('prevPageMedia');
+                                const nextButtonMedia = document.getElementById('nextPageMedia');
+                                const pageNumbersContainerMedia = document.getElementById('pageNumbersMedia');
+
+                                pageNumbersContainerMedia.innerHTML = '';
+
+                                for (let i = 1; i <= totalPagesMedia; i++) {
+                                    const button = document.createElement('button');
+                                    button.textContent = i;
+                                    button.className = 'btn btn-sm ' + (i === currentPageMedia ? 'btn-primary' : 'btn-light');
+                                    button.addEventListener('click', () => {
+                                        currentPageMedia = i;
+                                        renderMediaTable();
+                                    });
+                                    pageNumbersContainerMedia.appendChild(button);
+                                }
+
+                                prevButtonMedia.disabled = currentPageMedia === 1;
+                                nextButtonMedia.disabled = currentPageMedia === totalPagesMedia;
+
+                                prevButtonMedia.addEventListener('click', () => {
+                                    if (currentPageMedia > 1) {
+                                        currentPageMedia--;
+                                        renderMediaTable();
+                                    }
+                                });
+
+                                nextButtonMedia.addEventListener('click', () => {
+                                    if (currentPageMedia < totalPagesMedia) {
+                                        currentPageMedia++;
+                                        renderMediaTable();
+                                    }
+                                });
+                            }
+
+                            rowsPerPageSelectMedia.addEventListener('change', function () {
+                                rowsPerPageMedia = this.value === 'all' ? mediaRows.length : parseInt(this.value);
+                                currentPageMedia = 1;
+                                renderMediaTable();
+                            });
+
+                            renderMediaTable();
+                        });
+
                         function filterMediaTable() {
                             const input = document.querySelector('input[name="p_keyword"]');
                             const filter = input.value.toLowerCase();

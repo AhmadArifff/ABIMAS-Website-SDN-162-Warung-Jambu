@@ -9,6 +9,7 @@ use App\About;
 use App\AboutSejarah;
 use App\Pembiasaan;
 use App\Kesiswaan;
+use App\Modul;
 use App\Ekstrakurikuler;
 use App\Berita;
 use App\Penghargaan;
@@ -57,6 +58,7 @@ class DashboardController extends Controller
         $ekstrakurikuler = Ekstrakurikuler::all();
         $penghargaan = Penghargaan::all();
         $tatatertib = Tatatertib::all();
+        $modul = Modul::all();
         $user = User::all();
         $berita = Berita::all();
         $beasiswa = Beasiswa::all();
@@ -66,7 +68,7 @@ class DashboardController extends Controller
         $tautan = Tautan::all();
         $guru = Guru::all();
         $pendaftaran = Pendaftaran::all();
-        return view('dashboards.index', ['data'=>$data, 'menu'=>$menu, 'pembiasaan_all'=>$pembiasaan_all, 'kesiswaa_all'=>$kesiswaa_all, 'ekstrakurikuler_all'=>$ekstrakurikuler_all, 'penghargaan_all'=>$penghargaan_all, 'tatatertib_all'=>$tatatertib_all, 'user_all'=>$user_all, 'berita_all'=>$berita_all, 'beasiswa_all'=>$beasiswa_all, 'pembiasaan'=>$pembiasaan, 'kesiswaan'=>$kesiswaan, 'ekstrakurikuler'=>$ekstrakurikuler, 'penghargaan'=>$penghargaan, 'tatatertib'=>$tatatertib, 'user'=>$user, 'berita'=>$berita, 'beasiswa'=>$beasiswa, 'about'=>$about, 'aboutSejarah'=>$aboutSejarah, 'mediaSosial'=>$mediaSosial, 'tautan'=>$tautan, 'guru'=>$guru, 'pendaftaran'=>$pendaftaran]);
+        return view('dashboards.index', ['data'=>$data, 'menu'=>$menu, 'pembiasaan_all'=>$pembiasaan_all, 'kesiswaa_all'=>$kesiswaa_all, 'ekstrakurikuler_all'=>$ekstrakurikuler_all, 'penghargaan_all'=>$penghargaan_all, 'tatatertib_all'=>$tatatertib_all, 'user_all'=>$user_all, 'berita_all'=>$berita_all, 'beasiswa_all'=>$beasiswa_all, 'pembiasaan'=>$pembiasaan, 'kesiswaan'=>$kesiswaan, 'ekstrakurikuler'=>$ekstrakurikuler, 'penghargaan'=>$penghargaan, 'tatatertib'=>$tatatertib, 'user'=>$user, 'berita'=>$berita, 'beasiswa'=>$beasiswa, 'about'=>$about, 'aboutSejarah'=>$aboutSejarah, 'mediaSosial'=>$mediaSosial, 'tautan'=>$tautan, 'guru'=>$guru, 'pendaftaran'=>$pendaftaran, 'modul'=>$modul]);
     }
 
     /**

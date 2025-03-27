@@ -67,8 +67,8 @@ class AboutController extends Controller
         $tatatertib_all = Tatatertib::where('t_status', 'DRAFT')->get();
         $user_all = User::all();
         $kesiswaan->where('k_nama_menu', $menu);
-        $about = $about->paginate(10);
-        $kesiswaan = $kesiswaan->paginate(10);
+        $about = $about->get();
+        $kesiswaan = $kesiswaan->get();
         $pembiasaan_all = Pembiasaan::where('p_status', 'DRAFT')->get();
         $aboutSejarah_all = AboutSejarah::all();
         $berita_all = Berita::where('b_status', 'DRAFT')->get();

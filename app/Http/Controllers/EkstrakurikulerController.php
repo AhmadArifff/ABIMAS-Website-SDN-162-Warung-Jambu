@@ -9,6 +9,7 @@ use App\Ekstrakurikuler;
 use App\Penghargaan;
 use App\Beasiswa;
 use App\Tatatertib;
+use App\Strukturorganisasi;
 use App\Berita;
 use App\User;
 use Illuminate\Support\Facades\File;
@@ -62,8 +63,8 @@ class EkstrakurikulerController extends Controller
         }
         
         $kesiswaan->where('k_nama_menu', $menu);
-        $ekstrakurikuler = $ekstrakurikuler->paginate(10);
-        $kesiswaan = $kesiswaan->paginate(10);
+        $ekstrakurikuler = $ekstrakurikuler->get();
+        $kesiswaan = $kesiswaan->get();
         $berita_all = Berita::where('b_status', 'DRAFT')->get();
         $beasiswa_all = Beasiswa::where('status', 'DRAFT')->get();
     
@@ -94,6 +95,8 @@ class EkstrakurikulerController extends Controller
         // }
         $berita_all = Berita::where('b_status', 'DRAFT')->get();
         $beasiswa_all = Beasiswa::where('status', 'DRAFT')->get();
+        $getisPublished = Strukturorganisasi::where('so_status', 'PUBLISH')->count();
+        $publishDisabled = $getisPublished >= 1; // Disable button if there is at least one published data
         $ekstrakurikuler = [
             'achievements' => [
             [
@@ -110,7 +113,7 @@ class EkstrakurikulerController extends Controller
             ]
             ]
         ];
-        return view('kesiswaan/admin.create', compact( 'menu','ekstrakurikuler', 'pembiasaan_all', 'kesiswaa_all', 'ekstrakurikuler_all', 'penghargaan_all', 'tatatertib_all', 'user_all', 'publishedEkstrakurikulerNames', 'berita_all', 'beasiswa_all'));
+        return view('kesiswaan/admin.create', compact( 'menu','ekstrakurikuler', 'pembiasaan_all', 'kesiswaa_all', 'ekstrakurikuler_all', 'penghargaan_all', 'tatatertib_all', 'user_all', 'publishedEkstrakurikulerNames', 'berita_all', 'beasiswa_all','getisPublished','publishDisabled'));
     }
 
     public function store(Request $request)

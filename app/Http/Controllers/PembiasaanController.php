@@ -7,6 +7,7 @@ use App\Pembiasaan;
 use App\Kesiswaan;
 use App\Ekstrakurikuler;
 use App\Penghargaan;
+use App\Strukturorganisasi;
 use App\Tatatertib;
 use App\Berita;
 use App\Beasiswa;
@@ -65,8 +66,8 @@ class PembiasaanController extends Controller
         $tatatertib_all=Tatatertib::where('t_status', 'DRAFT')->get();
         $user_all=User::all();
         $kesiswaan->where('k_nama_menu', $menu);
-        $pembiasaan = $pembiasaan->paginate(10);
-        $kesiswaan = $kesiswaan->paginate(10);
+        $pembiasaan = $pembiasaan->get();
+        $kesiswaan = $kesiswaan->get();
         $berita_all = Berita::where('b_status', 'DRAFT')->get();
         $beasiswa_all = Beasiswa::where('status', 'DRAFT')->get();
     
@@ -91,6 +92,8 @@ class PembiasaanController extends Controller
         $user_all=User::all();
         $berita_all = Berita::where('b_status', 'DRAFT')->get();
         $beasiswa_all = Beasiswa::where('status', 'DRAFT')->get();
+        $getisPublished = Strukturorganisasi::where('so_status', 'PUBLISH')->count();
+        $publishDisabled = $getisPublished >= 1; // Disable button if there is at least one published data
 
         $menu = $request->query('menu');
         // $kesiswaan = Kesiswaan::where('k_status', 'PUBLISH')->first();
@@ -98,7 +101,7 @@ class PembiasaanController extends Controller
         if (!$kesiswaan) {
             return redirect()->back()->withErrors(['error' => 'Data Manage Content Slide Pembiasaan Tidak Terpublish! Tolong Publish Terlebih Dahulu!']);
         }
-        return view('kesiswaan/admin.create', compact('kesiswaan', 'menu', 'kesiswaa_all', 'ekstrakurikuler_all', 'penghargaan_all', 'tatatertib_all', 'user_all', 'pembiasaan_all','publishedEkstrakurikulerNames', 'berita_all', 'beasiswa_all'));
+        return view('kesiswaan/admin.create', compact('kesiswaan', 'menu', 'kesiswaa_all', 'ekstrakurikuler_all', 'penghargaan_all', 'tatatertib_all', 'user_all', 'pembiasaan_all','publishedEkstrakurikulerNames', 'berita_all', 'beasiswa_all', 'publishDisabled', 'getisPublished'));
     }
 
     public function store(Request $request)

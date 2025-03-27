@@ -43,24 +43,57 @@
 							@if ($menu == 'Media')
 								<div class="mb-3">
 									<label for="media_sosial" class="font-weight-bold">Media Sosial</label>
-									<select name="name" id="media_sosial" class="form-control {{$errors->first('media_sosial') ? "is-invalid" : ""}}" required>
-										@foreach(['facebook', 'twitter', 'instagram', 'youtube'] as $mediaselect)
-											@if(!$mediasosial->contains('ms_nama_media', $mediaselect) || old('name', $item->ms_nama_media) == $mediaselect)
-												<option value="{{ $mediaselect }}" {{ old('name', $item->ms_nama_media) == $mediaselect ? 'selected' : '' }}>{{ ucfirst($mediaselect) }}</option>
-											@endif
+									<select name="name" id="media_sosial" class="form-control {{$errors->first('media_sosial') ? "is-invalid" : ""}}" required onchange="updateLabelAndInput()">
+										@foreach(['facebook', 'twitter', 'instagram', 'youtube', 'whatsApp', 'tiktok'] as $mediaOption)
+										@if($mediaOption == $media->ms_nama_media)
+											<option value="{{ $mediaOption }}" selected>{{ ucfirst($mediaOption) }}</option>
+										@elseif(!$mediasosial->contains('ms_nama_media', $mediaOption))
+											<option value="{{ $mediaOption }}" {{ old('media_sosial') == $mediaOption ? 'selected' : '' }}>{{ ucfirst($mediaOption) }}</option>
+										@endif
 										@endforeach
 									</select>
 								</div>
 							@endif
 							<div class="mb-3">
-								<input type="text" name="menu" id="menu" value="{{ $menu }}" class="form-control" hidden>
-								<label for="url" class="font-weight-bold">URL {{$menu}}</label>
-								@if ($menu == 'Media')
-								<input type="text" name="url" id="url" placeholder="https://example.com..." class="form-control {{$errors->first('url') ? "is-invalid" : ""}}" value="{{ $tautan->tt_url}}" required>
-								@elseif ($menu == 'Tautan')	
-								<input type="text" name="url" id="url" placeholder="https://example.com..." class="form-control {{$errors->first('url') ? "is-invalid" : ""}}" value="{{ $media->ms_url}}" required>
-								@endif
+								<input type="text" name="menu" id="menu" placeholder="Name..." value="{{$menu}}" class="form-control {{$errors->first('name') ? "is-invalid" : ""}}" required hidden>
+								<label for="url" id="url-label" class="font-weight-bold">URL {{$menu}}</label>
+								<div class="input-group">
+									<input type="text" name="url" id="url" placeholder="Nomor Admin..." class="form-control {{$errors->first('url') ? "is-invalid" : ""}}" value="{{old('url', $media->ms_url)}}" required>
+								</div>
 							</div>
+
+							<script>
+								function updateLabelAndInput() {
+									const mediaSelect = document.getElementById('media_sosial');
+									const urlLabel = document.getElementById('url-label');
+									const urlInput = document.getElementById('url');
+
+									if (mediaSelect.value === 'whatsApp') {
+										urlLabel.textContent = 'Nomor Admin';
+										urlInput.placeholder = 'Nomor Admin...';
+										urlInput.type = 'tel';
+										urlInput.pattern = '\\+62[0-9]+';
+										urlInput.maxLength = 15;
+										urlInput.oninput = function() {
+											this.value = this.value.replace(/[^\d+]/g, '');
+											if (!this.value.startsWith('+62')) {
+												this.value = '+62' + this.value.replace(/^(\+62|0)+/, '');
+											}
+										};
+									} else {
+										urlLabel.textContent = 'URL {{$menu}}';
+										urlInput.placeholder = 'https://example.com...';
+										urlInput.type = 'text';
+										urlInput.removeAttribute('pattern');
+										urlInput.removeAttribute('maxlength');
+										urlInput.oninput = null;
+									}
+								}
+
+								document.addEventListener('DOMContentLoaded', function() {
+									updateLabelAndInput();
+								});
+							</script>
 							<div class="mb-3 mt-4">
 								<a href="{{ route('admin.informasi-media.index') }}" class="btn btn-md btn-secondary">Back</a>
 								<button type="submit" class="btn btn-md btn-warning">Submit</button>
