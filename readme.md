@@ -1,4 +1,51 @@
-<h1 align="center">Website Sekolah SDN 162 Warung Jambu Kiara Condong</h1>
+# Website Sekolah SDN 162 Warung Jambu Kiara Condong
+
+Website ini dibuat menggunakan **Laravel Framework** sebagai platform utama.
+Tujuan utama dari website ini adalah sebagai **halaman informasi sekolah** sekaligus **sistem manajemen informasi** untuk staff dan guru di SDN 162 Warung Jambu Kiara Condong.
+
+Dengan adanya website ini, sekolah dapat dengan mudah menyampaikan informasi penting, mengelola data guru, siswa, hingga kegiatan kesiswaan.
+
+
+## ✨ Fitur Utama
+
+### 📊 Dashboard
+- Tampilan utama bagi admin, guru, atau staff untuk mengakses ringkasan data dan menu yang tersedia.
+
+### 🎓 Beasiswa
+- Informasi mengenai program beasiswa yang tersedia di sekolah.
+- Admin dapat menambahkan, mengedit, atau menghapus data beasiswa.
+
+### ℹ️ About (Tentang Sekolah) *(khusus Admin)*
+- Mengelola halaman tentang sekolah.
+- Memuat profil singkat, visi misi, dan sejarah sekolah.
+
+### 👥 User Management *(khusus Admin)*
+- Mengelola akun pengguna (Admin, Guru, Staff).
+- Menambahkan, menghapus, atau mengubah hak akses.
+
+### 📢 Informasi & Media Sosial *(khusus Admin)*
+- Mengelola informasi umum, pengumuman, dan tautan media sosial resmi sekolah.
+
+### 📝 Pendaftaran *(khusus Admin)*
+- Sistem pendaftaran siswa baru.
+- Menyimpan data calon siswa secara terstruktur.
+
+### 👩‍🏫 Data Guru *(khusus Admin)*
+- Menampilkan dan mengelola data guru yang ada di sekolah.
+
+### 📰 Berita
+- Menampilkan berita terbaru terkait sekolah.
+- Artikel dapat di-posting oleh admin.
+
+### 🧑‍🤝‍🧑 Kegiatan Kesiswaan
+- **Ekstrakurikuler** *(khusus Admin)* → mengelola kegiatan ekstrakurikuler siswa.
+- **Tata Tertib** *(khusus Admin)* → mengatur tata tertib sekolah.
+- **Penghargaan** → menampilkan prestasi atau penghargaan siswa.
+- **Pembiasaan** → menampilkan program pembiasaan harian atau mingguan di sekolah.
+
+
+
+## ⚙️ Teknologi yang Digunakan
 
 <div align="center">
   <a href="#">
@@ -20,67 +67,112 @@
 
 
 
-## Pengantar
-&emsp; &emsp; Ini adalah website company profile yang saya buat menggunakan Framework Laravel 6 untuk backend-nya dan framework bootstrap 4 untuk tampilannya. <br />
-&emsp; &emsp; Sistem ini berfungsi untuk ajang promosi usaha Agent Travel yang kita punya, dapat juga digunakan untuk menulis blog atau artikel-artikel seputar travelling dan membagikannya di website ini, selain itu kita juga bisa menampilkan destinasi-destinasi wisata yang dapat dikunjungi dengan jasa yang kita punya sehingga pengunjung bisa melihat dan memilih sendiri destinasi yang ingin dikunjungi.<br />
-	
-	
-## Fitur
-Fitur yang tersedia di website ini adalah
-1. Crud data Category Artikel 
-2. Crud data Artikel
-3. Crud data Destinasi Wisata
-4. Edit data About
-5. User dapat mencari Artikel berdasarkan judul atau kategory
-6. User dapat melihat dan mencari destinasi-destinasi yang disediakan
+## 🚀 Instalasi & Setup
 
-## Kebutuhan
-Software yang diperlukan untuk menjalankan aplikasi ini adalah
-1. [Xampp](https://sourceforge.net/projects/xampp/files/XAMPP%20Windows/)
-2. Web Browser (Mozilla, Chrome, Opera, dll)
-3. Composer
+1. Clone repository ini:
+   ```bash
+   git clone https://github.com/AhmadArifff/ABIMAS-Website-SDN-162-Warung-Jambu.git
+    
+    ```
 
-## Cara Instalasi
-1. Pastikan kamu sudah mendownload repositori ini.
-2. Ekstrak file yang sudah didownload.
-3. Letakkan repositori di dalam folder htdocts xampp kamu.
-4. Buka aplikasi xampp dan klik start pada apache dan mysql.
-5. cp .env.example .env
-6. File env dan sesuaikan dengan sistem kita
-7. Buka CMD dan arahkan ke direktori ini.
-8. Ketik "composer install" dan tekan enter
-9. ketik "php artisan key:generate" dan tekan enter
-10. ketik "php artisan migrate" dan tekan enter
-11. ketik "php artisan db:seed" dan tekan enter
-12. ketik "php artisan serve" dan tekan enter
-13. Buka web browser dan tulis 'http://127.0.0.1:8000/' di form url lalu tekan enter.
+1. Masuk ke folder project:
+    
+    ```bash
+    cd nama-repo
+    
+    ```
+    
+2. Install dependencies menggunakan Composer:
+    
+    ```bash
+    composer install
+    
+    ```
+    
+3. Copy file `.env.example` menjadi `.env`:
+   - Untuk Linux/MacOS:
+     ```bash
+     cp .env.example .env
+     ```
+   - Untuk Windows:
+     ```bash
+     copy .env.example .env
+     ```
+    
+4. Atur konfigurasi database di file `.env`
+    
+    ```
+    DB_DATABASE=sekolah_db
+    DB_USERNAME=root
+    DB_PASSWORD=
+    
+    ```
+    
+5. Generate application key:
+    
+    ```bash
+    php artisan key:generate
+    
+    ```
+    
+6. Migrasi dan seed database:
+    
+    ```bash
+    php artisan migrate --seed
+    
+    ```
+    
+7. Jalankan server lokal:
+    
+    ```bash
+    php artisan serve
+    
+    ```
+    
+
+## 👨‍💻 Roles & Hak Akses
+
+- **Admin**
+    - Akses penuh (mengelola user, informasi, pendaftaran, guru, ekstrakurikuler, tata tertib, dll).
+- **Guru**
+    - Membaca berita, informasi, kegiatan kesiswaan, dan data terkait lainnya.
+- **Staff**
+    - Membantu pengelolaan data tertentu sesuai hak akses.
+- **Publik**
+    - Dapat melihat halaman informasi, berita, dan profil sekolah.
 
 
-## Screenshot Halaman Admin
+
+
+## Screenshot Halaman User
 <p align='Left' valign='top'>
   <span>
-		<img src='https://github.com/DanyAdhi/Company-Profile-Laravel/blob/master/ScreenShot/admin-dashboard.png'  width=400 />
-		<img src='https://github.com/DanyAdhi/Company-Profile-Laravel/blob/master/ScreenShot/admin-category.png'  width=400 />
-		<img src='https://github.com/DanyAdhi/Company-Profile-Laravel/blob/master/ScreenShot/admin-articles.png'  width=400 />
-	    <img src='https://github.com/DanyAdhi/Company-Profile-Laravel/blob/master/ScreenShot/admin-about.png'  width=400 />
+		<img src='ScreenShot/Home page.png'  width=400 />
+		<img src='ScreenShot/tentang kami.png'  width=400 />
+		<img src='ScreenShot/tentang kami isi.png'  width=400 />
+	    <img src='ScreenShot/berita.png'  width=400 />
+	    <img src='ScreenShot/berita isi.png'  width=400 />
+	    <img src='ScreenShot/Contact.png'  width=400 />
+	    <img src='ScreenShot/Contact isi.png'  width=400 />
+	    <img src='ScreenShot/informasi.png'  width=400 />
+	    <img src='ScreenShot/informasi isi -1.png'  width=400 />
+	    <img src='ScreenShot/informasi isi -2.png'  width=400 />
+	    <img src='ScreenShot/Kesiswaan.png'  width=400 />
+	    <img src='ScreenShot/Kesiswaan penghargaan.png'  width=400 />
+	    <img src='ScreenShot/Kesiswaan penghargaan isi.png'  width=400 />
   </span>
 </p>
 
 <br />
 <br />
 
-## Screenshot Halaman User
+## Screenshot Halaman Admin
 <p align='Left' valign='top'>
     <span>
-        <img src='https://github.com/DanyAdhi/Company-Profile-Laravel/blob/master/ScreenShot/user-home.jpg'  width=400 />
-        <img src='https://github.com/DanyAdhi/Company-Profile-Laravel/blob/master/ScreenShot/user-articles.png'  width=400 />
-    </span>
-</p>
-
-<p align='Left' valign='top'>
-    <span>
-        <img src='https://github.com/DanyAdhi/Company-Profile-Laravel/blob/master/ScreenShot/user-destinations.jpg'  width=400 />
-        <img src='https://github.com/DanyAdhi/Company-Profile-Laravel/blob/master/ScreenShot/user-contact.png'  width=400 />
+        <img src='ScreenShot/Admin/dashboard.png'  width=400 />
+        <img src='ScreenShot/Admin/about.png'  width=400 />
+        <img src='ScreenShot/Admin/about sejarah.png'  width=400 />
+        <img src='ScreenShot/Admin/about visi misi.png'  width=400 />
     </span>
 </p>
 
